@@ -3,16 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jazz Transcription Player</title>
+  <title>The Shed</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Aladin&family=Josefin+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:      #ffffff;
-      --surface: #f7f6f3;
-      --border:  #e9e9e7;
-      --text:    #37352f;
-      --muted:   #9b9a97;
+      --bg:      #f2eeea;
+      --surface: #eae6e1;
+      --border:  #d8d3cd;
+      --text:    #1e1a16;
+      --muted:   #9b9590;
       --col-a:   #2383e2;
       --col-b:   #e03e3e;
       --loop-bg: rgba(35,131,226,.07);
@@ -20,17 +23,173 @@
     }
 
     html, body {
-      background: var(--bg);
+      background-color: var(--bg);
+      /* Subtle horizontal wood-grain lines */
+      background-image:
+        repeating-linear-gradient(
+          180deg,
+          transparent,
+          transparent 28px,
+          rgba(120,100,80,.06) 28px,
+          rgba(120,100,80,.06) 29px
+        ),
+        repeating-linear-gradient(
+          180deg,
+          transparent,
+          transparent 72px,
+          rgba(100,80,60,.04) 72px,
+          rgba(100,80,60,.04) 74px
+        );
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Josefin Sans', sans-serif;
       font-size: 14px;
       min-height: 100vh;
     }
 
-    body {
-      max-width: 740px;
+    body { margin: 0; padding: 0; }
+
+    .layout {
+      display: flex;
+      align-items: flex-start;
+      gap: 32px;
+      max-width: 1020px;
       margin: 0 auto;
-      padding: 44px 24px 64px;
+      padding: 44px 24px 0;
+    }
+
+    .main { flex: 1; min-width: 0; }
+
+    /* ── Sidebar ──────────────────────────────────── */
+    .sidebar {
+      width: 210px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 24px;
+    }
+
+    .sidebar-label {
+      font-size: .68rem; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .marker-add {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: .78rem;
+      text-align: left;
+      margin-bottom: 10px;
+      font-family: inherit;
+    }
+    .marker-add:hover { background: var(--border); }
+
+    .marker-list { display: flex; flex-direction: column; gap: 5px; }
+
+    .marker-item {
+      display: flex; align-items: center; gap: 5px;
+    }
+
+    .marker-time {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--col-a); border-radius: 5px;
+      font-size: .7rem; padding: 3px 6px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      white-space: nowrap; cursor: pointer; flex-shrink: 0;
+      font-weight: 500;
+    }
+    .marker-time:hover { background: var(--col-a); color: #fff; border-color: var(--col-a); }
+
+    .marker-label {
+      flex: 1; min-width: 0;
+      background: transparent; border: none;
+      border-bottom: 1px solid transparent;
+      color: var(--text); font-size: .78rem;
+      font-family: inherit; outline: none;
+      padding: 2px 2px;
+    }
+    .marker-label:focus { border-bottom-color: var(--border); }
+    .marker-label::placeholder { color: var(--muted); }
+
+    .marker-del {
+      background: none; border: none; color: var(--muted);
+      font-size: .85rem; padding: 2px 4px; line-height: 1;
+      flex-shrink: 0;
+    }
+    .marker-del:hover { color: var(--col-b); }
+
+    /* ── Sidebar scroll ───────────────────────────── */
+    .sidebar {
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
+    }
+
+    .sidebar-divider {
+      border: none; border-top: 1px solid var(--border);
+      margin: 16px 0;
+    }
+
+    .sidebar-row {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-bottom: 10px;
+    }
+    .sidebar-row .sidebar-label { margin: 0; }
+
+    /* ── Playlist ─────────────────────────────────── */
+    .playlist-add {
+      background: none; border: none;
+      color: var(--col-a); font-size: .75rem;
+      font-family: inherit; cursor: pointer; padding: 0;
+    }
+    .playlist-add:hover { text-decoration: underline; }
+
+    .playlist-list { display: flex; flex-direction: column; gap: 6px; }
+
+    .playlist-item {
+      display: flex; align-items: center; gap: 7px;
+      cursor: pointer; padding: 5px 6px; border-radius: 6px;
+      border: 1px solid transparent;
+    }
+    .playlist-item:hover { background: var(--surface); }
+    .playlist-item.active {
+      background: var(--surface);
+      border-color: var(--border);
+    }
+
+    .playlist-thumb {
+      width: 48px; height: 27px;
+      object-fit: cover; border-radius: 3px;
+      flex-shrink: 0; background: var(--border);
+    }
+
+    .playlist-info { flex: 1; min-width: 0; }
+    .playlist-title {
+      font-size: .73rem; font-weight: 500;
+      white-space: nowrap; overflow: hidden;
+      text-overflow: ellipsis; color: var(--text);
+    }
+    .playlist-meta { font-size: .65rem; color: var(--muted); margin-top: 1px; }
+
+    .playlist-del {
+      background: none; border: none; color: var(--muted);
+      font-size: .85rem; padding: 2px 4px; flex-shrink: 0; line-height: 1;
+    }
+    .playlist-del:hover { color: var(--col-b); }
+
+    /* ── Cat border ───────────────────────────────── */
+    #cat-border {
+      width: 100vw;
+      position: relative; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: flex-end;
+      overflow: hidden;
+      margin-top: 32px;
+    }
+    #cat-border img {
+      width: auto;
+      flex-shrink: 0;
     }
 
     /* ── Header ───────────────────────────────────── */
@@ -39,8 +198,10 @@
       border-bottom: 1px solid var(--border);
       margin-bottom: 24px;
     }
-    header h1 { font-size: 1.05rem; font-weight: 600; letter-spacing: -.01em; }
-    header p  { font-size: .72rem; color: var(--muted); margin-top: 3px; }
+    header { display: flex; align-items: flex-end; gap: 16px; }
+    header .header-text h1 { font-size: 4rem; font-weight: 400; font-family: 'Aladin', cursive; letter-spacing: .02em; line-height: 1; }
+    header .header-text p  { font-size: .72rem; color: var(--muted); margin-top: 4px; }
+    header img#header-cat  { height: 80px; width: auto; }
 
     /* ── URL bar ──────────────────────────────────── */
     .url-row { display: flex; gap: 8px; margin-bottom: 20px; }
@@ -56,7 +217,7 @@
       font-family: inherit;
       outline: none;
     }
-    input[type="text"]:focus { border-color: #bbb; background: #fff; }
+    input[type="text"]:focus { border-color: #b8b0a6; background: #f8f5f2; }
     input[type="text"]::placeholder { color: var(--muted); }
 
     /* ── Buttons ──────────────────────────────────── */
@@ -267,6 +428,28 @@
     #tapBtn:hover { background: var(--border); }
     #tapBtn.flash { background: var(--text); color: #fff; border-color: var(--text); }
 
+    #detectBtn {
+      background: var(--surface); color: var(--text);
+      border: 1px solid var(--border);
+    }
+    #detectBtn:hover { background: var(--border); }
+
+    /* ── Keyboard shortcuts ───────────────────────── */
+    .shortcuts-grid {
+      display: flex; flex-wrap: wrap; gap: 6px 20px; align-items: center;
+    }
+    .sc {
+      display: flex; align-items: center; gap: 5px;
+      font-size: .74rem; color: var(--text);
+    }
+    kbd {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 5px; padding: 2px 7px;
+      font-size: .72rem; font-family: inherit;
+      color: var(--text); min-width: 28px;
+      text-align: center; display: inline-block;
+    }
+
     /* ── Toast ────────────────────────────────────── */
     #toast {
       position: fixed; bottom: 24px; left: 50%;
@@ -282,6 +465,9 @@
 </head>
 <body>
 
+<div class="layout">
+<div class="main">
+
 <div id="protocol-warning" style="display:none;background:#fff8e1;border:1px solid #ffe082;
   border-radius:8px;padding:12px 16px;margin-bottom:20px;font-size:.8rem;line-height:1.6;color:#5d4037">
   <strong>YouTube embeds require HTTP — open via a local server instead of file://.</strong><br>
@@ -292,8 +478,11 @@
 </div>
 
 <header>
-  <h1>Jazz Transcription Player</h1>
-  <p>Loop · Slow Down · Transcribe</p>
+  <img id="header-cat" src="cats/bassc.png" alt="bass cat" />
+  <div class="header-text">
+    <h1>The Shed</h1>
+    <p>Loop · Slow Down · Transcribe</p>
+  </div>
 </header>
 
 <!-- URL input -->
@@ -339,8 +528,7 @@
       <span style="color:var(--col-b)">B</span>
       <span id="ptB" style="color:var(--col-b)"> —</span>
     </div>
-    <button id="loopToggle" onclick="toggleLoop()">⟳ Loop</button>
-    <button class="btn-clear" onclick="clearLoop()">Clear</button>
+    <button class="btn-clear" onclick="resetLoop()">Reset</button>
   </div>
   <div class="hint">Drag on the timeline to set loop region · drag the handles to adjust</div>
 </div>
@@ -363,7 +551,7 @@
   <div class="slider-wrap">
     <span class="slider-end">¼×</span>
     <input type="range" id="speedSlider"
-           min="0.25" max="2.0" step="0.01" value="1.0"
+           min="0.25" max="2.0" step="0.05" value="1.0"
            oninput="onSpeedSlider(this.value)" />
     <span class="slider-end">2×</span>
   </div>
@@ -383,12 +571,47 @@
     <input type="number" id="bpmInput" placeholder="120" min="20" max="400"
            oninput="onBPMInput(this.value)" />
     <button id="tapBtn" onclick="tap()">Tap Tempo</button>
+    <button id="detectBtn" onclick="detectBPM()">Detect BPM</button>
     <button class="btn-ghost" onclick="applySpeed(1)">Reset speed</button>
   </div>
+  <div class="hint" id="detectHint" style="display:none">Play the music through speakers — the mic will listen for the beat</div>
 
 </div>
 
+<!-- Keyboard shortcuts -->
+<div class="section">
+  <div class="section-label">Keyboard Shortcuts</div>
+  <div class="shortcuts-grid">
+    <div class="sc"><kbd>Space</kbd> Play / Pause</div>
+    <div class="sc"><kbd>→</kbd> +5s</div>
+    <div class="sc"><kbd>←</kbd> −5s</div>
+    <div class="sc"><kbd>↑</kbd> Speed +0.05×</div>
+    <div class="sc"><kbd>↓</kbd> Speed −0.05×</div>
+    <div class="sc"><kbd>T</kbd> Tap Tempo</div>
+  </div>
+</div>
+
+</div><!-- /.main -->
+
+<!-- Markers sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-label">Markers</div>
+  <button class="marker-add" onclick="addMarker()">+ Add marker at current time</button>
+  <div class="marker-list" id="markerList"></div>
+
+  <hr class="sidebar-divider" />
+
+  <div class="sidebar-row">
+    <div class="sidebar-label">Playlist</div>
+    <button class="playlist-add" onclick="saveToPlaylist()">+ Save current</button>
+  </div>
+  <div class="playlist-list" id="playlistEl"></div>
+</aside>
+
+</div><!-- /.layout -->
+
 <div id="toast"></div>
+<div id="cat-border"></div>
 
 <script>
 /* ── YouTube IFrame API ─────────────────────────── */
@@ -404,15 +627,15 @@ var pendingId   = null;
 
 var loopA   = null;
 var loopB   = null;
-var looping = false;
 
 var baseBPM      = null;
 var tapTimes     = [];
 var tapTimer     = null;
 var currentSpeed = 1;
 
-var ticker     = null;
-var toastTimer = null;
+var ticker       = null;
+var toastTimer   = null;
+var lastDuration = 0;
 
 /* ── YouTube callbacks ──────────────────────────── */
 function onYouTubeIframeAPIReady() {
@@ -438,6 +661,7 @@ function createPlayer(videoId) {
 
 function onReady() {
   playerReady = true;
+  lastDuration = 0; // force AB reset on first tick
   if (ticker) clearInterval(ticker);
   ticker = setInterval(tick, 80);
 }
@@ -469,6 +693,7 @@ function loadVideo() {
   var url = document.getElementById('urlInput').value.trim();
   var id  = extractId(url);
   if (!id) { toast('Could not parse YouTube URL'); return; }
+  loadMarkers(id);
   if (typeof YT === 'undefined' || !YT.Player) { pendingId = id; return; }
   if (player && playerReady) { player.loadVideoById(id); }
   else { pendingId = id; createPlayer(id); }
@@ -498,10 +723,17 @@ function tick() {
     document.getElementById('timeDisplay').textContent = fmt(t) + ' / ' + fmt(d);
     if (d) {
       document.getElementById('progFill').style.width = (t / d * 100) + '%';
+      // Auto-init A/B when a new video duration appears
+      if (d !== lastDuration && d > 0) {
+        lastDuration = d;
+        loopA = 0; loopB = d;
+        document.getElementById('ptA').textContent = ' ' + fmt(0);
+        document.getElementById('ptB').textContent = ' ' + fmt(d);
+      }
       repaintLoop(d);
     }
-    if (looping && loopA !== null && loopB !== null && t >= loopB) {
-      player.seekTo(loopA, true);
+    if (loopA !== null && loopB !== null) {
+      if (t >= loopB || t < loopA) player.seekTo(loopA, true);
     }
   } catch (_) {}
 }
@@ -630,14 +862,6 @@ function skipBy(sec) {
       // click → seek
       var d = getDur();
       if (playerReady && d) player.seekTo(getRatio(e.clientX) * d, true);
-    } else if (dragState.type === 'loop') {
-      // auto-enable loop after drag
-      if (loopA !== null && loopB !== null && loopB - loopA > 0.3) {
-        looping = true;
-        var btn = document.getElementById('loopToggle');
-        btn.classList.add('active');
-        btn.textContent = '⟳ Loop ON';
-      }
     }
     dragState = null;
   }
@@ -647,23 +871,11 @@ function skipBy(sec) {
 })();
 
 /* ── Loop ───────────────────────────────────────── */
-function toggleLoop() {
-  looping = !looping;
-  var btn = document.getElementById('loopToggle');
-  btn.classList.toggle('active', looping);
-  btn.textContent = looping ? '⟳ Loop ON' : '⟳ Loop';
-}
-
-function clearLoop() {
-  loopA = loopB = null; looping = false;
-  var btn = document.getElementById('loopToggle');
-  btn.classList.remove('active');
-  btn.textContent = '⟳ Loop';
-  document.getElementById('loopRegion').style.display = 'none';
-  document.getElementById('handleA').style.display    = 'none';
-  document.getElementById('handleB').style.display    = 'none';
-  document.getElementById('ptA').textContent = ' —';
-  document.getElementById('ptB').textContent = ' —';
+function resetLoop() {
+  var d = (playerReady ? player.getDuration() : 0) || 0;
+  loopA = 0; loopB = d || null;
+  document.getElementById('ptA').textContent = d ? ' ' + fmt(0) : ' —';
+  document.getElementById('ptB').textContent = d ? ' ' + fmt(d) : ' —';
 }
 
 /* ── Speed ──────────────────────────────────────── */
@@ -720,15 +932,18 @@ function toast(msg) {
 }
 
 /* ── Keyboard ───────────────────────────────────── */
+document.getElementById('speedSlider').addEventListener('keydown', function (e) {
+  if (e.key.startsWith('Arrow')) e.preventDefault();
+});
+
 document.addEventListener('keydown', function (e) {
-  if (e.target.tagName === 'INPUT') return;
+  // let text/number inputs handle their own keys, but not the range slider
+  if (e.target.tagName === 'INPUT' && e.target.type !== 'range') return;
   switch (e.key) {
     case ' ':          e.preventDefault(); togglePlay(); break;
     case 'l': case 'L': toggleLoop(); break;
-    case 'ArrowLeft':  e.preventDefault(); skipBy(-2); break;
-    case 'ArrowRight': e.preventDefault(); skipBy(2); break;
-    case ',': skipBy(-0.1); break;
-    case '.': skipBy(0.1); break;
+    case 'ArrowLeft':  e.preventDefault(); skipBy(-(5 * currentSpeed)); break;
+    case 'ArrowRight': e.preventDefault(); skipBy(5 * currentSpeed); break;
     case 'ArrowUp':    e.preventDefault(); applySpeed(Math.round((currentSpeed + 0.05) * 100) / 100); break;
     case 'ArrowDown':  e.preventDefault(); applySpeed(Math.round((currentSpeed - 0.05) * 100) / 100); break;
     case 't': case 'T': tap(); break;
@@ -739,10 +954,385 @@ document.getElementById('urlInput').addEventListener('keydown', function (e) {
   if (e.key === 'Enter') loadVideo();
 });
 
+/* ── Cat border ─────────────────────────────────── */
+(function () {
+  var cats = ['cats/bassc.png','cats/drum.png','cats/guitarc.png',
+              'cats/keyboard.png','cats/saxc.png','cats/trumpe.png','cats/violinc.png'];
+  var MAX_H = 64; // px — tallest cat will be this height, others scale proportionally
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  var border = document.getElementById('cat-border');
+  var seq = [];
+  while (seq.length < 60) {
+    var deck = shuffle(cats);
+    // Prevent the join point from repeating
+    if (seq.length && deck[0] === seq[seq.length - 1]) {
+      // swap first card with a random other card in the deck
+      var swap = 1 + Math.floor(Math.random() * (deck.length - 1));
+      var tmp = deck[0]; deck[0] = deck[swap]; deck[swap] = tmp;
+    }
+    seq = seq.concat(deck);
+  }
+
+  var flippable = ['cats/trumpe.png','cats/violinc.png','cats/keyboard.png'];
+
+  seq.forEach(function (src) {
+    var img = document.createElement('img');
+    img.src = src;
+    img.dataset.src = src;
+    if (flippable.indexOf(src) !== -1 && Math.random() < 0.5) {
+      img.style.transform = 'scaleX(-1)';
+    }
+    border.appendChild(img);
+  });
+
+  // Load natural heights of the 7 unique cats, then scale all proportionally
+  var naturalH = {};
+  var loaded = 0;
+  cats.forEach(function (src) {
+    var t = new Image();
+    t.onload = function () {
+      naturalH[src] = t.naturalHeight;
+      if (++loaded === cats.length) applyScale();
+    };
+    t.src = src;
+  });
+
+  function applyScale() {
+    var maxNatural = Math.max.apply(null, cats.map(function (s) { return naturalH[s] || 1; }));
+    var scale = MAX_H / maxNatural;
+    border.querySelectorAll('img').forEach(function (img) {
+      var h = naturalH[img.dataset.src];
+      if (h) img.style.height = Math.round(h * scale) + 'px';
+    });
+  }
+})();
+
+/* ── Markers ────────────────────────────────────── */
+var markers    = [];   // [{id, time, label}]
+var currentVideoId = null;
+
+function markersKey(id) { return 'shed_markers_' + id; }
+
+function loadMarkers(videoId) {
+  currentVideoId = videoId;
+  try {
+    markers = JSON.parse(localStorage.getItem(markersKey(videoId)) || '[]');
+  } catch(_) { markers = []; }
+  renderMarkers();
+}
+
+function saveMarkers() {
+  if (!currentVideoId) return;
+  localStorage.setItem(markersKey(currentVideoId), JSON.stringify(markers));
+  renderPlaylist();
+}
+
+function addMarker() {
+  if (!playerReady) { toast('Load a video first'); return; }
+  var t = player.getCurrentTime();
+  var m = { id: Date.now(), time: t, label: '' };
+  markers.push(m);
+  markers.sort(function(a, b) { return a.time - b.time; });
+  saveMarkers();
+  renderMarkers();
+  // Focus the new marker's label input
+  var input = document.querySelector('[data-marker-id="' + m.id + '"] .marker-label');
+  if (input) { input.focus(); input.select(); }
+}
+
+function deleteMarker(id) {
+  markers = markers.filter(function(m) { return m.id !== id; });
+  saveMarkers();
+  renderMarkers();
+}
+
+function seekToMarker(time) {
+  if (!playerReady) return;
+  loopA = time;
+  player.seekTo(time, true);
+}
+
+function renderMarkers() {
+  var list = document.getElementById('markerList');
+  list.innerHTML = '';
+  if (!markers.length) {
+    list.innerHTML = '<div style="font-size:.72rem;color:var(--muted);padding:4px 2px">No markers yet</div>';
+    return;
+  }
+  markers.forEach(function(m) {
+    var item = document.createElement('div');
+    item.className = 'marker-item';
+    item.dataset.markerId = m.id;
+
+    var timeBtn = document.createElement('button');
+    timeBtn.className = 'marker-time';
+    timeBtn.textContent = fmt(m.time);
+    timeBtn.title = 'Seek to ' + fmt(m.time);
+    timeBtn.onclick = function() { seekToMarker(m.time); };
+
+    var label = document.createElement('input');
+    label.className = 'marker-label';
+    label.type = 'text';
+    label.value = m.label;
+    label.placeholder = 'label…';
+    label.oninput = function() {
+      m.label = label.value;
+      saveMarkers();
+    };
+    label.onkeydown = function(e) { if (e.key === 'Enter') label.blur(); };
+
+    var del = document.createElement('button');
+    del.className = 'marker-del';
+    del.textContent = '×';
+    del.onclick = function() { deleteMarker(m.id); };
+
+    item.appendChild(timeBtn);
+    item.appendChild(label);
+    item.appendChild(del);
+    list.appendChild(item);
+  });
+}
+
+/* ── BPM Detection ──────────────────────────────── */
+var bpmDetecting   = false;
+var bpmAudioCtx    = null;
+var bpmInterval    = null;
+
+async function detectBPM() {
+  if (bpmDetecting) { stopBPMDetect('Cancelled'); return; }
+  if (!playerReady) { toast('Load a video first'); return; }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    toast('Microphone not supported in this browser. Use Tap Tempo.');
+    return;
+  }
+
+  try {
+    document.getElementById('detectHint').style.display = 'block';
+    var stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation:  false,
+        noiseSuppression:  false,
+        autoGainControl:   false
+      },
+      video: false
+    });
+    document.getElementById('detectHint').style.display = 'none';
+
+    bpmDetecting = true;
+    var btn = document.getElementById('detectBtn');
+    btn.style.background = 'var(--text)';
+    btn.style.color = '#fff';
+
+    bpmAudioCtx = new AudioContext();
+    var source  = bpmAudioCtx.createMediaStreamSource(stream);
+
+    // Broad bandpass — jazz beat lives in mids too, not just kick
+    var hp = bpmAudioCtx.createBiquadFilter();
+    hp.type = 'highpass'; hp.frequency.value = 60;
+    var lp = bpmAudioCtx.createBiquadFilter();
+    lp.type = 'lowpass';  lp.frequency.value = 1000;
+    source.connect(hp); hp.connect(lp);
+
+    var analyser = bpmAudioCtx.createAnalyser();
+    analyser.fftSize = 1024;
+    analyser.smoothingTimeConstant = 0.0;
+    lp.connect(analyser);
+
+    var buf      = new Float32Array(analyser.frequencyBinCount);
+    var samples  = [];
+    var RATE     = 30;   // samples/sec — finer resolution
+    var SECS     = 15;   // longer window for accuracy
+    var elapsed  = 0;
+
+    bpmInterval = setInterval(function() {
+      analyser.getFloatTimeDomainData(buf);
+      var e = 0;
+      for (var i = 0; i < buf.length; i++) e += buf[i] * buf[i];
+      samples.push(e / buf.length);
+      elapsed++;
+
+      var left = SECS - Math.floor(elapsed / RATE);
+      document.getElementById('detectBtn').textContent = left > 0 ? left + 's…' : 'Analysing…';
+
+      if (elapsed >= SECS * RATE) {
+        clearInterval(bpmInterval);
+        stream.getTracks().forEach(function(t) { t.stop(); });
+        var bpm = calcBPM(samples, RATE);
+        if (bpm && bpm >= 40 && bpm <= 280) {
+          baseBPM = Math.round(bpm);
+          document.getElementById('bpmInput').value = baseBPM;
+          refreshBPM();
+          stopBPMDetect('Detected ' + baseBPM + ' BPM');
+        } else {
+          stopBPMDetect('Could not detect BPM — try Tap Tempo');
+        }
+      }
+    }, 1000 / RATE);
+
+    stream.getAudioTracks()[0].addEventListener('ended', function() {
+      clearInterval(bpmInterval);
+      stopBPMDetect('Audio stream ended');
+    });
+
+  } catch (err) {
+    document.getElementById('detectHint').style.display = 'none';
+    toast('Could not capture audio. Use Tap Tempo instead.');
+    stopBPMDetect('');
+  }
+}
+
+function stopBPMDetect(msg) {
+  bpmDetecting = false;
+  if (bpmInterval) { clearInterval(bpmInterval); bpmInterval = null; }
+  if (bpmAudioCtx) { bpmAudioCtx.close(); bpmAudioCtx = null; }
+  var btn = document.getElementById('detectBtn');
+  btn.textContent = 'Detect BPM';
+  btn.style.background = '';
+  btn.style.color = '';
+  if (msg) toast(msg);
+}
+
+function calcBPM(energies, sampleRate) {
+  if (energies.length < sampleRate * 4) return null;
+
+  // Check there's an actual signal
+  var max = 0, sum = 0;
+  for (var i = 0; i < energies.length; i++) {
+    if (energies[i] > max) max = energies[i];
+    sum += energies[i];
+  }
+  if (max === 0) return null;
+  var mean = sum / energies.length;
+  // If signal has no dynamics, mic probably heard nothing useful
+  if (max / mean < 1.2) return null;
+
+  // Normalize and detrend
+  var n = energies.length;
+  var norm = new Array(n);
+  var nmean = 0;
+  for (var i = 0; i < n; i++) { norm[i] = energies[i] / max; nmean += norm[i]; }
+  nmean /= n;
+  for (var i = 0; i < n; i++) norm[i] -= nmean;
+
+  // Auto-correlation — finds dominant period without needing a threshold
+  // Lag range: 40–220 BPM
+  var minLag = Math.floor(sampleRate * 60 / 220);
+  var maxLag = Math.min(Math.floor(sampleRate * 60 / 40), Math.floor(n / 2));
+
+  var bestCorr = -Infinity, bestLag = -1;
+  for (var lag = minLag; lag <= maxLag; lag++) {
+    var c = 0, cnt = n - lag;
+    for (var i = 0; i < cnt; i++) c += norm[i] * norm[i + lag];
+    c /= cnt;
+    if (c > bestCorr) { bestCorr = c; bestLag = lag; }
+  }
+
+  if (bestLag < 0 || bestCorr < 0.001) return null;
+
+  var bpm = 60 * sampleRate / bestLag;
+  // Fold into 60–200 BPM range
+  while (bpm < 60)  bpm *= 2;
+  while (bpm > 200) bpm /= 2;
+  return bpm;
+}
+
 // Show banner if served from file://
 if (window.location.protocol === 'file:') {
   document.getElementById('protocol-warning').style.display = 'block';
 }
+
+// ── Playlist ─────────────────────────────────────────────────
+var PLAYLIST_KEY = 'shed_playlist';
+var playlist = [];
+var activePlaylistId = null;
+
+function loadPlaylist() {
+  try { playlist = JSON.parse(localStorage.getItem(PLAYLIST_KEY)) || []; }
+  catch(e) { playlist = []; }
+  renderPlaylist();
+}
+
+function savePlaylistStore() {
+  localStorage.setItem(PLAYLIST_KEY, JSON.stringify(playlist));
+}
+
+function getMarkerCount(videoId) {
+  try {
+    var m = JSON.parse(localStorage.getItem('shed_markers_' + videoId));
+    return m ? m.length : 0;
+  } catch(e) { return 0; }
+}
+
+function saveToPlaylist() {
+  if (!currentVideoId) { alert('Load a video first.'); return; }
+  if (playlist.find(function(p){ return p.id === currentVideoId; })) {
+    alert('Already in playlist.'); return;
+  }
+  var entry = { id: currentVideoId, title: currentVideoId, thumb: 'https://img.youtube.com/vi/' + currentVideoId + '/default.jpg' };
+  playlist.push(entry);
+  savePlaylistStore();
+  renderPlaylist();
+  // Fetch title in background
+  fetch('https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=' + currentVideoId + '&format=json')
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      var item = playlist.find(function(p){ return p.id === currentVideoId; });
+      if (item && d.title) { item.title = d.title; savePlaylistStore(); renderPlaylist(); }
+    })
+    .catch(function(){});
+}
+
+function removeFromPlaylist(id) {
+  playlist = playlist.filter(function(p){ return p.id !== id; });
+  savePlaylistStore();
+  renderPlaylist();
+}
+
+function loadPlaylistItem(id) {
+  var item = playlist.find(function(p){ return p.id === id; });
+  if (!item) return;
+  activePlaylistId = id;
+  var input = document.getElementById('urlInput');
+  input.value = 'https://www.youtube.com/watch?v=' + id;
+  loadVideo();
+  renderPlaylist();
+}
+
+function renderPlaylist() {
+  var el = document.getElementById('playlistEl');
+  if (!el) return;
+  if (playlist.length === 0) {
+    el.innerHTML = '<div style="font-size:.7rem;color:var(--muted);padding:4px 2px;">No videos saved yet.</div>';
+    return;
+  }
+  el.innerHTML = playlist.map(function(item) {
+    var cnt = getMarkerCount(item.id);
+    var isActive = item.id === currentVideoId;
+    return '<div class="playlist-item' + (isActive ? ' active' : '') + '" onclick="loadPlaylistItem(\'' + item.id + '\')">' +
+      '<img class="playlist-thumb" src="' + item.thumb + '" alt="" onerror="this.style.display=\'none\'">' +
+      '<div class="playlist-info">' +
+        '<div class="playlist-title">' + escapeHtml(item.title) + '</div>' +
+        '<div class="playlist-meta">' + (cnt > 0 ? cnt + ' marker' + (cnt !== 1 ? 's' : '') : 'no markers') + '</div>' +
+      '</div>' +
+      '<button class="playlist-del" onclick="event.stopPropagation();removeFromPlaylist(\'' + item.id + '\')" title="Remove">&#x2715;</button>' +
+    '</div>';
+  }).join('');
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+loadPlaylist();
 </script>
 </body>
 </html>
