@@ -188,6 +188,7 @@
       margin-top: 32px;
     }
     #cat-border img {
+      height: 54px;
       width: auto;
       flex-shrink: 0;
     }
@@ -1001,6 +1002,9 @@ document.getElementById('urlInput').addEventListener('keydown', function (e) {
     var t = new Image();
     t.onload = function () {
       naturalH[src] = t.naturalHeight;
+      if (++loaded === cats.length) applyScale();
+    };
+    t.onerror = function () {
       if (++loaded === cats.length) applyScale();
     };
     t.src = src;
