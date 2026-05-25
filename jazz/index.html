@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jazz Transcription Player</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #ffffff;
+      --surface: #f7f6f3;
+      --border:  #e9e9e7;
+      --text:    #37352f;
+      --muted:   #9b9a97;
+      --col-a:   #2383e2;
+      --col-b:   #e03e3e;
+      --loop-bg: rgba(35,131,226,.07);
+      --green:   #2f9e44;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px;
+      min-height: 100vh;
+    }
+
+    body {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 44px 24px 64px;
+    }
+
+    /* ── Header ───────────────────────────────────── */
+    header {
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+    header h1 { font-size: 1.05rem; font-weight: 600; letter-spacing: -.01em; }
+    header p  { font-size: .72rem; color: var(--muted); margin-top: 3px; }
+
+    /* ── URL bar ──────────────────────────────────── */
+    .url-row { display: flex; gap: 8px; margin-bottom: 20px; }
+
+    input[type="text"] {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: .875rem;
+      font-family: inherit;
+      outline: none;
+    }
+    input[type="text"]:focus { border-color: #bbb; background: #fff; }
+    input[type="text"]::placeholder { color: var(--muted); }
+
+    /* ── Buttons ──────────────────────────────────── */
+    button {
+      cursor: pointer; border: none; border-radius: 6px;
+      font-size: .8rem; padding: 7px 13px; font-weight: 500;
+      font-family: inherit; transition: background .1s;
+    }
+
+    .btn-dark { background: var(--text); color: #fff; }
+    .btn-dark:hover { background: #555; }
+
+    .btn-ghost {
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: var(--surface); color: var(--text); }
+
+    /* ── Player ───────────────────────────────────── */
+    .player-shell {
+      width: 100%; aspect-ratio: 16/9;
+      background: #1a1a1a; border-radius: 8px;
+      overflow: hidden; position: relative;
+      margin-bottom: 0;
+    }
+    #player-mount { width: 100%; height: 100%; }
+    #player-mount iframe { width: 100%; height: 100%; display: block; }
+
+    .placeholder {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 10px;
+    }
+    .placeholder-icon { font-size: 2.2rem; opacity: .18; color: #fff; }
+    .placeholder-text { font-size: .78rem; color: rgba(255,255,255,.3); }
+
+    /* ── Section ──────────────────────────────────── */
+    .section {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .section:last-child { border-bottom: none; }
+
+    .section-label {
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    /* ── Transport ────────────────────────────────── */
+    .transport { display: flex; align-items: center; gap: 12px; }
+
+    #playBtn {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--text); color: #fff;
+      font-size: .8rem; padding: 0; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #playBtn:hover { background: #555; }
+
+    .time {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: .73rem; color: var(--muted);
+      min-width: 86px;
+    }
+
+    /* ── Progress bar ─────────────────────────────── */
+    .prog-wrap {
+      flex: 1; height: 32px;
+      display: flex; align-items: center;
+      cursor: pointer; user-select: none;
+    }
+
+    .prog-track {
+      width: 100%; height: 3px;
+      background: var(--border); border-radius: 2px;
+      position: relative; overflow: visible;
+    }
+
+    .prog-fill {
+      position: absolute; top: 0; left: 0;
+      height: 100%; background: var(--text);
+      border-radius: 2px; width: 0%;
+      pointer-events: none; z-index: 2;
+    }
+
+    .loop-region {
+      position: absolute; top: -3px;
+      height: calc(100% + 6px);
+      background: var(--loop-bg);
+      border-left:  2px solid var(--col-a);
+      border-right: 2px solid var(--col-b);
+      display: none; z-index: 1; pointer-events: none;
+    }
+
+    /* A / B handles — clickable, draggable vertical lines */
+    .handle {
+      position: absolute; top: -14px;
+      width: 20px; height: calc(100% + 28px);
+      cursor: ew-resize; transform: translateX(-50%);
+      display: none; z-index: 20;
+    }
+    .handle::before {
+      content: ''; position: absolute;
+      left: 50%; top: 0;
+      transform: translateX(-50%);
+      width: 2px; height: 100%; border-radius: 1px;
+    }
+    .handle::after {
+      content: ''; position: absolute;
+      left: 50%; top: 0;
+      transform: translateX(-50%);
+      width: 8px; height: 8px; border-radius: 50%;
+    }
+    .handle-a::before { background: var(--col-a); }
+    .handle-a::after  { background: var(--col-a); }
+    .handle-b::before { background: var(--col-b); }
+    .handle-b::after  { background: var(--col-b); }
+
+    /* ── Loop section ─────────────────────────────── */
+    .loop-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+    .loop-times {
+      flex: 1;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: .75rem; color: var(--muted);
+    }
+
+    #loopToggle {
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border);
+      font-size: .75rem; padding: 5px 10px;
+    }
+    #loopToggle:hover { background: var(--surface); }
+    #loopToggle.active {
+      background: #ebfbee; color: var(--green);
+      border-color: #b2f2bb;
+    }
+
+    .btn-clear {
+      background: transparent; color: var(--muted);
+      border: none; font-size: .75rem;
+      padding: 5px 6px;
+    }
+    .btn-clear:hover { color: var(--col-b); }
+
+    .hint { font-size: .68rem; color: var(--muted); margin-top: 9px; }
+
+    /* ── Speed / BPM ──────────────────────────────── */
+    .speed-top {
+      display: flex; align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .speed-big {
+      font-size: 1.5rem; font-weight: 600;
+      color: var(--text); line-height: 1;
+    }
+    .speed-small-label { font-size: .68rem; color: var(--muted); margin-top: 2px; }
+
+    .bpm-right { text-align: right; }
+    .bpm-num   { font-size: 1.5rem; font-weight: 600; color: var(--text); line-height: 1; }
+    .bpm-small-label { font-size: .68rem; color: var(--muted); margin-top: 2px; }
+
+    /* slider */
+    .slider-wrap { margin-bottom: 5px; display: flex; align-items: center; gap: 9px; }
+    .slider-end  { font-size: .68rem; color: var(--muted); }
+
+    input[type="range"] {
+      -webkit-appearance: none; flex: 1;
+      height: 3px; background: var(--border);
+      border-radius: 2px; outline: none; cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--text); cursor: pointer;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 1.5px var(--border);
+    }
+
+    .speed-ticks {
+      display: flex; justify-content: space-between;
+      padding: 0 7px; margin-bottom: 16px;
+    }
+    .speed-tick { font-size: .6rem; color: var(--muted); }
+
+    /* BPM inputs */
+    .bpm-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .bpm-row-label { font-size: .72rem; color: var(--muted); }
+
+    input[type="number"] {
+      width: 66px;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); padding: 6px 8px; border-radius: 6px;
+      font-size: .85rem; text-align: center; outline: none;
+      font-family: inherit;
+    }
+    input[type="number"]:focus { border-color: #bbb; }
+
+    #tapBtn {
+      background: var(--surface); color: var(--text);
+      border: 1px solid var(--border);
+    }
+    #tapBtn:hover { background: var(--border); }
+    #tapBtn.flash { background: var(--text); color: #fff; border-color: var(--text); }
+
+    /* ── Toast ────────────────────────────────────── */
+    #toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--text); color: #fff;
+      padding: 6px 14px; border-radius: 6px;
+      font-size: .73rem; pointer-events: none;
+      opacity: 0; transition: opacity .15s;
+      white-space: nowrap; z-index: 999;
+    }
+    #toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<div id="protocol-warning" style="display:none;background:#fff8e1;border:1px solid #ffe082;
+  border-radius:8px;padding:12px 16px;margin-bottom:20px;font-size:.8rem;line-height:1.6;color:#5d4037">
+  <strong>YouTube embeds require HTTP — open via a local server instead of file://.</strong><br>
+  In Terminal: <code style="background:#f5f5f5;padding:1px 5px;border-radius:4px;font-size:.78rem">
+  cd /Users/meghai/Documents/meghai/jazz &amp;&amp; python3 -m http.server 8080</code><br>
+  Then open <code style="background:#f5f5f5;padding:1px 5px;border-radius:4px;font-size:.78rem">
+  http://localhost:8080</code> in your browser.
+</div>
+
+<header>
+  <h1>Jazz Transcription Player</h1>
+  <p>Loop · Slow Down · Transcribe</p>
+</header>
+
+<!-- URL input -->
+<div class="url-row">
+  <input type="text" id="urlInput" placeholder="Paste YouTube URL…" />
+  <button class="btn-dark" onclick="loadVideo()">Load</button>
+</div>
+
+<!-- Player -->
+<div class="player-shell">
+  <div id="player-mount">
+    <div class="placeholder">
+      <div class="placeholder-icon">♫</div>
+      <div class="placeholder-text">Paste a YouTube URL above</div>
+    </div>
+  </div>
+</div>
+
+<!-- Transport -->
+<div class="section">
+  <div class="transport">
+    <button id="playBtn" onclick="togglePlay()">▶</button>
+    <div class="time" id="timeDisplay">0:00 / 0:00</div>
+    <div class="prog-wrap" id="progWrap">
+      <div class="prog-track" id="progTrack">
+        <div class="loop-region" id="loopRegion"></div>
+        <div class="prog-fill"   id="progFill"></div>
+        <div class="handle handle-a" id="handleA"></div>
+        <div class="handle handle-b" id="handleB"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loop A–B -->
+<div class="section">
+  <div class="section-label">Loop A – B</div>
+  <div class="loop-row">
+    <div class="loop-times">
+      <span style="color:var(--col-a)">A</span>
+      <span id="ptA" style="color:var(--col-a)"> —</span>
+      &ensp;
+      <span style="color:var(--col-b)">B</span>
+      <span id="ptB" style="color:var(--col-b)"> —</span>
+    </div>
+    <button id="loopToggle" onclick="toggleLoop()">⟳ Loop</button>
+    <button class="btn-clear" onclick="clearLoop()">Clear</button>
+  </div>
+  <div class="hint">Drag on the timeline to set loop region · drag the handles to adjust</div>
+</div>
+
+<!-- Speed / BPM -->
+<div class="section">
+  <div class="section-label">Speed / BPM</div>
+
+  <div class="speed-top">
+    <div>
+      <div class="speed-big" id="speedVal">1.00<span style="font-size:.9rem;font-weight:400;color:var(--muted)">×</span></div>
+      <div class="speed-small-label">Playback speed</div>
+    </div>
+    <div class="bpm-right">
+      <div class="bpm-num" id="bpmDisplay">—</div>
+      <div class="bpm-small-label">Current BPM</div>
+    </div>
+  </div>
+
+  <div class="slider-wrap">
+    <span class="slider-end">¼×</span>
+    <input type="range" id="speedSlider"
+           min="0.25" max="2.0" step="0.01" value="1.0"
+           oninput="onSpeedSlider(this.value)" />
+    <span class="slider-end">2×</span>
+  </div>
+  <div class="speed-ticks">
+    <span class="speed-tick">.25</span>
+    <span class="speed-tick">.5</span>
+    <span class="speed-tick">.75</span>
+    <span class="speed-tick">1</span>
+    <span class="speed-tick">1.25</span>
+    <span class="speed-tick">1.5</span>
+    <span class="speed-tick">1.75</span>
+    <span class="speed-tick">2</span>
+  </div>
+
+  <div class="bpm-row">
+    <span class="bpm-row-label">Base BPM</span>
+    <input type="number" id="bpmInput" placeholder="120" min="20" max="400"
+           oninput="onBPMInput(this.value)" />
+    <button id="tapBtn" onclick="tap()">Tap Tempo</button>
+    <button class="btn-ghost" onclick="applySpeed(1)">Reset speed</button>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ── YouTube IFrame API ─────────────────────────── */
+(function () {
+  var s = document.createElement('script');
+  s.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(s);
+})();
+
+var player      = null;
+var playerReady = false;
+var pendingId   = null;
+
+var loopA   = null;
+var loopB   = null;
+var looping = false;
+
+var baseBPM      = null;
+var tapTimes     = [];
+var tapTimer     = null;
+var currentSpeed = 1;
+
+var ticker     = null;
+var toastTimer = null;
+
+/* ── YouTube callbacks ──────────────────────────── */
+function onYouTubeIframeAPIReady() {
+  if (pendingId) createPlayer(pendingId);
+}
+
+function createPlayer(videoId) {
+  document.getElementById('player-mount').innerHTML = '<div id="yt"></div>';
+  player = new YT.Player('yt', {
+    videoId: videoId,
+    host: 'https://www.youtube-nocookie.com',
+    playerVars: {
+      playsinline: 1, rel: 0, modestbranding: 1,
+      origin: window.location.origin || window.location.href
+    },
+    events: {
+      onReady:       onReady,
+      onStateChange: onStateChange,
+      onError:       onPlayerError
+    }
+  });
+}
+
+function onReady() {
+  playerReady = true;
+  if (ticker) clearInterval(ticker);
+  ticker = setInterval(tick, 80);
+}
+
+function onStateChange(e) {
+  document.getElementById('playBtn').textContent =
+    e.data === YT.PlayerState.PLAYING ? '⏸' : '▶';
+}
+
+function onPlayerError(e) {
+  var msgs = {
+    2:   'Invalid video ID.',
+    5:   'HTML5 player error — try another browser.',
+    100: 'Video not found or is private.',
+    101: 'This video cannot be embedded. The owner has disabled embedding on third-party sites.',
+    150: 'This video cannot be embedded. The owner has disabled embedding on third-party sites.',
+    153: 'This video cannot be embedded. The owner has disabled embedding on third-party sites.'
+  };
+  var msg = msgs[e.data] || ('Player error ' + e.data + '.');
+  document.getElementById('player-mount').innerHTML =
+    '<div class="placeholder"><div style="font-size:.76rem;color:rgba(255,80,80,.8);' +
+    'text-align:center;max-width:300px;line-height:1.7;padding:0 20px">' + msg +
+    '<br><span style="opacity:.5;font-size:.7rem">This restriction is set by the video owner and cannot be bypassed.</span></div></div>';
+  playerReady = false;
+}
+
+/* ── Load ───────────────────────────────────────── */
+function loadVideo() {
+  var url = document.getElementById('urlInput').value.trim();
+  var id  = extractId(url);
+  if (!id) { toast('Could not parse YouTube URL'); return; }
+  if (typeof YT === 'undefined' || !YT.Player) { pendingId = id; return; }
+  if (player && playerReady) { player.loadVideoById(id); }
+  else { pendingId = id; createPlayer(id); }
+}
+
+function extractId(url) {
+  var patterns = [
+    /[?&]v=([^&#\s]+)/,
+    /youtu\.be\/([^?&#\s]+)/,
+    /youtube\.com\/embed\/([^?&#\s]+)/,
+    /youtube\.com\/shorts\/([^?&#\s]+)/,
+    /^([A-Za-z0-9_-]{11})$/
+  ];
+  for (var i = 0; i < patterns.length; i++) {
+    var m = url.match(patterns[i]);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+/* ── Tick ───────────────────────────────────────── */
+function tick() {
+  if (!playerReady) return;
+  try {
+    var t = player.getCurrentTime();
+    var d = player.getDuration() || 0;
+    document.getElementById('timeDisplay').textContent = fmt(t) + ' / ' + fmt(d);
+    if (d) {
+      document.getElementById('progFill').style.width = (t / d * 100) + '%';
+      repaintLoop(d);
+    }
+    if (looping && loopA !== null && loopB !== null && t >= loopB) {
+      player.seekTo(loopA, true);
+    }
+  } catch (_) {}
+}
+
+function fmt(s) {
+  if (!isFinite(s) || s < 0) return '0:00';
+  var m = Math.floor(s / 60), sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+function repaintLoop(d) {
+  var r  = document.getElementById('loopRegion');
+  var ha = document.getElementById('handleA');
+  var hb = document.getElementById('handleB');
+  if (loopA !== null && loopB !== null && d) {
+    var left  = loopA / d * 100;
+    var width = (loopB - loopA) / d * 100;
+    r.style.left    = left + '%';
+    r.style.width   = width + '%';
+    r.style.display = 'block';
+    ha.style.left = left + '%';
+    hb.style.left = (loopB / d * 100) + '%';
+    ha.style.display = 'block';
+    hb.style.display = 'block';
+  } else {
+    r.style.display = 'none';
+  }
+}
+
+/* ── Transport ──────────────────────────────────── */
+function togglePlay() {
+  if (!playerReady) return;
+  var s = player.getPlayerState();
+  if (s === YT.PlayerState.PLAYING) player.pauseVideo();
+  else player.playVideo();
+}
+
+function skipBy(sec) {
+  if (!playerReady) return;
+  player.seekTo(player.getCurrentTime() + sec, true);
+}
+
+/* ── Interactive timeline ───────────────────────── */
+(function () {
+  var dragState = null;
+  // dragState: { type: 'pending'|'loop'|'handle-a'|'handle-b', startX, anchorRatio }
+
+  function getRatio(clientX) {
+    var rect = document.getElementById('progTrack').getBoundingClientRect();
+    return Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+  }
+
+  function getDur() {
+    try { return (playerReady ? player.getDuration() : 0) || 0; } catch (_) { return 0; }
+  }
+
+  function immediatePaint() {
+    var d = getDur();
+    if (d) repaintLoop(d);
+    document.getElementById('ptA').textContent = loopA !== null ? ' ' + fmt(loopA) : ' —';
+    document.getElementById('ptB').textContent = loopB !== null ? ' ' + fmt(loopB) : ' —';
+  }
+
+  // Handle A drag
+  document.getElementById('handleA').addEventListener('mousedown', function (e) {
+    if (e.button !== 0) return;
+    e.stopPropagation(); e.preventDefault();
+    dragState = { type: 'handle-a' };
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'ew-resize';
+    bind();
+  });
+
+  // Handle B drag
+  document.getElementById('handleB').addEventListener('mousedown', function (e) {
+    if (e.button !== 0) return;
+    e.stopPropagation(); e.preventDefault();
+    dragState = { type: 'handle-b' };
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'ew-resize';
+    bind();
+  });
+
+  // Timeline click / drag
+  document.getElementById('progWrap').addEventListener('mousedown', function (e) {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    var r = getRatio(e.clientX);
+    dragState = { type: 'pending', startX: e.clientX, anchorRatio: r };
+    document.body.style.userSelect = 'none';
+    bind();
+  });
+
+  function onMove(e) {
+    if (!dragState) return;
+    var r = getRatio(e.clientX);
+    var d = getDur();
+    if (!d) return;
+
+    if (dragState.type === 'pending') {
+      if (Math.abs(e.clientX - dragState.startX) < 5) return;
+      dragState.type = 'loop';
+    }
+
+    if (dragState.type === 'loop') {
+      var anchor = dragState.anchorRatio;
+      if (r >= anchor) { loopA = anchor * d; loopB = r * d; }
+      else             { loopA = r * d;      loopB = anchor * d; }
+      immediatePaint();
+    } else if (dragState.type === 'handle-a') {
+      loopA = Math.min(r * d, loopB !== null ? loopB - 0.3 : d);
+      immediatePaint();
+    } else if (dragState.type === 'handle-b') {
+      loopB = Math.max(r * d, loopA !== null ? loopA + 0.3 : 0);
+      immediatePaint();
+    }
+  }
+
+  function onUp(e) {
+    unbind();
+    document.body.style.userSelect = '';
+    document.body.style.cursor     = '';
+    if (!dragState) return;
+
+    if (dragState.type === 'pending') {
+      // click → seek
+      var d = getDur();
+      if (playerReady && d) player.seekTo(getRatio(e.clientX) * d, true);
+    } else if (dragState.type === 'loop') {
+      // auto-enable loop after drag
+      if (loopA !== null && loopB !== null && loopB - loopA > 0.3) {
+        looping = true;
+        var btn = document.getElementById('loopToggle');
+        btn.classList.add('active');
+        btn.textContent = '⟳ Loop ON';
+      }
+    }
+    dragState = null;
+  }
+
+  function bind()   { document.addEventListener('mousemove', onMove); document.addEventListener('mouseup', onUp); }
+  function unbind() { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); }
+})();
+
+/* ── Loop ───────────────────────────────────────── */
+function toggleLoop() {
+  looping = !looping;
+  var btn = document.getElementById('loopToggle');
+  btn.classList.toggle('active', looping);
+  btn.textContent = looping ? '⟳ Loop ON' : '⟳ Loop';
+}
+
+function clearLoop() {
+  loopA = loopB = null; looping = false;
+  var btn = document.getElementById('loopToggle');
+  btn.classList.remove('active');
+  btn.textContent = '⟳ Loop';
+  document.getElementById('loopRegion').style.display = 'none';
+  document.getElementById('handleA').style.display    = 'none';
+  document.getElementById('handleB').style.display    = 'none';
+  document.getElementById('ptA').textContent = ' —';
+  document.getElementById('ptB').textContent = ' —';
+}
+
+/* ── Speed ──────────────────────────────────────── */
+function onSpeedSlider(val) { applySpeed(parseFloat(val)); }
+
+function applySpeed(rate) {
+  rate = Math.max(0.25, Math.min(2.0, Math.round(rate * 100) / 100));
+  currentSpeed = rate;
+  if (playerReady) player.setPlaybackRate(rate);
+  document.getElementById('speedVal').innerHTML =
+    rate.toFixed(2) + '<span style="font-size:.9rem;font-weight:400;color:var(--muted)">×</span>';
+  document.getElementById('speedSlider').value = rate;
+  refreshBPM();
+}
+
+function refreshBPM() {
+  document.getElementById('bpmDisplay').textContent =
+    baseBPM !== null ? (baseBPM * currentSpeed).toFixed(1) : '—';
+}
+
+function onBPMInput(val) {
+  var n = parseFloat(val);
+  baseBPM = (n > 0) ? n : null;
+  tapTimes = [];
+  refreshBPM();
+}
+
+/* ── Tap Tempo ──────────────────────────────────── */
+function tap() {
+  var now = performance.now();
+  if (tapTimes.length && now - tapTimes[tapTimes.length - 1] > 3000) tapTimes = [];
+  tapTimes.push(now);
+  if (tapTimes.length > 8) tapTimes.shift();
+  if (tapTimes.length >= 2) {
+    var sum = 0;
+    for (var i = 1; i < tapTimes.length; i++) sum += tapTimes[i] - tapTimes[i - 1];
+    baseBPM = Math.round(60000 / (sum / (tapTimes.length - 1)));
+    document.getElementById('bpmInput').value = baseBPM;
+    refreshBPM();
+  }
+  var btn = document.getElementById('tapBtn');
+  btn.classList.add('flash');
+  if (tapTimer) clearTimeout(tapTimer);
+  tapTimer = setTimeout(function () { btn.classList.remove('flash'); }, 150);
+}
+
+/* ── Toast ──────────────────────────────────────── */
+function toast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { el.classList.remove('show'); }, 1800);
+}
+
+/* ── Keyboard ───────────────────────────────────── */
+document.addEventListener('keydown', function (e) {
+  if (e.target.tagName === 'INPUT') return;
+  switch (e.key) {
+    case ' ':          e.preventDefault(); togglePlay(); break;
+    case 'l': case 'L': toggleLoop(); break;
+    case 'ArrowLeft':  e.preventDefault(); skipBy(-2); break;
+    case 'ArrowRight': e.preventDefault(); skipBy(2); break;
+    case ',': skipBy(-0.1); break;
+    case '.': skipBy(0.1); break;
+    case 'ArrowUp':    e.preventDefault(); applySpeed(Math.round((currentSpeed + 0.05) * 100) / 100); break;
+    case 'ArrowDown':  e.preventDefault(); applySpeed(Math.round((currentSpeed - 0.05) * 100) / 100); break;
+    case 't': case 'T': tap(); break;
+  }
+});
+
+document.getElementById('urlInput').addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') loadVideo();
+});
+
+// Show banner if served from file://
+if (window.location.protocol === 'file:') {
+  document.getElementById('protocol-warning').style.display = 'block';
+}
+</script>
+</body>
+</html>
