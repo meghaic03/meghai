@@ -58,12 +58,15 @@
     body { margin: 0; padding: 0; }
 
     .layout {
-      display: flex;
-      align-items: flex-start;
-      gap: 32px;
       max-width: 1020px;
       margin: 0 auto;
       padding: 44px 24px 0;
+    }
+
+    .content-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 32px;
     }
 
     .main { flex: 1; min-width: 0; }
@@ -358,13 +361,13 @@
       font-size: .75rem; color: var(--muted);
     }
 
-    #loopToggle {
+    #loopToggle, #countdownToggle {
       background: transparent; color: var(--muted);
       border: 1px solid var(--border);
       font-size: .75rem; padding: 5px 10px;
     }
-    #loopToggle:hover { background: var(--surface); }
-    #loopToggle.active {
+    #loopToggle:hover, #countdownToggle:hover { background: var(--surface); }
+    #loopToggle.active, #countdownToggle.active {
       background: #ebfbee; color: var(--green);
       border-color: #b2f2bb;
     }
@@ -431,12 +434,12 @@
     }
     input[type="number"]:focus { border-color: #bbb; }
 
-    #tapBtn {
+    #tapBtn, #metroTapBtn {
       background: var(--surface); color: var(--text);
       border: 1px solid var(--border);
     }
-    #tapBtn:hover { background: var(--border); }
-    #tapBtn.flash { background: var(--text); color: #fff; border-color: var(--text); }
+    #tapBtn:hover, #metroTapBtn:hover { background: var(--border); }
+    #tapBtn.flash, #metroTapBtn.flash { background: var(--text); color: #fff; border-color: var(--text); }
 
     #detectBtn {
       background: var(--surface); color: var(--text);
@@ -462,14 +465,12 @@
 
     /* ── Mobile ──────────────────────────────────── */
     @media (max-width: 680px) {
-      .layout {
-        flex-direction: column;
-        padding: 20px 16px 0;
-        gap: 0;
-      }
+      .layout { padding: 20px 16px 0; }
 
       header .header-text h1 { font-size: 2.6rem; }
       header img#header-cat  { height: 56px; }
+
+      .content-row { flex-direction: column; gap: 0; }
 
       .sidebar {
         width: 100%;
@@ -538,7 +539,6 @@
 <body>
 
 <div class="layout">
-<div class="main">
 
 <div id="protocol-warning" style="display:none;background:#fff8e1;border:1px solid #ffe082;
   border-radius:8px;padding:12px 16px;margin-bottom:20px;font-size:.8rem;line-height:1.6;color:#5d4037">
@@ -557,10 +557,25 @@
   </div>
 </header>
 
+<div class="content-row">
+<div class="main">
+
 <!-- URL input -->
 <div class="url-row">
   <input type="text" id="urlInput" placeholder="Paste YouTube URL…" />
   <button class="btn-dark" onclick="loadVideo()">Load</button>
+</div>
+
+<!-- Keyboard shortcuts -->
+<div class="section" style="padding:12px 0">
+  <div class="shortcuts-grid">
+    <div class="sc"><kbd>Space</kbd> Play / Pause</div>
+    <div class="sc"><kbd>→</kbd> +5s</div>
+    <div class="sc"><kbd>←</kbd> −5s</div>
+    <div class="sc"><kbd>↑</kbd> Speed +0.05×</div>
+    <div class="sc"><kbd>↓</kbd> Speed −0.05×</div>
+    <div class="sc"><kbd>T</kbd> Tap Tempo</div>
+  </div>
 </div>
 
 <!-- Player -->
@@ -600,6 +615,7 @@
       <span style="color:var(--col-b)">B</span>
       <span id="ptB" style="color:var(--col-b)"> —</span>
     </div>
+    <button id="countdownToggle" onclick="toggleCountdown()">4-beat count-in</button>
     <button class="btn-clear" onclick="resetLoop()">Reset</button>
   </div>
   <div class="hint">Drag on the timeline to set loop region · drag the handles to adjust</div>
@@ -646,22 +662,10 @@
 
 </div>
 
-<!-- Keyboard shortcuts -->
-<div class="section">
-  <div class="section-label">Keyboard Shortcuts</div>
-  <div class="shortcuts-grid">
-    <div class="sc"><kbd>Space</kbd> Play / Pause</div>
-    <div class="sc"><kbd>→</kbd> +5s</div>
-    <div class="sc"><kbd>←</kbd> −5s</div>
-    <div class="sc"><kbd>↑</kbd> Speed +0.05×</div>
-    <div class="sc"><kbd>↓</kbd> Speed −0.05×</div>
-    <div class="sc"><kbd>T</kbd> Tap Tempo</div>
-  </div>
-</div>
 
 </div><!-- /.main -->
 
-<!-- Markers sidebar -->
+<!-- Sidebar -->
 <aside class="sidebar">
   <div class="sidebar-label">Markers</div>
   <button class="marker-add" onclick="addMarker()">+ Add marker at current time</button>
@@ -681,13 +685,24 @@
     <div class="sidebar-label">Metronome</div>
     <button id="metroToggle" onclick="toggleMetro()">Start</button>
   </div>
-  <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">
-    <span id="metroBPMDisplay">120</span> BPM
+  <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+    <input type="number" id="metroBPMInput" value="120" min="20" max="400"
+           style="width:58px;font-size:.8rem;padding:4px 6px;text-align:center;
+                  background:var(--surface);border:1px solid var(--border);
+                  border-radius:6px;color:var(--text);font-family:inherit;outline:none"
+           oninput="onMetroBPMInput(this.value)" />
+    <span style="font-size:.68rem;color:var(--muted)">BPM</span>
+    <button id="metroTapBtn" onclick="metroTap()"
+            style="flex:1;background:var(--surface);border:1px solid var(--border);
+                   color:var(--text);font-size:.72rem;padding:4px 6px;border-radius:6px;
+                   font-family:inherit">Tap</button>
   </div>
   <div class="metro-sig-row" id="metroSigRow"></div>
   <div class="metro-dots" id="metroDots"></div>
-  <div class="hint">Dark dot = beat 1 · syncs to BPM above</div>
+  <div class="hint">Dark dot = beat 1</div>
 </aside>
+
+</div><!-- /.content-row -->
 
 </div><!-- /.layout -->
 
@@ -712,7 +727,11 @@ var loopB   = null;
 var baseBPM      = null;
 var tapTimes     = [];
 var tapTimer     = null;
+var metroTapTimer = null;
 var currentSpeed = 1;
+
+var countdownEnabled = false;
+var countdownActive  = false;
 
 var ticker       = null;
 var toastTimer   = null;
@@ -814,7 +833,14 @@ function tick() {
       repaintLoop(d);
     }
     if (loopA !== null && loopB !== null) {
-      if (t >= loopB || t < loopA) player.seekTo(loopA, true);
+      if (!countdownActive) {
+        if (t >= loopB) {
+          if (countdownEnabled) startCountdown();
+          else player.seekTo(loopA, true);
+        } else if (t < loopA) {
+          player.seekTo(loopA, true);
+        }
+      }
     }
   } catch (_) {}
 }
@@ -1419,7 +1445,45 @@ function escapeHtml(s) {
 
 loadPlaylist();
 
-/* ── Metronome ──────────────────────────────── */
+/* ── Count-in ───────────────────────────────── */
+function toggleCountdown() {
+  countdownEnabled = !countdownEnabled;
+  document.getElementById('countdownToggle')
+    .classList.toggle('active', countdownEnabled);
+}
+
+function startCountdown() {
+  countdownActive = true;
+
+  var wasPlaying = player.getPlayerState() === YT.PlayerState.PLAYING;
+  player.pauseVideo();
+  player.seekTo(loopA, true);
+
+  var ctx      = new (window.AudioContext || window.webkitAudioContext)();
+  var beatSec  = 60 / (120 * currentSpeed);
+  for (var i = 0; i < 4; i++) {
+    scheduleCountClick(ctx, ctx.currentTime + i * beatSec, i === 0);
+  }
+  setTimeout(function () {
+    countdownActive = false;
+    ctx.close();
+    if (playerReady && wasPlaying) player.playVideo();
+  }, 4 * beatSec * 1000 + 60);
+}
+
+function scheduleCountClick(ctx, when, accent) {
+  var osc  = ctx.createOscillator();
+  var gain = ctx.createGain();
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.frequency.value = accent ? 1200 : 900;
+  gain.gain.setValueAtTime(accent ? 0.4 : 0.25, when);
+  gain.gain.exponentialRampToValueAtTime(0.0001, when + 0.04);
+  osc.start(when);
+  osc.stop(when + 0.05);
+}
+
+/* ── Metronome ───────────────────────────────── */
 var metroRunning  = false;
 var metroAudioCtx = null;
 var metroTimerId  = null;
@@ -1464,8 +1528,37 @@ function getMetroBPM() {
 }
 
 function updateMetroBPMDisplay() {
-  var el = document.getElementById('metroBPMDisplay');
-  if (el) el.textContent = getMetroBPM();
+  var el = document.getElementById('metroBPMInput');
+  if (el) el.value = getMetroBPM();
+}
+
+function onMetroBPMInput(val) {
+  var n = parseFloat(val);
+  baseBPM = (n > 0) ? n : null;
+  tapTimes = [];
+  var main = document.getElementById('bpmInput');
+  if (main) main.value = baseBPM || '';
+  document.getElementById('bpmDisplay').textContent =
+    baseBPM !== null ? (baseBPM * currentSpeed).toFixed(1) : '—';
+}
+
+function metroTap() {
+  var now = performance.now();
+  if (tapTimes.length && now - tapTimes[tapTimes.length - 1] > 3000) tapTimes = [];
+  tapTimes.push(now);
+  if (tapTimes.length > 8) tapTimes.shift();
+  if (tapTimes.length >= 2) {
+    var sum = 0;
+    for (var i = 1; i < tapTimes.length; i++) sum += tapTimes[i] - tapTimes[i - 1];
+    baseBPM = Math.round(60000 / (sum / (tapTimes.length - 1)));
+    var main = document.getElementById('bpmInput');
+    if (main) main.value = baseBPM;
+    refreshBPM();
+  }
+  var btn = document.getElementById('metroTapBtn');
+  btn.classList.add('flash');
+  if (metroTapTimer) clearTimeout(metroTapTimer);
+  metroTapTimer = setTimeout(function () { btn.classList.remove('flash'); }, 150);
 }
 
 function toggleMetro() {
