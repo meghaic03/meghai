@@ -609,7 +609,9 @@
     <div class="sc"><kbd>↑</kbd> Speed +0.05×</div>
     <div class="sc"><kbd>↓</kbd> Speed −0.05×</div>
     <div class="sc"><kbd>T</kbd> Tap Tempo</div>
+    <div class="sc"><kbd>M</kbd> Add Marker</div>
   </div>
+  <div class="hint" style="margin-top:8px">Shortcuts only work when the video isn't focused — click anywhere outside the player first.</div>
 </div>
 
 <!-- Player -->
@@ -656,7 +658,12 @@
   </div>
   <div class="metro-sig-row" id="metroSigRow"></div>
   <div class="metro-dots" id="metroDots"></div>
-  <div class="hint">Dark dot = beat 1</div>
+  <div class="hint" style="margin-top:4px">Click dots to toggle accents</div>
+  <div style="display:flex;align-items:center;gap:6px;margin-top:8px">
+    <span style="font-size:.68rem;color:var(--muted);flex-shrink:0">Vol</span>
+    <input type="range" id="metroVolSlider" min="0" max="10" step="0.1" value="3"
+           style="flex:1;height:3px" oninput="metroVolume=parseFloat(this.value)" />
+  </div>
 </aside>
 </div><!-- /.content-row -->
 
@@ -1117,6 +1124,7 @@ document.addEventListener('keydown', function (e) {
     case 'ArrowUp':    e.preventDefault(); applySpeed(Math.round((currentSpeed + 0.05) * 100) / 100); break;
     case 'ArrowDown':  e.preventDefault(); applySpeed(Math.round((currentSpeed - 0.05) * 100) / 100); break;
     case 't': case 'T': tap(); break;
+    case 'm': case 'M': addMarker(); break;
   }
 });
 
@@ -1551,10 +1559,11 @@ function startCountdown() {
   player.pauseVideo();
   player.seekTo(loopA, true);
 
-  var ctx      = new (window.AudioContext || window.webkitAudioContext)();
-  var beatSec  = 60 / (120 * currentSpeed);
+  var ac      = makeAudioCtxWithLimiter();
+  var ctx     = ac.ctx;
+  var beatSec = 60 / (120 * currentSpeed);
   for (var i = 0; i < 4; i++) {
-    scheduleCountClick(ctx, ctx.currentTime + i * beatSec, i === 0);
+    scheduleCountClick(ctx, ctx.currentTime + i * beatSec, i === 0, ac.limiter);
   }
   setTimeout(function () {
     countdownActive = false;
@@ -1563,32 +1572,43 @@ function startCountdown() {
   }, 4 * beatSec * 1000 + 60);
 }
 
-function scheduleCountClick(ctx, when, accent) {
+function scheduleCountClick(ctx, when, accent, limiter) {
   var osc  = ctx.createOscillator();
   var gain = ctx.createGain();
   osc.connect(gain);
-  gain.connect(ctx.destination);
+  gain.connect(limiter || ctx.destination);
   osc.frequency.value = accent ? 1200 : 900;
-  gain.gain.setValueAtTime(accent ? 0.4 : 0.25, when);
+  gain.gain.setValueAtTime(accent ? metroVolume : metroVolume * 0.55, when);
   gain.gain.exponentialRampToValueAtTime(0.0001, when + 0.04);
   osc.start(when);
   osc.stop(when + 0.05);
 }
 
 /* ── Metronome ───────────────────────────────── */
+var metroVolume   = 3.0;
 var metroRunning  = false;
 var metroAudioCtx = null;
 var metroTimerId  = null;
 var metroBeatIdx  = 0;
-var METRO_BEATS   = 4;
+var METRO_BEATS      = 4;
+var metroAccentBeats = [0];
 
 function renderMetroDots() {
   var container = document.getElementById('metroDots');
   container.innerHTML = '';
   for (var i = 0; i < METRO_BEATS; i++) {
     var dot = document.createElement('span');
-    dot.className = 'metro-dot';
+    dot.className = 'metro-dot' + (metroAccentBeats.indexOf(i) !== -1 ? ' accent' : '');
     dot.id = 'md' + i;
+    dot.title = 'Toggle accent';
+    (function(idx) {
+      dot.onclick = function() {
+        var pos = metroAccentBeats.indexOf(idx);
+        if (pos !== -1) metroAccentBeats.splice(pos, 1);
+        else metroAccentBeats.push(idx);
+        renderMetroDots();
+      };
+    })(i);
     container.appendChild(dot);
   }
 }
@@ -1606,8 +1626,9 @@ function renderMetroSig() {
 }
 
 function setMetroBeats(n) {
-  METRO_BEATS  = n;
-  metroBeatIdx = 0;
+  METRO_BEATS     = n;
+  metroBeatIdx    = 0;
+  metroAccentBeats = [0];
   renderMetroDots();
   renderMetroSig();
 }
@@ -1658,10 +1679,26 @@ function toggleMetro() {
   else startMetro();
 }
 
+var metroLimiter = null;
+
+function makeAudioCtxWithLimiter() {
+  var ctx  = new (window.AudioContext || window.webkitAudioContext)();
+  var comp = ctx.createDynamicsCompressor();
+  comp.threshold.value = -3;
+  comp.knee.value      = 0;
+  comp.ratio.value     = 20;
+  comp.attack.value    = 0.001;
+  comp.release.value   = 0.05;
+  comp.connect(ctx.destination);
+  return { ctx: ctx, limiter: comp };
+}
+
 function startMetro() {
   metroRunning  = true;
   metroBeatIdx  = 0;
-  metroAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  var ac        = makeAudioCtxWithLimiter();
+  metroAudioCtx = ac.ctx;
+  metroLimiter  = ac.limiter;
   document.getElementById('metroToggle').textContent = 'Stop';
   document.getElementById('metroToggle').classList.add('active');
   metroCycle();
@@ -1671,7 +1708,7 @@ function metroCycle() {
   if (!metroRunning) return;
   var bpm = getMetroBPM();
   if (!bpm) { stopMetro(); toast('BPM cleared — metronome stopped'); return; }
-  var accent = metroBeatIdx === 0;
+  var accent = metroAccentBeats.indexOf(metroBeatIdx) !== -1;
   playMetroTick(accent);
   lightMetroDot(metroBeatIdx, accent);
   metroBeatIdx = (metroBeatIdx + 1) % METRO_BEATS;
@@ -1684,9 +1721,9 @@ function playMetroTick(accent) {
   var osc  = metroAudioCtx.createOscillator();
   var gain = metroAudioCtx.createGain();
   osc.connect(gain);
-  gain.connect(metroAudioCtx.destination);
+  gain.connect(metroLimiter || metroAudioCtx.destination);
   osc.frequency.value = accent ? 1200 : 900;
-  gain.gain.setValueAtTime(accent ? 0.35 : 0.2, t);
+  gain.gain.setValueAtTime(accent ? metroVolume : metroVolume * 0.55, t);
   gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.04);
   osc.start(t);
   osc.stop(t + 0.05);
