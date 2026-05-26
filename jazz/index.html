@@ -489,6 +489,39 @@
       .shortcuts-grid { gap: 6px 12px; }
     }
 
+    /* ── Metronome ───────────────────────────────── */
+    .metro-sig-row { display: flex; gap: 4px; margin-bottom: 8px; }
+    .metro-sig {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--muted); font-size: .7rem; padding: 2px 0;
+      border-radius: 4px; width: 24px; text-align: center;
+    }
+    .metro-sig:hover { background: var(--border); color: var(--text); }
+    .metro-sig.active { background: var(--text); color: #fff; border-color: var(--text); }
+
+    .metro-dots {
+      display: flex; gap: 8px; margin: 4px 0 5px; flex-wrap: wrap;
+    }
+    .metro-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%; background: var(--border);
+      transition: background .04s;
+      flex-shrink: 0;
+    }
+    .metro-dot.on     { background: var(--col-a); }
+    .metro-dot.accent { background: var(--text); }
+
+    #metroToggle {
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border);
+      font-size: .72rem; padding: 3px 9px;
+    }
+    #metroToggle:hover { background: var(--surface); }
+    #metroToggle.active {
+      background: #ebfbee; color: var(--green);
+      border-color: #b2f2bb;
+    }
+
     /* ── Toast ────────────────────────────────────── */
     #toast {
       position: fixed; bottom: 24px; left: 50%;
@@ -590,19 +623,15 @@
   <div class="slider-wrap">
     <span class="slider-end">¼×</span>
     <input type="range" id="speedSlider"
-           min="0.25" max="2.0" step="0.05" value="1.0"
+           min="0.25" max="1.0" step="0.05" value="1.0"
            oninput="onSpeedSlider(this.value)" />
-    <span class="slider-end">2×</span>
+    <span class="slider-end">1×</span>
   </div>
   <div class="speed-ticks">
     <span class="speed-tick">.25</span>
     <span class="speed-tick">.5</span>
     <span class="speed-tick">.75</span>
     <span class="speed-tick">1</span>
-    <span class="speed-tick">1.25</span>
-    <span class="speed-tick">1.5</span>
-    <span class="speed-tick">1.75</span>
-    <span class="speed-tick">2</span>
   </div>
 
   <div class="bpm-row">
@@ -645,6 +674,19 @@
     <button class="playlist-add" onclick="saveToPlaylist()">+ Save current</button>
   </div>
   <div class="playlist-list" id="playlistEl"></div>
+
+  <hr class="sidebar-divider" />
+
+  <div class="sidebar-row">
+    <div class="sidebar-label">Metronome</div>
+    <button id="metroToggle" onclick="toggleMetro()">Start</button>
+  </div>
+  <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">
+    <span id="metroBPMDisplay">120</span> BPM
+  </div>
+  <div class="metro-sig-row" id="metroSigRow"></div>
+  <div class="metro-dots" id="metroDots"></div>
+  <div class="hint">Dark dot = beat 1 · syncs to BPM above</div>
 </aside>
 
 </div><!-- /.layout -->
@@ -921,7 +963,7 @@ function resetLoop() {
 function onSpeedSlider(val) { applySpeed(parseFloat(val)); }
 
 function applySpeed(rate) {
-  rate = Math.max(0.25, Math.min(2.0, Math.round(rate * 100) / 100));
+  rate = Math.max(0.25, Math.min(1.0, Math.round(rate * 100) / 100));
   currentSpeed = rate;
   if (playerReady) player.setPlaybackRate(rate);
   document.getElementById('speedVal').innerHTML =
@@ -933,6 +975,7 @@ function applySpeed(rate) {
 function refreshBPM() {
   document.getElementById('bpmDisplay').textContent =
     baseBPM !== null ? (baseBPM * currentSpeed).toFixed(1) : '—';
+  updateMetroBPMDisplay();
 }
 
 function onBPMInput(val) {
@@ -1375,6 +1418,113 @@ function escapeHtml(s) {
 }
 
 loadPlaylist();
+
+/* ── Metronome ──────────────────────────────── */
+var metroRunning  = false;
+var metroAudioCtx = null;
+var metroTimerId  = null;
+var metroBeatIdx  = 0;
+var METRO_BEATS   = 4;
+
+function renderMetroDots() {
+  var container = document.getElementById('metroDots');
+  container.innerHTML = '';
+  for (var i = 0; i < METRO_BEATS; i++) {
+    var dot = document.createElement('span');
+    dot.className = 'metro-dot';
+    dot.id = 'md' + i;
+    container.appendChild(dot);
+  }
+}
+
+function renderMetroSig() {
+  var row = document.getElementById('metroSigRow');
+  row.innerHTML = '';
+  [2, 3, 4, 5, 6, 7].forEach(function(n) {
+    var btn = document.createElement('button');
+    btn.className = 'metro-sig' + (n === METRO_BEATS ? ' active' : '');
+    btn.textContent = n;
+    btn.onclick = function() { setMetroBeats(n); };
+    row.appendChild(btn);
+  });
+}
+
+function setMetroBeats(n) {
+  METRO_BEATS  = n;
+  metroBeatIdx = 0;
+  renderMetroDots();
+  renderMetroSig();
+}
+
+renderMetroDots();
+renderMetroSig();
+
+function getMetroBPM() {
+  return baseBPM ? Math.round(baseBPM * currentSpeed) : 120;
+}
+
+function updateMetroBPMDisplay() {
+  var el = document.getElementById('metroBPMDisplay');
+  if (el) el.textContent = getMetroBPM();
+}
+
+function toggleMetro() {
+  if (metroRunning) stopMetro();
+  else startMetro();
+}
+
+function startMetro() {
+  metroRunning  = true;
+  metroBeatIdx  = 0;
+  metroAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  document.getElementById('metroToggle').textContent = 'Stop';
+  document.getElementById('metroToggle').classList.add('active');
+  metroCycle();
+}
+
+function metroCycle() {
+  if (!metroRunning) return;
+  var bpm = getMetroBPM();
+  if (!bpm) { stopMetro(); toast('BPM cleared — metronome stopped'); return; }
+  var accent = metroBeatIdx === 0;
+  playMetroTick(accent);
+  lightMetroDot(metroBeatIdx, accent);
+  metroBeatIdx = (metroBeatIdx + 1) % METRO_BEATS;
+  metroTimerId = setTimeout(metroCycle, 60000 / bpm);
+}
+
+function playMetroTick(accent) {
+  if (!metroAudioCtx) return;
+  var t    = metroAudioCtx.currentTime;
+  var osc  = metroAudioCtx.createOscillator();
+  var gain = metroAudioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(metroAudioCtx.destination);
+  osc.frequency.value = accent ? 1200 : 900;
+  gain.gain.setValueAtTime(accent ? 0.35 : 0.2, t);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.04);
+  osc.start(t);
+  osc.stop(t + 0.05);
+}
+
+function lightMetroDot(idx, accent) {
+  document.getElementById('metroDots').querySelectorAll('.metro-dot').forEach(function(d) {
+    d.classList.remove('on', 'accent');
+  });
+  var active = document.getElementById('md' + idx);
+  if (active) active.classList.add(accent ? 'accent' : 'on');
+}
+
+function stopMetro() {
+  metroRunning = false;
+  if (metroTimerId) { clearTimeout(metroTimerId); metroTimerId = null; }
+  if (metroAudioCtx) { metroAudioCtx.close(); metroAudioCtx = null; }
+  document.getElementById('metroToggle').textContent = 'Start';
+  document.getElementById('metroToggle').classList.remove('active');
+  document.getElementById('metroDots').querySelectorAll('.metro-dot').forEach(function(d) {
+    d.classList.remove('on', 'accent');
+  });
+}
 </script>
 </body>
 </html>
