@@ -301,14 +301,15 @@
 
     /* ── Progress bar ─────────────────────────────── */
     .prog-wrap {
-      flex: 1; height: 32px;
+      width: 100%; height: 40px;
       display: flex; align-items: center;
       cursor: pointer; user-select: none;
+      margin-bottom: 8px;
     }
 
     .prog-track {
-      width: 100%; height: 3px;
-      background: var(--border); border-radius: 2px;
+      width: 100%; height: 5px;
+      background: var(--border); border-radius: 3px;
       position: relative; overflow: visible;
     }
 
@@ -356,10 +357,20 @@
     .loop-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
     .loop-times {
-      flex: 1;
+      flex: 1; display: flex; align-items: center; gap: 4px;
       font-family: 'SF Mono', 'Fira Code', monospace;
       font-size: .75rem; color: var(--muted);
     }
+
+    .loop-time-input {
+      width: 52px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 5px; padding: 3px 5px;
+      font-size: .72rem; font-family: 'SF Mono', 'Fira Code', monospace;
+      text-align: center; outline: none;
+    }
+    .loop-time-input:focus { border-color: #b8b0a6; background: #f8f5f2; }
+    .loop-time-input::placeholder { color: var(--muted); }
 
     #loopToggle, #countdownToggle {
       background: transparent; color: var(--muted);
@@ -402,10 +413,13 @@
     .slider-wrap { margin-bottom: 5px; display: flex; align-items: center; gap: 9px; }
     .slider-end  { font-size: .68rem; color: var(--muted); }
 
+    .slider-inner { flex: 1; position: relative; }
+
     input[type="range"] {
-      -webkit-appearance: none; flex: 1;
+      -webkit-appearance: none; width: 100%;
       height: 3px; background: var(--border);
       border-radius: 2px; outline: none; cursor: pointer;
+      display: block;
     }
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
@@ -415,11 +429,31 @@
       box-shadow: 0 0 0 1.5px var(--border);
     }
 
-    .speed-ticks {
-      display: flex; justify-content: space-between;
-      padding: 0 7px; margin-bottom: 16px;
+    .speed-dots {
+      position: relative; height: 6px; margin-top: 3px;
     }
-    .speed-tick { font-size: .6rem; color: var(--muted); }
+    .speed-dot-mark {
+      position: absolute; top: 50%;
+      transform: translate(-50%, -50%);
+      width: 1.5px; border-radius: 1px;
+      background: var(--border);
+    }
+    .speed-dot-mark.minor { height: 3px; }
+    .speed-dot-mark.major { height: 5px; background: var(--muted); }
+
+    .speed-ticks {
+      position: relative; height: 18px; margin-bottom: 16px;
+    }
+    .speed-tick {
+      position: absolute; top: 0;
+      transform: translateX(-50%);
+      font-size: .6rem; color: var(--muted);
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+    }
+    .speed-tick::before {
+      content: ''; width: 1px; height: 5px;
+      background: var(--border); display: block;
+    }
 
     /* BPM inputs */
     .bpm-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -588,96 +622,19 @@
   </div>
 </div>
 
-<!-- Transport -->
-<div class="section">
-  <div class="transport">
-    <button id="playBtn" onclick="togglePlay()">▶</button>
-    <div class="time" id="timeDisplay">0:00 / 0:00</div>
-    <div class="prog-wrap" id="progWrap">
-      <div class="prog-track" id="progTrack">
-        <div class="loop-region" id="loopRegion"></div>
-        <div class="prog-fill"   id="progFill"></div>
-        <div class="handle handle-a" id="handleA"></div>
-        <div class="handle handle-b" id="handleB"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Loop A–B -->
-<div class="section">
-  <div class="section-label">Loop A – B</div>
-  <div class="loop-row">
-    <div class="loop-times">
-      <span style="color:var(--col-a)">A</span>
-      <span id="ptA" style="color:var(--col-a)"> —</span>
-      &ensp;
-      <span style="color:var(--col-b)">B</span>
-      <span id="ptB" style="color:var(--col-b)"> —</span>
-    </div>
-    <button id="countdownToggle" onclick="toggleCountdown()">4-beat count-in</button>
-    <button class="btn-clear" onclick="resetLoop()">Reset</button>
-  </div>
-  <div class="hint">Drag on the timeline to set loop region · drag the handles to adjust</div>
-</div>
-
-<!-- Speed / BPM -->
-<div class="section">
-  <div class="section-label">Speed / BPM</div>
-
-  <div class="speed-top">
-    <div>
-      <div class="speed-big" id="speedVal">1.00<span style="font-size:.9rem;font-weight:400;color:var(--muted)">×</span></div>
-      <div class="speed-small-label">Playback speed</div>
-    </div>
-    <div class="bpm-right">
-      <div class="bpm-num" id="bpmDisplay">—</div>
-      <div class="bpm-small-label">Current BPM</div>
-    </div>
-  </div>
-
-  <div class="slider-wrap">
-    <span class="slider-end">¼×</span>
-    <input type="range" id="speedSlider"
-           min="0.25" max="1.0" step="0.05" value="1.0"
-           oninput="onSpeedSlider(this.value)" />
-    <span class="slider-end">1×</span>
-  </div>
-  <div class="speed-ticks">
-    <span class="speed-tick">.25</span>
-    <span class="speed-tick">.5</span>
-    <span class="speed-tick">.75</span>
-    <span class="speed-tick">1</span>
-  </div>
-
-  <div class="bpm-row">
-    <span class="bpm-row-label">Base BPM</span>
-    <input type="number" id="bpmInput" placeholder="120" min="20" max="400"
-           oninput="onBPMInput(this.value)" />
-    <button id="tapBtn" onclick="tap()">Tap Tempo</button>
-    <button id="detectBtn" onclick="detectBPM()">Detect BPM</button>
-    <button class="btn-ghost" onclick="applySpeed(1)">Reset speed</button>
-  </div>
-  <div class="hint" id="detectHint" style="display:none">Play the music through speakers — the mic will listen for the beat</div>
-
-</div>
-
-
 </div><!-- /.main -->
-
-<!-- Sidebar -->
 <aside class="sidebar">
-  <div class="sidebar-label">Markers</div>
-  <button class="marker-add" onclick="addMarker()">+ Add marker at current time</button>
-  <div class="marker-list" id="markerList"></div>
-
-  <hr class="sidebar-divider" />
-
   <div class="sidebar-row">
     <div class="sidebar-label">Playlist</div>
     <button class="playlist-add" onclick="saveToPlaylist()">+ Save current</button>
   </div>
   <div class="playlist-list" id="playlistEl"></div>
+
+  <hr class="sidebar-divider" />
+
+  <div class="sidebar-label">Markers</div>
+  <button class="marker-add" onclick="addMarker()">+ Add marker at current time</button>
+  <div class="marker-list" id="markerList"></div>
 
   <hr class="sidebar-divider" />
 
@@ -701,14 +658,85 @@
   <div class="metro-dots" id="metroDots"></div>
   <div class="hint">Dark dot = beat 1</div>
 </aside>
-
 </div><!-- /.content-row -->
+
+<!-- Transport -->
+<div class="section">
+  <div class="prog-wrap" id="progWrap">
+    <div class="prog-track" id="progTrack">
+      <div class="loop-region" id="loopRegion"></div>
+      <div class="prog-fill"   id="progFill"></div>
+      <div class="handle handle-a" id="handleA"></div>
+      <div class="handle handle-b" id="handleB"></div>
+    </div>
+  </div>
+  <div class="transport">
+    <button id="playBtn" onclick="togglePlay()">▶</button>
+    <div class="time" id="timeDisplay">0:00 / 0:00</div>
+  </div>
+</div>
+
+<!-- Loop A–B -->
+<div class="section">
+  <div class="section-label">Loop A – B</div>
+  <div class="loop-row">
+    <div class="loop-times">
+      <span style="color:var(--col-a);font-size:.72rem">A</span>
+      <input id="ptA" class="loop-time-input" placeholder="—"
+             style="color:var(--col-a)" onchange="setLoopPoint('a', this.value)" />
+      <span style="color:var(--col-b);font-size:.72rem;margin-left:10px">B</span>
+      <input id="ptB" class="loop-time-input" placeholder="—"
+             style="color:var(--col-b)" onchange="setLoopPoint('b', this.value)" />
+    </div>
+    <button id="countdownToggle" onclick="toggleCountdown()">4-beat count-in</button>
+    <button class="btn-clear" onclick="resetLoop()">Reset</button>
+  </div>
+  <div class="hint">Drag timeline or type a time (m:ss) to set loop · drag handles to adjust</div>
+</div>
+
+<!-- Speed / BPM -->
+<div class="section">
+  <div class="section-label">Speed / BPM</div>
+
+  <div class="speed-top">
+    <div>
+      <div class="speed-big" id="speedVal">1.00<span style="font-size:.9rem;font-weight:400;color:var(--muted)">×</span></div>
+      <div class="speed-small-label">Playback speed</div>
+    </div>
+    <div class="bpm-right">
+      <div class="bpm-num" id="bpmDisplay">—</div>
+      <div class="bpm-small-label">Current BPM</div>
+    </div>
+  </div>
+
+  <div class="slider-wrap">
+    <span class="slider-end">¼×</span>
+    <div class="slider-inner">
+      <input type="range" id="speedSlider"
+             min="0.25" max="2.0" step="0.05" value="1.0"
+             oninput="onSpeedSlider(this.value)" />
+      <div class="speed-dots" id="speedDots"></div>
+      <div class="speed-ticks" id="speedTicks"></div>
+    </div>
+    <span class="slider-end">2×</span>
+  </div>
+
+  <div class="bpm-row">
+    <span class="bpm-row-label">Base BPM</span>
+    <input type="number" id="bpmInput" placeholder="120" min="20" max="400"
+           oninput="onBPMInput(this.value)" />
+    <button id="tapBtn" onclick="tap()">Tap Tempo</button>
+    <button id="detectBtn" onclick="detectBPM()">Detect BPM</button>
+    <button class="btn-ghost" onclick="applySpeed(1)">Reset speed</button>
+  </div>
+  <div class="hint" id="detectHint" style="display:none">Play the music through speakers — the mic will listen for the beat</div>
+
+</div>
 
 </div><!-- /.layout -->
 
 <div id="toast"></div>
 <div id="cat-border"></div>
-
 <script>
 /* ── YouTube IFrame API ─────────────────────────── */
 (function () {
@@ -827,8 +855,8 @@ function tick() {
       if (d !== lastDuration && d > 0) {
         lastDuration = d;
         loopA = 0; loopB = d;
-        document.getElementById('ptA').textContent = ' ' + fmt(0);
-        document.getElementById('ptB').textContent = ' ' + fmt(d);
+        document.getElementById('ptA').value = fmt(0);
+        document.getElementById('ptB').value = fmt(d);
       }
       repaintLoop(d);
     }
@@ -900,8 +928,8 @@ function skipBy(sec) {
   function immediatePaint() {
     var d = getDur();
     if (d) repaintLoop(d);
-    document.getElementById('ptA').textContent = loopA !== null ? ' ' + fmt(loopA) : ' —';
-    document.getElementById('ptB').textContent = loopB !== null ? ' ' + fmt(loopB) : ' —';
+    document.getElementById('ptA').value = loopA !== null ? fmt(loopA) : '';
+    document.getElementById('ptB').value = loopB !== null ? fmt(loopB) : '';
   }
 
   // Handle A drag
@@ -981,15 +1009,49 @@ function skipBy(sec) {
 function resetLoop() {
   var d = (playerReady ? player.getDuration() : 0) || 0;
   loopA = 0; loopB = d || null;
-  document.getElementById('ptA').textContent = d ? ' ' + fmt(0) : ' —';
-  document.getElementById('ptB').textContent = d ? ' ' + fmt(d) : ' —';
+  document.getElementById('ptA').value = d ? fmt(0) : '';
+  document.getElementById('ptB').value = d ? fmt(d) : '';
+}
+
+function parseTime(str) {
+  str = str.trim();
+  // accepts: ss, m:ss, mm:ss, h:mm:ss
+  var parts = str.split(':').map(Number);
+  if (parts.some(isNaN)) return null;
+  if (parts.length === 1) return parts[0];
+  if (parts.length === 2) return parts[0] * 60 + parts[1];
+  return parts[0] * 3600 + parts[1] * 60 + parts[2];
+}
+
+function setLoopPoint(ab, val) {
+  var t = parseTime(val);
+  var d = (playerReady ? player.getDuration() : 0) || 0;
+  if (t === null || t < 0 || (d && t > d)) {
+    // restore displayed value on bad input
+    document.getElementById(ab === 'a' ? 'ptA' : 'ptB').value =
+      ab === 'a' ? (loopA !== null ? fmt(loopA) : '') : (loopB !== null ? fmt(loopB) : '');
+    return;
+  }
+  if (ab === 'a') {
+    loopA = t;
+    if (loopB !== null && loopA >= loopB) loopB = Math.min(loopA + 1, d || loopA + 1);
+    document.getElementById('ptA').value = fmt(loopA);
+    document.getElementById('ptB').value = loopB !== null ? fmt(loopB) : '';
+    if (playerReady) player.seekTo(loopA, true);
+  } else {
+    loopB = t;
+    if (loopA !== null && loopB <= loopA) loopA = Math.max(loopB - 1, 0);
+    document.getElementById('ptA').value = loopA !== null ? fmt(loopA) : '';
+    document.getElementById('ptB').value = fmt(loopB);
+  }
+  if (d) repaintLoop(d);
 }
 
 /* ── Speed ──────────────────────────────────────── */
 function onSpeedSlider(val) { applySpeed(parseFloat(val)); }
 
 function applySpeed(rate) {
-  rate = Math.max(0.25, Math.min(1.0, Math.round(rate * 100) / 100));
+  rate = Math.max(0.25, Math.min(2.0, Math.round(rate * 100) / 100));
   currentSpeed = rate;
   if (playerReady) player.setPlaybackRate(rate);
   document.getElementById('speedVal').innerHTML =
@@ -1444,6 +1506,36 @@ function escapeHtml(s) {
 }
 
 loadPlaylist();
+
+(function () {
+  var MIN = 0.25, MAX = 2.0, THUMB = 14;
+  // position formula: left = pct*100% + (thumbRadius - pct*thumbWidth)px
+  // = calc(Xpct% + Ypx)  where Y = 7 - pct*14
+  function pos(v) {
+    var pct = (v - MIN) / (MAX - MIN);
+    return 'calc(' + (pct * 100).toFixed(4) + '% + ' + (7 - pct * THUMB).toFixed(4) + 'px)';
+  }
+
+  // Dots — every 0.05
+  var dots = document.getElementById('speedDots');
+  for (var v = MIN; v <= MAX + 0.001; v = Math.round((v + 0.05) * 100) / 100) {
+    var d = document.createElement('div');
+    var isMajor = Math.round(v * 100) % 25 === 0;
+    d.className = 'speed-dot-mark ' + (isMajor ? 'major' : 'minor');
+    d.style.left = pos(v);
+    dots.appendChild(d);
+  }
+
+  // Ticks — every 0.25
+  var ticks = document.getElementById('speedTicks');
+  [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2].forEach(function (v) {
+    var span = document.createElement('span');
+    span.className = 'speed-tick';
+    span.textContent = String(v).replace(/^0/, '');
+    span.style.left = pos(v);
+    ticks.appendChild(span);
+  });
+})();
 
 /* ── Count-in ───────────────────────────────── */
 function toggleCountdown() {
