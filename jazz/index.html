@@ -698,7 +698,7 @@
     <button id="countdownToggle" onclick="toggleCountdown()">4-beat count-in</button>
     <button class="btn-clear" onclick="resetLoop()">Reset</button>
   </div>
-  <div class="hint">Drag timeline or type a time (m:ss) to set loop · drag handles to adjust</div>
+  <div class="hint">Drag timeline or type a time (m:ss) to set loop</div>
 </div>
 
 <!-- Speed / BPM -->
@@ -767,6 +767,7 @@ var currentSpeed = 1;
 
 var countdownEnabled = false;
 var countdownActive  = false;
+var countdownAC      = null; // AudioContext created on user gesture
 
 var ticker       = null;
 var toastTimer   = null;
@@ -1227,7 +1228,7 @@ function addMarker() {
   renderMarkers();
   // Focus the new marker's label input
   var input = document.querySelector('[data-marker-id="' + m.id + '"] .marker-label');
-  if (input) { input.focus(); input.select(); }
+  if (input) { setTimeout(function() { input.focus(); input.select(); }, 0); }
 }
 
 function deleteMarker(id) {
@@ -1550,6 +1551,15 @@ function toggleCountdown() {
   countdownEnabled = !countdownEnabled;
   document.getElementById('countdownToggle')
     .classList.toggle('active', countdownEnabled);
+  if (countdownEnabled) {
+    // Create AudioContext NOW while we have a user gesture
+    if (!countdownAC || countdownAC.ctx.state === 'closed') {
+      countdownAC = makeAudioCtxWithLimiter();
+    }
+    countdownAC.ctx.resume();
+  } else {
+    if (countdownAC) { countdownAC.ctx.close(); countdownAC = null; }
+  }
 }
 
 function startCountdown() {
@@ -1559,15 +1569,18 @@ function startCountdown() {
   player.pauseVideo();
   player.seekTo(loopA, true);
 
-  var ac      = makeAudioCtxWithLimiter();
-  var ctx     = ac.ctx;
-  var beatSec = 60 / (120 * currentSpeed);
-  for (var i = 0; i < 4; i++) {
-    scheduleCountClick(ctx, ctx.currentTime + i * beatSec, i === 0, ac.limiter);
+  var ac      = countdownAC;
+  var ctx     = ac ? ac.ctx : null;
+  var beatSec = 60 / getMetroBPM();
+
+  if (ctx && ctx.state !== 'closed') {
+    for (var i = 0; i < 4; i++) {
+      scheduleCountClick(ctx, ctx.currentTime + i * beatSec, i === 0, ac.limiter);
+    }
   }
+
   setTimeout(function () {
     countdownActive = false;
-    ctx.close();
     if (playerReady && wasPlaying) player.playVideo();
   }, 4 * beatSec * 1000 + 60);
 }
