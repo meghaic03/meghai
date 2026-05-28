@@ -1536,8 +1536,10 @@ function applySpeed(rate) {
 }
 
 function refreshBPM() {
+  var currentBPM = baseBPM !== null ? baseBPM * currentSpeed : null;
   document.getElementById('bpmDisplay').textContent =
-    baseBPM !== null ? (baseBPM * currentSpeed).toFixed(1) : '—';
+    currentBPM !== null ? currentBPM.toFixed(1) : '—';
+  if (currentBPM !== null) metroBPM = currentBPM;
   updateMetroBPMDisplay();
 }
 
