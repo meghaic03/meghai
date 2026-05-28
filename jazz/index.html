@@ -725,7 +725,7 @@
     <div class="sc"><kbd>T</kbd> Tap Tempo</div>
     <div class="sc"><kbd>M</kbd> Add Marker</div>
   </div>
-  <div class="hint" style="margin-top:8px">Shortcuts only work when the video isn't focused — click anywhere outside the player first.</div>
+  <div class="hint" id="videoFocusHint" style="margin-top:8px">Shortcuts only work when the video isn't focused — click anywhere outside the player first.</div>
 </div>
 
 <!-- Video player -->
@@ -933,6 +933,7 @@ function applyMode(mode) {
   document.getElementById('tabVideo').classList.toggle('active', mode === 'video');
   document.getElementById('tabWave').classList.toggle('active',  mode === 'waveform');
   document.getElementById('urlRow').style.display = mode === 'video' ? '' : 'none';
+  document.getElementById('videoFocusHint').style.display = mode === 'video' ? '' : 'none';
   localStorage.setItem('shed_tab', mode);
 }
 
