@@ -33,7 +33,6 @@
 
     html, body {
       background-color: var(--bg);
-      /* Subtle horizontal wood-grain lines */
       background-image:
         repeating-linear-gradient(
           180deg,
@@ -150,7 +149,7 @@
     }
     .sidebar-row .sidebar-label { margin: 0; }
 
-    /* ── Playlist ─────────────────────────────────── */
+    /* ── Playlist / History ───────────────────────── */
     .playlist-add {
       background: none; border: none;
       color: var(--col-a); font-size: .75rem;
@@ -175,6 +174,12 @@
       width: 48px; height: 27px;
       object-fit: cover; border-radius: 3px;
       flex-shrink: 0; background: var(--border);
+    }
+
+    .playlist-thumb-icon {
+      width: 48px; height: 27px; border-radius: 3px; flex-shrink: 0;
+      background: var(--border); display: flex; align-items: center;
+      justify-content: center; font-size: .95rem; color: var(--muted);
     }
 
     .playlist-info { flex: 1; min-width: 0; }
@@ -568,6 +573,109 @@
       white-space: nowrap; z-index: 999;
     }
     #toast.show { opacity: 1; }
+
+    /* ── View toggle tabs ────────────────────────── */
+    .view-tabs {
+      display: flex; margin-bottom: 10px;
+      border: 1px solid var(--border); border-radius: 7px;
+      overflow: hidden; align-self: flex-start; width: fit-content;
+    }
+    .view-tab {
+      background: var(--surface); color: var(--muted);
+      border: none; border-radius: 0;
+      padding: 5px 14px; font-size: .7rem;
+      font-family: inherit; cursor: pointer;
+      transition: background .1s, color .1s; letter-spacing: .03em;
+    }
+    .view-tab + .view-tab { border-left: 1px solid var(--border); }
+    .view-tab.active { background: var(--text); color: #fff; }
+    .view-tab:hover:not(.active) { background: var(--border); color: var(--text); }
+
+    /* ── Waveform shell ──────────────────────────── */
+    .waveform-shell {
+      width: 100%; border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      overflow: hidden; margin-bottom: 0;
+      position: relative;
+    }
+    #waveform-el { min-height: 166px; padding: 8px 0; display: block; position: relative; }
+    #wave-overlay {
+      position: absolute; inset: 0; z-index: 5;
+      background: var(--surface); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .waveform-zoom-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 12px; border-top: 1px solid var(--border);
+    }
+
+    /* ── Waveform loading state ───────────────────── */
+    .wave-loading-wrap {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      min-height: 166px; gap: 10px; padding: 0 28px;
+      width: 100%; max-width: 360px;
+    }
+    .wave-loading-label {
+      font-size: .74rem; color: var(--muted); text-align: center;
+    }
+    .wave-prog-track {
+      width: 100%; height: 4px; background: var(--border);
+      border-radius: 2px; overflow: hidden;
+    }
+    .wave-prog-fill {
+      height: 100%; background: var(--text); border-radius: 2px;
+      width: 0%; transition: width .2s linear;
+    }
+    .wave-prog-pct {
+      font-size: .68rem; color: var(--muted); letter-spacing: .04em;
+    }
+
+    /* ── Dropzone ─────────────────────────────────── */
+    .dropzone {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      width: 100%; align-self: stretch; gap: 8px; padding: 28px 24px;
+      cursor: pointer; text-align: center;
+      border-radius: 8px;
+      transition: background .15s;
+    }
+    .dropzone:hover, .dropzone.drag-over { background: rgba(120,100,80,.05); }
+    .dropzone-icon  { font-size: 1.9rem; color: var(--muted); opacity: .4; line-height: 1; }
+    .dropzone-title { font-size: .8rem; color: var(--text); font-weight: 500; margin-top: 2px; }
+    .dropzone-hint  { font-size: .7rem; color: var(--muted); line-height: 1.65; }
+
+    /* ── Waveform handle / playhead ──────────────── */
+    .wavesurfer-handle { overflow: visible !important; }
+    .wavesurfer-handle::after {
+      content: ''; position: absolute;
+      left: 50%; top: 2px;
+      transform: translateX(-50%);
+      width: 10px; height: 10px; border-radius: 50%;
+      box-shadow: 0 0 0 2px rgba(255,255,255,.55);
+    }
+    .wavesurfer-handle-start::after { background: var(--col-a); }
+    .wavesurfer-handle-end::after   { background: var(--col-b); }
+
+    #ws-playhead-tri {
+      position: absolute; top: 0; left: 0;
+      pointer-events: none; z-index: 20; display: none;
+    }
+    #ws-playhead-tri::after {
+      content: ''; position: absolute;
+      top: 0; left: 50%; transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 8px solid var(--text);
+    }
+
+    /* ── Wide-monitor scaling ─────────────────────── */
+    @media (min-width: 1700px) {
+      html, body { font-size: 16px; }
+      .layout { max-width: 1280px; width: 88%; }
+    }
   </style>
 </head>
 <body>
@@ -580,7 +688,7 @@
   In Terminal: <code style="background:#f5f5f5;padding:1px 5px;border-radius:4px;font-size:.78rem">
   cd /Users/meghai/Documents/meghai/jazz &amp;&amp; python3 -m http.server 8080</code><br>
   Then open <code style="background:#f5f5f5;padding:1px 5px;border-radius:4px;font-size:.78rem">
-  http://localhost:8080</code> in your browser.
+  http://localhost:8080</code> in your browser. (Audio files work fine from file:// too.)
 </div>
 
 <header>
@@ -594,10 +702,16 @@
 <div class="content-row">
 <div class="main">
 
-<!-- URL input -->
-<div class="url-row">
+<!-- View toggle -->
+<div class="view-tabs">
+  <button id="tabVideo" class="view-tab active" onclick="setMode('video')">▶ YouTube</button>
+  <button id="tabWave"  class="view-tab"        onclick="setMode('waveform')">♪ Audio File</button>
+</div>
+
+<!-- URL input (YouTube only) -->
+<div class="url-row" id="urlRow">
   <input type="text" id="urlInput" placeholder="Paste YouTube URL…" />
-  <button class="btn-dark" onclick="loadVideo()">Load</button>
+  <button class="btn-dark" onclick="load()">Load</button>
 </div>
 
 <!-- Keyboard shortcuts -->
@@ -614,22 +728,59 @@
   <div class="hint" style="margin-top:8px">Shortcuts only work when the video isn't focused — click anywhere outside the player first.</div>
 </div>
 
-<!-- Player -->
-<div class="player-shell">
-  <div id="player-mount">
-    <div class="placeholder">
-      <div class="placeholder-icon">♫</div>
-      <div class="placeholder-text">Paste a YouTube URL above</div>
+<!-- Video player -->
+<div id="videoView">
+  <div class="player-shell">
+    <div id="player-mount">
+      <div class="placeholder">
+        <div class="placeholder-icon">♫</div>
+        <div class="placeholder-text">Paste a YouTube URL above</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Waveform player -->
+<div id="waveformView" style="display:none">
+  <div class="waveform-shell">
+    <div id="wave-overlay">
+      <div id="audioDropzone" class="dropzone"
+           ondrop="handleAudioDrop(event)"
+           ondragover="event.preventDefault();this.classList.add('drag-over')"
+           ondragleave="this.classList.remove('drag-over')"
+           onclick="document.getElementById('audioFileInput').click()">
+        <div class="dropzone-icon">♪</div>
+        <div class="dropzone-title">Drop an audio file here, or click to browse</div>
+        <div class="dropzone-hint">Supports MP3, M4A, WAV, and most audio formats.</div>
+        <input type="file" id="audioFileInput" accept="audio/*" style="display:none"
+               onchange="handleAudioFileInput(this)" />
+      </div>
+      <div id="waveLoadingUI" class="wave-loading-wrap" style="display:none">
+        <div class="wave-loading-label" id="waveLoadingLabel">Loading…</div>
+        <div class="wave-prog-track" style="width:100%">
+          <div class="wave-prog-fill" id="waveProgFill" style="width:0%"></div>
+        </div>
+        <div class="wave-prog-pct" id="waveProgPct"></div>
+      </div>
+      <div id="waveErrorUI" style="display:none;text-align:center;padding:0 20px">
+        <div id="waveErrorMsg" style="font-size:.74rem;color:rgba(200,60,60,.9);line-height:1.7;margin-bottom:10px"></div>
+        <button class="btn-ghost" style="font-size:.72rem" onclick="showAudioDropzone()">Try another file</button>
+      </div>
+    </div>
+    <div id="waveform-el"><div id="ws-playhead-tri"></div></div>
+    <div id="waveform-zoom-row" class="waveform-zoom-row" style="visibility:hidden">
+      <span style="font-size:.65rem;color:var(--muted);flex-shrink:0">Zoom</span>
+      <input type="range" id="zoomSlider" min="10" max="500" step="5" value="50"
+             style="flex:1;height:3px" oninput="onZoomSlider(this.value)" />
+      <button class="btn-ghost" style="font-size:.65rem;padding:3px 8px"
+              onclick="showAudioDropzone()">Change file</button>
     </div>
   </div>
 </div>
 
 </div><!-- /.main -->
 <aside class="sidebar">
-  <div class="sidebar-row">
-    <div class="sidebar-label">Playlist</div>
-    <button class="playlist-add" onclick="saveToPlaylist()">+ Save current</button>
-  </div>
+  <div class="sidebar-label">History</div>
   <div class="playlist-list" id="playlistEl"></div>
 
   <hr class="sidebar-divider" />
@@ -744,6 +895,8 @@
 
 <div id="toast"></div>
 <div id="cat-border"></div>
+<script src="https://unpkg.com/wavesurfer.js@6.6.4/dist/wavesurfer.min.js"></script>
+<script src="https://unpkg.com/wavesurfer.js@6.6.4/dist/plugin/wavesurfer.regions.min.js"></script>
 <script>
 /* ── YouTube IFrame API ─────────────────────────── */
 (function () {
@@ -756,6 +909,33 @@ var player      = null;
 var playerReady = false;
 var pendingId   = null;
 
+/* ── WaveSurfer ─────────────────────────────────── */
+var ws       = null;
+var wsReady  = false;
+var wsRegion = null;
+var wsAudio  = null; // parallel <audio> for pitch-preserving playback
+
+/* ── Mode ───────────────────────────────────────── */
+var playerMode = 'video'; // 'video' | 'waveform'
+
+function setMode(mode) { applyMode(mode); }
+
+function applyMode(mode) {
+  if (mode === 'video' && playerMode === 'waveform') {
+    if (ws && wsReady) try { ws.pause(); } catch(_) {}
+    if (wsAudio) wsAudio.pause();
+  } else if (mode === 'waveform' && playerMode === 'video') {
+    if (playerReady) try { player.pauseVideo(); } catch(_) {}
+  }
+  playerMode = mode;
+  document.getElementById('videoView').style.display    = mode === 'video'    ? '' : 'none';
+  document.getElementById('waveformView').style.display = mode === 'waveform' ? '' : 'none';
+  document.getElementById('tabVideo').classList.toggle('active', mode === 'video');
+  document.getElementById('tabWave').classList.toggle('active',  mode === 'waveform');
+  document.getElementById('urlRow').style.display = mode === 'video' ? '' : 'none';
+  localStorage.setItem('shed_tab', mode);
+}
+
 var loopA   = null;
 var loopB   = null;
 
@@ -767,7 +947,7 @@ var currentSpeed = 1;
 
 var countdownEnabled = false;
 var countdownActive  = false;
-var countdownAC      = null; // AudioContext created on user gesture
+var countdownAC      = null;
 
 var ticker       = null;
 var toastTimer   = null;
@@ -797,7 +977,7 @@ function createPlayer(videoId) {
 
 function onReady() {
   playerReady = true;
-  lastDuration = 0; // force AB reset on first tick
+  lastDuration = 0;
   if (ticker) clearInterval(ticker);
   ticker = setInterval(tick, 80);
 }
@@ -824,15 +1004,246 @@ function onPlayerError(e) {
   playerReady = false;
 }
 
-/* ── Load ───────────────────────────────────────── */
+/* ── Load dispatcher ────────────────────────────── */
+function load() {
+  applyMode('video');
+  loadVideo();
+}
+
 function loadVideo() {
   var url = document.getElementById('urlInput').value.trim();
   var id  = extractId(url);
   if (!id) { toast('Could not parse YouTube URL'); return; }
   loadMarkers(id);
+  addToHistory(id, false, null);
   if (typeof YT === 'undefined' || !YT.Player) { pendingId = id; return; }
   if (player && playerReady) { player.loadVideoById(id); }
   else { pendingId = id; createPlayer(id); }
+}
+
+/* ── Audio file: IndexedDB helpers ──────────────── */
+var AUDIO_DB_NAME    = 'shed_audio';
+var AUDIO_DB_VERSION = 1;
+var AUDIO_DB_STORE   = 'files';
+var currentAudioName = null;
+
+function getAudioDB() {
+  return new Promise(function(resolve, reject) {
+    var req = indexedDB.open(AUDIO_DB_NAME, AUDIO_DB_VERSION);
+    req.onupgradeneeded = function(e) { e.target.result.createObjectStore(AUDIO_DB_STORE); };
+    req.onsuccess = function(e) { resolve(e.target.result); };
+    req.onerror   = function(e) { reject(e); };
+  });
+}
+
+function saveAudioToDB(id, name, blob) {
+  return getAudioDB().then(function(db) {
+    return new Promise(function(resolve, reject) {
+      var tx = db.transaction(AUDIO_DB_STORE, 'readwrite');
+      tx.objectStore(AUDIO_DB_STORE).put({ name: name, blob: blob }, id);
+      tx.oncomplete = resolve;
+      tx.onerror    = reject;
+    });
+  });
+}
+
+function loadAudioFromDB(id) {
+  return getAudioDB().then(function(db) {
+    return new Promise(function(resolve, reject) {
+      var tx  = db.transaction(AUDIO_DB_STORE, 'readonly');
+      var req = tx.objectStore(AUDIO_DB_STORE).get(id);
+      req.onsuccess = function() { resolve(req.result || null); };
+      req.onerror   = reject;
+    });
+  });
+}
+
+function deleteAudioFromDB(id) {
+  return getAudioDB().then(function(db) {
+    return new Promise(function(resolve, reject) {
+      var tx = db.transaction(AUDIO_DB_STORE, 'readwrite');
+      tx.objectStore(AUDIO_DB_STORE).delete(id);
+      tx.oncomplete = resolve;
+      tx.onerror    = reject;
+    });
+  });
+}
+
+/* ── Audio file: drop / input handlers ─────────── */
+function handleAudioFile(file) {
+  if (!file || !file.type.startsWith('audio/')) { toast('Please select an audio file'); return; }
+  var id  = 'audio_' + Date.now();
+  var url = URL.createObjectURL(file);
+  saveAudioToDB(id, file.name, file).then(function() {
+    loadAudio(url, id, file.name);
+  });
+}
+
+function handleAudioDrop(event) {
+  event.preventDefault();
+  var dz = document.getElementById('audioDropzone');
+  if (dz) dz.classList.remove('drag-over');
+  handleAudioFile(event.dataTransfer.files[0]);
+}
+
+function handleAudioFileInput(input) {
+  handleAudioFile(input.files[0]);
+}
+
+/* ── Audio file: overlay state helpers ──────────── */
+function showAudioDropzone() {
+  wsReady = false;
+  if (wsAudio) { wsAudio.pause(); wsAudio.src = ''; wsAudio = null; }
+  if (ws) { ws.destroy(); ws = null; wsRegion = null; }
+  document.getElementById('waveform-zoom-row').style.visibility = 'hidden';
+  var ph = document.getElementById('ws-playhead-tri');
+  if (ph) ph.style.display = 'none';
+  document.getElementById('wave-overlay').style.display     = 'flex';
+  document.getElementById('audioDropzone').style.display    = 'flex';
+  document.getElementById('waveLoadingUI').style.display    = 'none';
+  document.getElementById('waveErrorUI').style.display      = 'none';
+  var fi = document.getElementById('audioFileInput');
+  if (fi) fi.value = '';
+}
+
+function _showWaveLoadingUI(label, pct) {
+  document.getElementById('wave-overlay').style.display      = 'flex';
+  document.getElementById('audioDropzone').style.display     = 'none';
+  document.getElementById('waveLoadingUI').style.display     = 'flex';
+  document.getElementById('waveErrorUI').style.display       = 'none';
+  document.getElementById('waveLoadingLabel').textContent    = label;
+  document.getElementById('waveProgFill').style.width        = pct + '%';
+  document.getElementById('waveProgPct').textContent         = pct > 0 ? pct + '%' : '';
+}
+
+function _showWaveErrorUI(msg) {
+  document.getElementById('wave-overlay').style.display      = 'flex';
+  document.getElementById('audioDropzone').style.display     = 'none';
+  document.getElementById('waveLoadingUI').style.display     = 'none';
+  document.getElementById('waveErrorUI').style.display       = 'flex';
+  document.getElementById('waveErrorMsg').textContent        = msg;
+}
+
+/* ── Audio file: load into WaveSurfer ───────────── */
+function loadAudio(blobUrl, id, name) {
+  currentVideoId   = id;
+  currentAudioName = name;
+  applyMode('waveform');
+  loadMarkers(id);
+  addToHistory(id, true, name);
+
+  _showWaveLoadingUI('Loading audio…', 0);
+
+  wsReady = false;
+  if (wsAudio) { wsAudio.pause(); wsAudio.src = ''; wsAudio = null; }
+  if (ws) { ws.destroy(); ws = null; wsRegion = null; }
+
+  ws = WaveSurfer.create({
+    container:     '#waveform-el',
+    waveColor:     '#b8b0a6',
+    progressColor: '#1e1a16',
+    cursorColor:   '#1e1a16',
+    cursorWidth:   2,
+    barWidth: 2, barGap: 1, barRadius: 2,
+    height:        150,
+    normalize:     true,
+    interact:      true,
+    scrollParent:  true,
+    minPxPerSec:   50,
+    partialRender: true,
+    plugins: [ WaveSurfer.regions.create({ dragSelection: false }) ]
+  });
+
+  ws.load(blobUrl);
+
+  ws.on('loading', function(pct) {
+    _showWaveLoadingUI(pct < 100 ? 'Loading… ' + pct + '%' : 'Decoding audio…', pct);
+    document.getElementById('waveProgPct').textContent = '';
+  });
+
+  ws.on('ready', function() {
+    wsReady = true;
+    document.getElementById('wave-overlay').style.display = 'none';
+    document.getElementById('waveform-zoom-row').style.visibility = 'visible';
+    ws.setVolume(0); // mute WaveSurfer; wsAudio handles actual sound
+    ws.setPlaybackRate(currentSpeed);
+    if (wsAudio) { wsAudio.pause(); wsAudio.src = ''; }
+    wsAudio = new Audio(blobUrl);
+    wsAudio.preservesPitch = true;
+    wsAudio.mozPreservesPitch = true;
+    wsAudio.webkitPreservesPitch = true;
+    wsAudio.playbackRate = currentSpeed;
+    var d = ws.getDuration();
+    lastDuration = d;
+    loopA = 0; loopB = d;
+    document.getElementById('ptA').value = fmt(0);
+    document.getElementById('ptB').value = fmt(d);
+    syncRegion();
+    if (ticker) clearInterval(ticker);
+    ticker = setInterval(tick, 80);
+  });
+
+  ws.on('play',  function() { document.getElementById('playBtn').textContent = '⏸'; });
+  ws.on('pause', function() { document.getElementById('playBtn').textContent = '▶'; });
+  ws.on('finish', function() {
+    document.getElementById('playBtn').textContent = '▶';
+    if (wsAudio) wsAudio.pause();
+    if (loopA !== null && wsReady) {
+      var d = ws.getDuration();
+      if (d) { if (wsAudio) wsAudio.currentTime = loopA; ws.seekTo(loopA / d); }
+      if (wsAudio) wsAudio.play().catch(function(){});
+      ws.play();
+    }
+  });
+
+  ws.on('region-updated', function(region) {
+    loopA = region.start;
+    loopB = region.end;
+    var d = ws.getDuration() || 0;
+    document.getElementById('ptA').value = fmt(loopA);
+    document.getElementById('ptB').value = fmt(loopB);
+    if (d) repaintLoop(d);
+  });
+
+  ws.on('error', function() {
+    _showWaveErrorUI('Could not decode audio. Try a different file or format.');
+  });
+}
+
+function syncRegion() {
+  if (!wsReady || !ws || !ws.regions) return;
+  ws.regions.clear();
+  wsRegion = null;
+  if (loopA !== null && loopB !== null) {
+    wsRegion = ws.regions.add({
+      start: loopA,
+      end:   loopB,
+      color: 'rgba(35,131,226,.09)',
+      drag:   true,
+      resize: true,
+      handleStyle: {
+        left:  { backgroundColor: '#2383e2', width: '3px' },
+        right: { backgroundColor: '#e03e3e', width: '3px' }
+      }
+    });
+  }
+}
+
+function onZoomSlider(val) {
+  if (ws) ws.zoom(parseInt(val));
+}
+
+function updateWsPlayhead() {
+  var ph = document.getElementById('ws-playhead-tri');
+  if (!ph || !wsReady || !ws) { if (ph) ph.style.display = 'none'; return; }
+  var dur = ws.getDuration();
+  if (!dur) { ph.style.display = 'none'; return; }
+  var waveEl  = document.getElementById('waveform-el');
+  var wrapper = waveEl ? waveEl.querySelector('wave') : null;
+  if (!wrapper) { ph.style.display = 'none'; return; }
+  var px = (ws.getCurrentTime() / dur) * wrapper.scrollWidth - wrapper.scrollLeft;
+  ph.style.display = (px >= 0 && px <= wrapper.offsetWidth) ? '' : 'none';
+  ph.style.left    = px + 'px';
 }
 
 function extractId(url) {
@@ -852,33 +1263,59 @@ function extractId(url) {
 
 /* ── Tick ───────────────────────────────────────── */
 function tick() {
-  if (!playerReady) return;
-  try {
-    var t = player.getCurrentTime();
-    var d = player.getDuration() || 0;
-    document.getElementById('timeDisplay').textContent = fmt(t) + ' / ' + fmt(d);
-    if (d) {
-      document.getElementById('progFill').style.width = (t / d * 100) + '%';
-      // Auto-init A/B when a new video duration appears
-      if (d !== lastDuration && d > 0) {
-        lastDuration = d;
-        loopA = 0; loopB = d;
-        document.getElementById('ptA').value = fmt(0);
-        document.getElementById('ptB').value = fmt(d);
+  if (playerReady) {
+    try {
+      var t = player.getCurrentTime();
+      var d = player.getDuration() || 0;
+      document.getElementById('timeDisplay').textContent = fmt(t) + ' / ' + fmt(d);
+      if (d) {
+        document.getElementById('progFill').style.width = (t / d * 100) + '%';
+        if (d !== lastDuration && d > 0) {
+          lastDuration = d;
+          loopA = 0; loopB = d;
+          document.getElementById('ptA').value = fmt(0);
+          document.getElementById('ptB').value = fmt(d);
+        }
+        repaintLoop(d);
       }
-      repaintLoop(d);
-    }
-    if (loopA !== null && loopB !== null) {
-      if (!countdownActive) {
-        if (t >= loopB) {
-          if (countdownEnabled) startCountdown();
-          else player.seekTo(loopA, true);
-        } else if (t < loopA) {
-          player.seekTo(loopA, true);
+      if (loopA !== null && loopB !== null) {
+        if (!countdownActive) {
+          if (t >= loopB) {
+            if (countdownEnabled) startCountdown();
+            else player.seekTo(loopA, true);
+          } else if (t < loopA) {
+            player.seekTo(loopA, true);
+          }
         }
       }
-    }
-  } catch (_) {}
+    } catch (_) {}
+  } else if (wsReady) {
+    try {
+      if (wsAudio && ws) {
+        if (ws.isPlaying() && wsAudio.paused) wsAudio.play().catch(function(){});
+        var drift = wsAudio.currentTime - ws.getCurrentTime();
+        if (Math.abs(drift) > 0.5) wsAudio.currentTime = ws.getCurrentTime();
+      }
+      var t = ws.getCurrentTime();
+      var d = ws.getDuration() || 0;
+      document.getElementById('timeDisplay').textContent = fmt(t) + ' / ' + fmt(d);
+      if (d) {
+        document.getElementById('progFill').style.width = (t / d * 100) + '%';
+        updateWsPlayhead();
+        repaintLoop(d);
+      }
+      if (loopA !== null && loopB !== null) {
+        if (!countdownActive) {
+          if (t >= loopB) {
+            if (countdownEnabled) startCountdown();
+            else { if (wsAudio) wsAudio.currentTime = loopA; ws.seekTo(loopA / d); }
+          } else if (t < loopA) {
+            if (wsAudio) wsAudio.currentTime = loopA; ws.seekTo(loopA / d);
+          }
+        }
+      }
+    } catch (_) {}
+  }
 }
 
 function fmt(s) {
@@ -908,21 +1345,34 @@ function repaintLoop(d) {
 
 /* ── Transport ──────────────────────────────────── */
 function togglePlay() {
-  if (!playerReady) return;
-  var s = player.getPlayerState();
-  if (s === YT.PlayerState.PLAYING) player.pauseVideo();
-  else player.playVideo();
+  if (playerReady) {
+    var s = player.getPlayerState();
+    if (s === YT.PlayerState.PLAYING) player.pauseVideo();
+    else player.playVideo();
+  } else if (wsReady && ws) {
+    if (ws.isPlaying()) {
+      ws.pause();
+      if (wsAudio) wsAudio.pause();
+    } else {
+      if (wsAudio) { wsAudio.currentTime = ws.getCurrentTime(); wsAudio.play().catch(function(){}); }
+      ws.play();
+    }
+  }
 }
 
 function skipBy(sec) {
-  if (!playerReady) return;
-  player.seekTo(player.getCurrentTime() + sec, true);
+  if (playerReady) {
+    player.seekTo(player.getCurrentTime() + sec, true);
+  } else if (wsReady && ws) {
+    var t = ws.getCurrentTime() + sec;
+    var d = ws.getDuration() || 0;
+    if (d) { if (wsAudio) wsAudio.currentTime = t; ws.seekTo(t / d); }
+  }
 }
 
 /* ── Interactive timeline ───────────────────────── */
 (function () {
   var dragState = null;
-  // dragState: { type: 'pending'|'loop'|'handle-a'|'handle-b', startX, anchorRatio }
 
   function getRatio(clientX) {
     var rect = document.getElementById('progTrack').getBoundingClientRect();
@@ -930,7 +1380,11 @@ function skipBy(sec) {
   }
 
   function getDur() {
-    try { return (playerReady ? player.getDuration() : 0) || 0; } catch (_) { return 0; }
+    try {
+      if (playerReady) return player.getDuration() || 0;
+      if (wsReady && ws) return ws.getDuration() || 0;
+      return 0;
+    } catch(_) { return 0; }
   }
 
   function immediatePaint() {
@@ -940,7 +1394,6 @@ function skipBy(sec) {
     document.getElementById('ptB').value = loopB !== null ? fmt(loopB) : '';
   }
 
-  // Handle A drag
   document.getElementById('handleA').addEventListener('mousedown', function (e) {
     if (e.button !== 0) return;
     e.stopPropagation(); e.preventDefault();
@@ -950,7 +1403,6 @@ function skipBy(sec) {
     bind();
   });
 
-  // Handle B drag
   document.getElementById('handleB').addEventListener('mousedown', function (e) {
     if (e.button !== 0) return;
     e.stopPropagation(); e.preventDefault();
@@ -960,7 +1412,6 @@ function skipBy(sec) {
     bind();
   });
 
-  // Timeline click / drag
   document.getElementById('progWrap').addEventListener('mousedown', function (e) {
     if (e.button !== 0) return;
     e.preventDefault();
@@ -1002,9 +1453,18 @@ function skipBy(sec) {
     if (!dragState) return;
 
     if (dragState.type === 'pending') {
-      // click → seek
       var d = getDur();
-      if (playerReady && d) player.seekTo(getRatio(e.clientX) * d, true);
+      if (d) {
+        var t = getRatio(e.clientX) * d;
+        if (playerReady) {
+          player.seekTo(t, true);
+        } else {
+          if (wsAudio) wsAudio.currentTime = t;
+          if (wsReady && ws) ws.seekTo(t / d);
+        }
+      }
+    } else {
+      syncRegion();
     }
     dragState = null;
   }
@@ -1015,15 +1475,17 @@ function skipBy(sec) {
 
 /* ── Loop ───────────────────────────────────────── */
 function resetLoop() {
-  var d = (playerReady ? player.getDuration() : 0) || 0;
+  var d = playerReady
+    ? (player.getDuration() || 0)
+    : (wsReady && ws ? (ws.getDuration() || 0) : 0);
   loopA = 0; loopB = d || null;
   document.getElementById('ptA').value = d ? fmt(0) : '';
   document.getElementById('ptB').value = d ? fmt(d) : '';
+  syncRegion();
 }
 
 function parseTime(str) {
   str = str.trim();
-  // accepts: ss, m:ss, mm:ss, h:mm:ss
   var parts = str.split(':').map(Number);
   if (parts.some(isNaN)) return null;
   if (parts.length === 1) return parts[0];
@@ -1033,9 +1495,10 @@ function parseTime(str) {
 
 function setLoopPoint(ab, val) {
   var t = parseTime(val);
-  var d = (playerReady ? player.getDuration() : 0) || 0;
+  var d = playerReady
+    ? (player.getDuration() || 0)
+    : (wsReady && ws ? (ws.getDuration() || 0) : 0);
   if (t === null || t < 0 || (d && t > d)) {
-    // restore displayed value on bad input
     document.getElementById(ab === 'a' ? 'ptA' : 'ptB').value =
       ab === 'a' ? (loopA !== null ? fmt(loopA) : '') : (loopB !== null ? fmt(loopB) : '');
     return;
@@ -1045,7 +1508,8 @@ function setLoopPoint(ab, val) {
     if (loopB !== null && loopA >= loopB) loopB = Math.min(loopA + 1, d || loopA + 1);
     document.getElementById('ptA').value = fmt(loopA);
     document.getElementById('ptB').value = loopB !== null ? fmt(loopB) : '';
-    if (playerReady) player.seekTo(loopA, true);
+    if (playerReady) { player.seekTo(loopA, true); }
+    else { if (wsAudio) wsAudio.currentTime = loopA; if (wsReady && ws && d) ws.seekTo(loopA / d); }
   } else {
     loopB = t;
     if (loopA !== null && loopB <= loopA) loopA = Math.max(loopB - 1, 0);
@@ -1053,6 +1517,7 @@ function setLoopPoint(ab, val) {
     document.getElementById('ptB').value = fmt(loopB);
   }
   if (d) repaintLoop(d);
+  syncRegion();
 }
 
 /* ── Speed ──────────────────────────────────────── */
@@ -1062,6 +1527,8 @@ function applySpeed(rate) {
   rate = Math.max(0.25, Math.min(2.0, Math.round(rate * 100) / 100));
   currentSpeed = rate;
   if (playerReady) player.setPlaybackRate(rate);
+  if (wsReady && ws) ws.setPlaybackRate(rate);
+  if (wsAudio) wsAudio.playbackRate = rate;
   document.getElementById('speedVal').innerHTML =
     rate.toFixed(2) + '<span style="font-size:.9rem;font-weight:400;color:var(--muted)">×</span>';
   document.getElementById('speedSlider').value = rate;
@@ -1115,7 +1582,6 @@ document.getElementById('speedSlider').addEventListener('keydown', function (e) 
 });
 
 document.addEventListener('keydown', function (e) {
-  // let text/number inputs handle their own keys, but not the range slider
   if (e.target.tagName === 'INPUT' && e.target.type !== 'range') return;
   switch (e.key) {
     case ' ':          e.preventDefault(); togglePlay(); break;
@@ -1130,14 +1596,14 @@ document.addEventListener('keydown', function (e) {
 });
 
 document.getElementById('urlInput').addEventListener('keydown', function (e) {
-  if (e.key === 'Enter') loadVideo();
+  if (e.key === 'Enter') load();
 });
 
 /* ── Cat border ─────────────────────────────────── */
 (function () {
   var cats = ['cats/bassc.png','cats/drum.png','cats/guitarc.png',
               'cats/keyboard.png','cats/saxc.png','cats/trumpe.png','cats/violinc.png'];
-  var MAX_H = 64; // px — tallest cat will be this height, others scale proportionally
+  var MAX_H = 64;
 
   function shuffle(arr) {
     var a = arr.slice();
@@ -1152,9 +1618,7 @@ document.getElementById('urlInput').addEventListener('keydown', function (e) {
   var seq = [];
   while (seq.length < 60) {
     var deck = shuffle(cats);
-    // Prevent the join point from repeating
     if (seq.length && deck[0] === seq[seq.length - 1]) {
-      // swap first card with a random other card in the deck
       var swap = 1 + Math.floor(Math.random() * (deck.length - 1));
       var tmp = deck[0]; deck[0] = deck[swap]; deck[swap] = tmp;
     }
@@ -1173,7 +1637,6 @@ document.getElementById('urlInput').addEventListener('keydown', function (e) {
     border.appendChild(img);
   });
 
-  // Load natural heights of the 7 unique cats, then scale all proportionally
   var naturalH = {};
   var loaded = 0;
   cats.forEach(function (src) {
@@ -1199,7 +1662,7 @@ document.getElementById('urlInput').addEventListener('keydown', function (e) {
 })();
 
 /* ── Markers ────────────────────────────────────── */
-var markers    = [];   // [{id, time, label}]
+var markers    = [];
 var currentVideoId = null;
 
 function markersKey(id) { return 'shed_markers_' + id; }
@@ -1219,14 +1682,13 @@ function saveMarkers() {
 }
 
 function addMarker() {
-  if (!playerReady) { toast('Load a video first'); return; }
-  var t = player.getCurrentTime();
+  if (!playerReady && (!wsReady || !ws)) { toast('Load a video or audio file first'); return; }
+  var t = playerReady ? player.getCurrentTime() : ws.getCurrentTime();
   var m = { id: Date.now(), time: t, label: '' };
   markers.push(m);
   markers.sort(function(a, b) { return a.time - b.time; });
   saveMarkers();
   renderMarkers();
-  // Focus the new marker's label input
   var input = document.querySelector('[data-marker-id="' + m.id + '"] .marker-label');
   if (input) { setTimeout(function() { input.focus(); input.select(); }, 0); }
 }
@@ -1238,9 +1700,13 @@ function deleteMarker(id) {
 }
 
 function seekToMarker(time) {
-  if (!playerReady) return;
   loopA = time;
-  player.seekTo(time, true);
+  if (playerReady) {
+    player.seekTo(time, true);
+  } else {
+    if (wsAudio) wsAudio.currentTime = time;
+    if (wsReady && ws) { var d = ws.getDuration(); if (d) ws.seekTo(time / d); }
+  }
 }
 
 function renderMarkers() {
@@ -1266,10 +1732,7 @@ function renderMarkers() {
     label.type = 'text';
     label.value = m.label;
     label.placeholder = 'label…';
-    label.oninput = function() {
-      m.label = label.value;
-      saveMarkers();
-    };
+    label.oninput = function() { m.label = label.value; saveMarkers(); };
     label.onkeydown = function(e) { if (e.key === 'Enter') label.blur(); };
 
     var del = document.createElement('button');
@@ -1291,7 +1754,7 @@ var bpmInterval    = null;
 
 async function detectBPM() {
   if (bpmDetecting) { stopBPMDetect('Cancelled'); return; }
-  if (!playerReady) { toast('Load a video first'); return; }
+  if (!playerReady && (!wsReady || !ws)) { toast('Load a video or audio file first'); return; }
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     toast('Microphone not supported in this browser. Use Tap Tempo.');
     return;
@@ -1300,11 +1763,7 @@ async function detectBPM() {
   try {
     document.getElementById('detectHint').style.display = 'block';
     var stream = await navigator.mediaDevices.getUserMedia({
-      audio: {
-        echoCancellation:  false,
-        noiseSuppression:  false,
-        autoGainControl:   false
-      },
+      audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
       video: false
     });
     document.getElementById('detectHint').style.display = 'none';
@@ -1317,7 +1776,6 @@ async function detectBPM() {
     bpmAudioCtx = new AudioContext();
     var source  = bpmAudioCtx.createMediaStreamSource(stream);
 
-    // Broad bandpass — jazz beat lives in mids too, not just kick
     var hp = bpmAudioCtx.createBiquadFilter();
     hp.type = 'highpass'; hp.frequency.value = 60;
     var lp = bpmAudioCtx.createBiquadFilter();
@@ -1331,8 +1789,8 @@ async function detectBPM() {
 
     var buf      = new Float32Array(analyser.frequencyBinCount);
     var samples  = [];
-    var RATE     = 30;   // samples/sec — finer resolution
-    var SECS     = 15;   // longer window for accuracy
+    var RATE     = 30;
+    var SECS     = 15;
     var elapsed  = 0;
 
     bpmInterval = setInterval(function() {
@@ -1386,7 +1844,6 @@ function stopBPMDetect(msg) {
 function calcBPM(energies, sampleRate) {
   if (energies.length < sampleRate * 4) return null;
 
-  // Check there's an actual signal
   var max = 0, sum = 0;
   for (var i = 0; i < energies.length; i++) {
     if (energies[i] > max) max = energies[i];
@@ -1394,10 +1851,8 @@ function calcBPM(energies, sampleRate) {
   }
   if (max === 0) return null;
   var mean = sum / energies.length;
-  // If signal has no dynamics, mic probably heard nothing useful
   if (max / mean < 1.2) return null;
 
-  // Normalize and detrend
   var n = energies.length;
   var norm = new Array(n);
   var nmean = 0;
@@ -1405,8 +1860,6 @@ function calcBPM(energies, sampleRate) {
   nmean /= n;
   for (var i = 0; i < n; i++) norm[i] -= nmean;
 
-  // Auto-correlation — finds dominant period without needing a threshold
-  // Lag range: 40–220 BPM
   var minLag = Math.floor(sampleRate * 60 / 220);
   var maxLag = Math.min(Math.floor(sampleRate * 60 / 40), Math.floor(n / 2));
 
@@ -1421,18 +1874,16 @@ function calcBPM(energies, sampleRate) {
   if (bestLag < 0 || bestCorr < 0.001) return null;
 
   var bpm = 60 * sampleRate / bestLag;
-  // Fold into 60–200 BPM range
   while (bpm < 60)  bpm *= 2;
   while (bpm > 200) bpm /= 2;
   return bpm;
 }
 
-// Show banner if served from file://
 if (window.location.protocol === 'file:') {
   document.getElementById('protocol-warning').style.display = 'block';
 }
 
-// ── Playlist ─────────────────────────────────────────────────
+/* ── History / Playlist ─────────────────────────── */
 var PLAYLIST_KEY = 'shed_playlist';
 var playlist = [];
 var activePlaylistId = null;
@@ -1454,26 +1905,32 @@ function getMarkerCount(videoId) {
   } catch(e) { return 0; }
 }
 
-function saveToPlaylist() {
-  if (!currentVideoId) { alert('Load a video first.'); return; }
-  if (playlist.find(function(p){ return p.id === currentVideoId; })) {
-    alert('Already in playlist.'); return;
+function addToHistory(id, isAudio, name) {
+  if (!id) return;
+  if (playlist.find(function(p){ return p.id === id; })) {
+    renderPlaylist(); return;
   }
-  var entry = { id: currentVideoId, title: currentVideoId, thumb: 'https://img.youtube.com/vi/' + currentVideoId + '/default.jpg' };
-  playlist.push(entry);
+  var isYt  = !isAudio && /^[A-Za-z0-9_-]{11}$/.test(id);
+  var title = isAudio ? (name || id) : id;
+  var thumb = isYt ? 'https://img.youtube.com/vi/' + id + '/default.jpg' : '';
+  var entry = { id: id, title: title, thumb: thumb, isYt: isYt, isAudio: isAudio };
+  playlist.unshift(entry);
   savePlaylistStore();
   renderPlaylist();
-  // Fetch title in background
-  fetch('https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=' + currentVideoId + '&format=json')
-    .then(function(r){ return r.json(); })
-    .then(function(d){
-      var item = playlist.find(function(p){ return p.id === currentVideoId; });
-      if (item && d.title) { item.title = d.title; savePlaylistStore(); renderPlaylist(); }
-    })
-    .catch(function(){});
+  if (isYt) {
+    fetch('https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=' + id + '&format=json')
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        var item = playlist.find(function(p){ return p.id === id; });
+        if (item && d.title) { item.title = d.title; savePlaylistStore(); renderPlaylist(); }
+      })
+      .catch(function(){});
+  }
 }
 
 function removeFromPlaylist(id) {
+  var item = playlist.find(function(p){ return p.id === id; });
+  if (item && item.isAudio) deleteAudioFromDB(id);
   playlist = playlist.filter(function(p){ return p.id !== id; });
   savePlaylistStore();
   renderPlaylist();
@@ -1483,24 +1940,35 @@ function loadPlaylistItem(id) {
   var item = playlist.find(function(p){ return p.id === id; });
   if (!item) return;
   activePlaylistId = id;
-  var input = document.getElementById('urlInput');
-  input.value = 'https://www.youtube.com/watch?v=' + id;
-  loadVideo();
-  renderPlaylist();
+  if (item.isAudio) {
+    loadAudioFromDB(id).then(function(record) {
+      if (!record) { toast('Audio file not found — try re-uploading it'); return; }
+      var url = URL.createObjectURL(record.blob);
+      loadAudio(url, id, record.name);
+      renderPlaylist();
+    });
+  } else {
+    document.getElementById('urlInput').value = 'https://www.youtube.com/watch?v=' + id;
+    load();
+    renderPlaylist();
+  }
 }
 
 function renderPlaylist() {
   var el = document.getElementById('playlistEl');
   if (!el) return;
   if (playlist.length === 0) {
-    el.innerHTML = '<div style="font-size:.7rem;color:var(--muted);padding:4px 2px;">No videos saved yet.</div>';
+    el.innerHTML = '<div style="font-size:.7rem;color:var(--muted);padding:4px 2px;">No history yet.</div>';
     return;
   }
   el.innerHTML = playlist.map(function(item) {
-    var cnt = getMarkerCount(item.id);
+    var cnt      = getMarkerCount(item.id);
     var isActive = item.id === currentVideoId;
+    var thumbHtml = item.isAudio
+      ? '<div class="playlist-thumb-icon">♪</div>'
+      : '<img class="playlist-thumb" src="' + item.thumb + '" alt="" onerror="this.style.display=\'none\'">';
     return '<div class="playlist-item' + (isActive ? ' active' : '') + '" onclick="loadPlaylistItem(\'' + item.id + '\')">' +
-      '<img class="playlist-thumb" src="' + item.thumb + '" alt="" onerror="this.style.display=\'none\'">' +
+      thumbHtml +
       '<div class="playlist-info">' +
         '<div class="playlist-title">' + escapeHtml(item.title) + '</div>' +
         '<div class="playlist-meta">' + (cnt > 0 ? cnt + ' marker' + (cnt !== 1 ? 's' : '') : 'no markers') + '</div>' +
@@ -1516,16 +1984,36 @@ function escapeHtml(s) {
 
 loadPlaylist();
 
+// Restore last active tab
+(function() {
+  var saved = localStorage.getItem('shed_tab');
+  if (saved === 'waveform') applyMode('waveform');
+})();
+
+// Wheel zoom on waveform
+(function() {
+  var shell = document.querySelector('.waveform-shell');
+  if (!shell) return;
+  shell.addEventListener('wheel', function(e) {
+    if (!wsReady || !ws) return;
+    if (!e.ctrlKey) return;
+    e.preventDefault();
+    var slider  = document.getElementById('zoomSlider');
+    var current = parseInt(slider.value) || 50;
+    var factor  = e.deltaY < 0 ? 1.3 : (1 / 1.3);
+    var newVal  = Math.max(10, Math.min(500, Math.round(current * factor / 5) * 5));
+    slider.value = newVal;
+    ws.zoom(newVal);
+  }, { passive: false });
+})();
+
 (function () {
   var MIN = 0.25, MAX = 2.0, THUMB = 14;
-  // position formula: left = pct*100% + (thumbRadius - pct*thumbWidth)px
-  // = calc(Xpct% + Ypx)  where Y = 7 - pct*14
   function pos(v) {
     var pct = (v - MIN) / (MAX - MIN);
     return 'calc(' + (pct * 100).toFixed(4) + '% + ' + (7 - pct * THUMB).toFixed(4) + 'px)';
   }
 
-  // Dots — every 0.05
   var dots = document.getElementById('speedDots');
   for (var v = MIN; v <= MAX + 0.001; v = Math.round((v + 0.05) * 100) / 100) {
     var d = document.createElement('div');
@@ -1535,7 +2023,6 @@ loadPlaylist();
     dots.appendChild(d);
   }
 
-  // Ticks — every 0.25
   var ticks = document.getElementById('speedTicks');
   [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2].forEach(function (v) {
     var span = document.createElement('span');
@@ -1552,7 +2039,6 @@ function toggleCountdown() {
   document.getElementById('countdownToggle')
     .classList.toggle('active', countdownEnabled);
   if (countdownEnabled) {
-    // Create AudioContext NOW while we have a user gesture
     if (!countdownAC || countdownAC.ctx.state === 'closed') {
       countdownAC = makeAudioCtxWithLimiter();
     }
@@ -1565,9 +2051,18 @@ function toggleCountdown() {
 function startCountdown() {
   countdownActive = true;
 
-  var wasPlaying = player.getPlayerState() === YT.PlayerState.PLAYING;
-  player.pauseVideo();
-  player.seekTo(loopA, true);
+  var wasPlaying;
+  if (playerReady) {
+    wasPlaying = player.getPlayerState() === YT.PlayerState.PLAYING;
+    player.pauseVideo();
+    player.seekTo(loopA, true);
+  } else {
+    wasPlaying = ws && ws.isPlaying();
+    if (ws) ws.pause();
+    if (wsAudio) wsAudio.pause();
+    if (wsAudio) wsAudio.currentTime = loopA;
+    if (wsReady && ws) { var d = ws.getDuration(); if (d) ws.seekTo(loopA / d); }
+  }
 
   var ac      = countdownAC;
   var ctx     = ac ? ac.ctx : null;
@@ -1581,7 +2076,12 @@ function startCountdown() {
 
   setTimeout(function () {
     countdownActive = false;
-    if (playerReady && wasPlaying) player.playVideo();
+    if (!wasPlaying) return;
+    if (playerReady) { player.playVideo(); }
+    else {
+      if (wsAudio) { wsAudio.currentTime = ws ? ws.getCurrentTime() : loopA; wsAudio.play().catch(function(){}); }
+      if (ws) ws.play();
+    }
   }, 4 * beatSec * 1000 + 60);
 }
 
@@ -1599,7 +2099,7 @@ function scheduleCountClick(ctx, when, accent, limiter) {
 
 /* ── Metronome ───────────────────────────────── */
 var metroVolume   = 3.0;
-var metroBPM      = null; // independent from baseBPM / playback
+var metroBPM      = null;
 var metroRunning  = false;
 var metroAudioCtx = null;
 var metroTimerId  = null;
