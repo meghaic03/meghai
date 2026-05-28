@@ -1599,6 +1599,7 @@ function scheduleCountClick(ctx, when, accent, limiter) {
 
 /* ── Metronome ───────────────────────────────── */
 var metroVolume   = 3.0;
+var metroBPM      = null; // independent from baseBPM / playback
 var metroRunning  = false;
 var metroAudioCtx = null;
 var metroTimerId  = null;
@@ -1650,7 +1651,7 @@ renderMetroDots();
 renderMetroSig();
 
 function getMetroBPM() {
-  return baseBPM ? Math.round(baseBPM * currentSpeed) : 120;
+  return metroBPM ? Math.round(metroBPM) : 120;
 }
 
 function updateMetroBPMDisplay() {
@@ -1660,26 +1661,23 @@ function updateMetroBPMDisplay() {
 
 function onMetroBPMInput(val) {
   var n = parseFloat(val);
-  baseBPM = (n > 0) ? n : null;
-  tapTimes = [];
-  var main = document.getElementById('bpmInput');
-  if (main) main.value = baseBPM || '';
-  document.getElementById('bpmDisplay').textContent =
-    baseBPM !== null ? (baseBPM * currentSpeed).toFixed(1) : '—';
+  metroBPM = (n > 0) ? n : null;
+  metroTapTimes = [];
 }
+
+var metroTapTimes = [];
+var metroTapTimer2 = null;
 
 function metroTap() {
   var now = performance.now();
-  if (tapTimes.length && now - tapTimes[tapTimes.length - 1] > 3000) tapTimes = [];
-  tapTimes.push(now);
-  if (tapTimes.length > 8) tapTimes.shift();
-  if (tapTimes.length >= 2) {
+  if (metroTapTimes.length && now - metroTapTimes[metroTapTimes.length - 1] > 3000) metroTapTimes = [];
+  metroTapTimes.push(now);
+  if (metroTapTimes.length > 8) metroTapTimes.shift();
+  if (metroTapTimes.length >= 2) {
     var sum = 0;
-    for (var i = 1; i < tapTimes.length; i++) sum += tapTimes[i] - tapTimes[i - 1];
-    baseBPM = Math.round(60000 / (sum / (tapTimes.length - 1)));
-    var main = document.getElementById('bpmInput');
-    if (main) main.value = baseBPM;
-    refreshBPM();
+    for (var i = 1; i < metroTapTimes.length; i++) sum += metroTapTimes[i] - metroTapTimes[i - 1];
+    metroBPM = Math.round(60000 / (sum / (metroTapTimes.length - 1)));
+    updateMetroBPMDisplay();
   }
   var btn = document.getElementById('metroTapBtn');
   btn.classList.add('flash');
