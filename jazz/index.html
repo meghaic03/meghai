@@ -1352,15 +1352,35 @@ function repaintLoop(d) {
 }
 
 /* ── Transport ──────────────────────────────────── */
+var countdownTimer = null;
+var pausedDuringCountdown = false;
+
+function cancelCountdown() {
+  countdownActive = false;
+  pausedDuringCountdown = true;
+  if (countdownTimer) { clearTimeout(countdownTimer); countdownTimer = null; }
+  if (countdownAC) {
+    try { countdownAC.ctx.close(); } catch(_) {}
+    countdownAC = null;
+  }
+  if (countdownEnabled) countdownAC = makeAudioCtxWithLimiter();
+}
+
 function togglePlay() {
+  if (countdownActive) { cancelCountdown(); return; }
   if (playerReady) {
     var s = player.getPlayerState();
-    if (s === YT.PlayerState.PLAYING) player.pauseVideo();
+    if (s === YT.PlayerState.PLAYING) { pausedDuringCountdown = false; player.pauseVideo(); }
+    else if (pausedDuringCountdown) { pausedDuringCountdown = false; startCountdown(true); }
     else player.playVideo();
   } else if (wsReady && ws) {
     if (ws.isPlaying()) {
+      pausedDuringCountdown = false;
       ws.pause();
       if (wsAudio) wsAudio.pause();
+    } else if (pausedDuringCountdown) {
+      pausedDuringCountdown = false;
+      startCountdown(true);
     } else {
       if (wsAudio) { wsAudio.currentTime = ws.getCurrentTime(); wsAudio.play().catch(function(){}); }
       ws.play();
@@ -2082,16 +2102,16 @@ function toggleCountdown() {
   }
 }
 
-function startCountdown() {
+function startCountdown(forcePlay) {
   countdownActive = true;
 
   var wasPlaying;
   if (playerReady) {
-    wasPlaying = player.getPlayerState() === YT.PlayerState.PLAYING;
+    wasPlaying = forcePlay || player.getPlayerState() === YT.PlayerState.PLAYING;
     player.pauseVideo();
     player.seekTo(loopA, true);
   } else {
-    wasPlaying = ws && ws.isPlaying();
+    wasPlaying = forcePlay || (ws && ws.isPlaying());
     if (ws) ws.pause();
     if (wsAudio) wsAudio.pause();
     if (wsAudio) wsAudio.currentTime = loopA;
@@ -2108,7 +2128,8 @@ function startCountdown() {
     }
   }
 
-  setTimeout(function () {
+  countdownTimer = setTimeout(function () {
+    countdownTimer = null;
     countdownActive = false;
     if (!wasPlaying) return;
     if (playerReady) { player.playVideo(); }
