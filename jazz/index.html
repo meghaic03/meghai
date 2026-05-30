@@ -1528,8 +1528,18 @@ function applySpeed(rate) {
   rate = Math.max(0.25, Math.min(2.0, Math.round(rate * 100) / 100));
   currentSpeed = rate;
   if (playerReady) player.setPlaybackRate(rate);
-  if (wsReady && ws) ws.setPlaybackRate(rate);
-  if (wsAudio) wsAudio.playbackRate = rate;
+  if (wsReady && ws) {
+    var t = wsAudio ? wsAudio.currentTime : ws.getCurrentTime();
+    var wasPlaying = ws.isPlaying();
+    ws.setPlaybackRate(rate);
+    if (wsAudio) wsAudio.playbackRate = rate;
+    if (wasPlaying) {
+      var d = ws.getDuration();
+      if (d) ws.seekTo(t / d);
+    }
+  } else if (wsAudio) {
+    wsAudio.playbackRate = rate;
+  }
   document.getElementById('speedVal').innerHTML =
     rate.toFixed(2) + '<span style="font-size:.9rem;font-weight:400;color:var(--muted)">×</span>';
   document.getElementById('speedSlider').value = rate;
