@@ -846,10 +846,12 @@
     <div class="loop-times">
       <span style="color:var(--col-a);font-size:.72rem">A</span>
       <input id="ptA" class="loop-time-input" placeholder="—"
-             style="color:var(--col-a)" onchange="setLoopPoint('a', this.value)" />
+             style="color:var(--col-a)" onchange="setLoopPoint('a', this.value)"
+             onkeydown="if(event.key==='Enter'){setLoopPoint('a',this.value);this.blur();}" />
       <span style="color:var(--col-b);font-size:.72rem;margin-left:10px">B</span>
       <input id="ptB" class="loop-time-input" placeholder="—"
-             style="color:var(--col-b)" onchange="setLoopPoint('b', this.value)" />
+             style="color:var(--col-b)" onchange="setLoopPoint('b', this.value)"
+             onkeydown="if(event.key==='Enter'){setLoopPoint('b',this.value);this.blur();}" />
     </div>
     <button id="countdownToggle" onclick="toggleCountdown()">4-beat count-in</button>
     <button class="btn-clear" onclick="resetLoop()">Reset</button>
