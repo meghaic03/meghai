@@ -1367,6 +1367,7 @@ function cancelCountdown() {
 }
 
 function togglePlay() {
+  if (metroRunning) { stopMetro(); return; }
   if (countdownActive) { cancelCountdown(); return; }
   if (playerReady) {
     var s = player.getPlayerState();
