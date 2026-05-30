@@ -780,8 +780,13 @@
 
 </div><!-- /.main -->
 <aside class="sidebar">
-  <div class="sidebar-label">History</div>
-  <div class="playlist-list" id="playlistEl"></div>
+  <div class="sidebar-label" id="historyToggle" onclick="toggleHistory()"
+       style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;margin-bottom:0">
+    History <span id="historyChevron" style="font-size:.6rem;color:var(--muted)">▼</span>
+  </div>
+  <div id="historyPanel" style="margin-top:10px">
+    <div class="playlist-list" id="playlistEl"></div>
+  </div>
 
   <hr class="sidebar-divider" />
 
@@ -1993,6 +1998,13 @@ function renderPlaylist() {
 
 function escapeHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+var historyOpen = true;
+function toggleHistory() {
+  historyOpen = !historyOpen;
+  document.getElementById('historyPanel').style.display = historyOpen ? '' : 'none';
+  document.getElementById('historyChevron').textContent = historyOpen ? '▼' : '▶';
 }
 
 loadPlaylist();
