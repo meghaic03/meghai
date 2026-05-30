@@ -1966,6 +1966,7 @@ function loadPlaylistItem(id) {
   var item = playlist.find(function(p){ return p.id === id; });
   if (!item) return;
   activePlaylistId = id;
+  applySpeed(1);
   if (item.isAudio) {
     loadAudioFromDB(id).then(function(record) {
       if (!record) { toast('Audio file not found — try re-uploading it'); return; }
