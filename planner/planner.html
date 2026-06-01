@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Summer 2026 Planner</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1a1a1a;background:#ddd8f5;min-height:100vh;padding:16px}
+:root{
+  --bg-primary:#f8f7ff;
+  --bg-secondary:#eeebfc;
+  --bg-tertiary:#e5e1f8;
+  --text-primary:#1a1a1a;
+  --text-secondary:#6b6b6b;
+  --text-tertiary:#9a9a9a;
+  --border-light:rgba(100,80,180,0.13);
+  --border-mid:rgba(100,80,180,0.22);
+  --radius-md:8px;
+  --radius-lg:12px;
+}
+.topbar{background:var(--bg-primary);border:0.5px solid var(--border-light);border-radius:var(--radius-lg);padding:12px 16px;margin-bottom:8px}
+.goals-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.goal-chip{flex:1;min-width:120px;background:var(--bg-secondary);border:0.5px solid var(--border-light);border-radius:var(--radius-md);padding:7px 11px;font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:7px}
+.goal-chip i{font-size:15px}
+.goal-chip strong{color:var(--text-primary);font-weight:500}
+.nav-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.nav-btn{background:none;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);padding:5px 9px;cursor:pointer;color:var(--text-primary);display:flex;align-items:center}
+.nav-btn:hover{background:var(--bg-secondary)}
+.date-label{font-size:15px;font-weight:500}
+.badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500}
+.badge-work{background:#E6F1FB;color:#0C447C}
+.badge-off{background:#EAF3DE;color:#27500A}
+.views{display:flex;gap:5px}
+.view-btn{background:none;border:0.5px solid var(--border-light);border-radius:var(--radius-md);padding:4px 9px;cursor:pointer;font-size:12px;color:var(--text-secondary)}
+.view-btn.active{background:var(--bg-secondary);color:var(--text-primary);border-color:var(--border-mid)}
+.panel{background:var(--bg-primary);border:0.5px solid var(--border-light);border-radius:var(--radius-lg);padding:12px}
+.panel-title{font-size:11px;font-weight:500;color:var(--text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em}
+.section-label{font-size:11px;font-weight:500;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.04em;margin:10px 0 5px;padding-left:2px;display:flex;justify-content:space-between;align-items:center}.section-total{font-size:11px;font-weight:400;color:var(--text-tertiary);text-transform:none;letter-spacing:0}
+.todo-item{display:flex;align-items:flex-start;gap:8px;padding:6px 8px;border-radius:var(--radius-md);border:0.5px solid var(--border-light);margin-bottom:3px;cursor:pointer}
+.todo-item:hover{background:var(--bg-secondary)}
+.todo-item.done{opacity:0.38}
+.todo-item.done .todo-label{text-decoration:line-through}
+.todo-check{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border-mid);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.todo-check.checked{background:#1D9E75;border-color:#1D9E75}
+.todo-label{font-size:13px;flex:1;line-height:1.4}
+.todo-sub{font-size:11px;color:var(--text-secondary);margin-top:1px}
+.todo-time{font-size:11px;color:var(--text-tertiary);white-space:nowrap;padding-top:1px}
+.cat-violin{background:#E8F0E6;color:#4A7A4A;font-size:10px;padding:2px 6px;border-radius:20px;white-space:nowrap}
+.cat-music{background:#FCE4EC;color:#880E4F;font-size:10px;padding:2px 6px;border-radius:20px;white-space:nowrap}
+.cat-job{background:#E6F1FB;color:#0C447C;font-size:10px;padding:2px 6px;border-radius:20px;white-space:nowrap}
+.cat-health{background:#FEF3E0;color:#B86800;font-size:10px;padding:2px 6px;border-radius:20px;white-space:nowrap}
+.cat-custom{background:#f1efe8;color:#444441;font-size:10px;padding:2px 6px;border-radius:20px;white-space:nowrap}
+.add-todo{display:flex;gap:5px;margin-top:8px}
+.add-todo input{flex:1;padding:6px 9px;border:0.5px solid var(--border-light);border-radius:var(--radius-md);font-size:13px;background:var(--bg-secondary);color:var(--text-primary)}
+.add-todo select{padding:6px 4px;border:0.5px solid var(--border-light);border-radius:var(--radius-md);font-size:12px;background:var(--bg-secondary);color:var(--text-primary)}
+.add-todo button{padding:6px 9px;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);cursor:pointer;background:none;color:var(--text-primary)}
+.sched-block{display:flex;gap:8px;padding:6px 8px;border-radius:var(--radius-md);border:0.5px solid var(--border-light);margin-bottom:3px}
+.sched-block.fixed-block{background:var(--bg-secondary)}
+.sched-time{font-size:11px;color:var(--text-secondary);min-width:72px;padding-top:2px;line-height:1.3}
+.sched-label-fixed{font-size:13px;font-weight:500}
+.sched-input{background:none;border:none;font-size:13px;color:var(--text-primary);font-family:inherit;outline:none;width:100%}
+.sched-input:focus{background:var(--bg-secondary);border-radius:3px;padding:0 3px}
+.sched-input::placeholder{color:var(--text-tertiary)}
+.sep{height:0.5px;background:var(--border-light);margin:8px 0}
+.offday-row{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--text-secondary);margin-top:6px}
+.offday-btn{padding:4px 9px;border:0.5px solid var(--border-light);border-radius:var(--radius-md);cursor:pointer;background:none;color:var(--text-secondary);font-size:12px}
+.offday-btn:hover{background:var(--bg-secondary)}
+.progress-bar{height:4px;background:var(--border-light);border-radius:2px;margin-top:4px}
+.progress-fill{height:4px;background:#1D9E75;border-radius:2px}
+.book-info{font-size:11px;color:var(--text-secondary);margin-top:2px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:8px}
+.cal-hdr{font-size:11px;color:var(--text-secondary);text-align:center;padding:3px 0}
+.cal-day{border:0.5px solid var(--border-light);border-radius:var(--radius-md);padding:5px;min-height:56px;cursor:pointer}
+.cal-day:hover{background:var(--bg-secondary)}
+.cal-day.today{border-color:#378ADD}
+.cal-day.is-off{background:var(--bg-secondary)}
+.cal-day.out-range{opacity:0.25;pointer-events:none}
+.cal-num{font-size:12px;font-weight:500}
+.cal-key{font-size:9px;color:#854F0B;margin-top:1px}
+.cal-done{font-size:9px;color:#1D9E75;margin-top:1px}
+.day-view{display:none}
+.day-view.show{display:grid;grid-template-columns:1fr 1.3fr;gap:8px}
+.cal-view{display:none}
+.cal-view.show{display:block}
+.seb-view{display:none}
+.seb-view.show{display:block}
+.day-off-banner{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 0;gap:6px;color:var(--text-secondary)}
+.day-off-banner i{font-size:28px}
+.seb-week-card{border:0.5px solid var(--border-light);border-radius:var(--radius-md);padding:10px 12px;margin-bottom:8px}
+.seb-week-card.current-week{border-color:#7F77DD;background:#EEEDFE}
+.seb-week-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.seb-week-label{font-size:12px;font-weight:500}
+.seb-week-keys{font-size:11px;color:var(--text-secondary)}
+.seb-textarea{width:100%;border:0.5px solid var(--border-light);border-radius:var(--radius-md);padding:7px 9px;font-size:13px;font-family:inherit;background:var(--bg-secondary);color:var(--text-primary);resize:vertical;min-height:52px;line-height:1.5}
+.seb-textarea:focus{outline:none;border-color:var(--border-mid)}
+.seb-textarea.current-wk{background:var(--bg-primary)}
+.current-chip{font-size:10px;padding:2px 7px;border-radius:20px;background:#7F77DD;color:#fff;margin-left:6px}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+#app{max-width:960px;margin:0 auto}
+.del-todo{background:none;border:none;cursor:pointer;color:var(--text-tertiary);font-size:15px;padding:0 2px;line-height:1;flex-shrink:0;opacity:0.5}
+.del-todo:hover{color:#ef4444;opacity:1}
+.today-btn{padding:4px 9px;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);cursor:pointer;background:none;color:var(--text-secondary);font-size:12px}
+.today-btn:hover{background:var(--bg-secondary)}
+.tl-outer{display:flex;margin-top:4px}
+.tl-axis{width:42px;flex-shrink:0;position:relative}
+.tl-axis-lbl{position:absolute;font-size:10px;color:var(--text-tertiary);right:8px;transform:translateY(-50%);white-space:nowrap}
+.tl-canvas{flex:1;position:relative;border-left:0.5px solid var(--border-light)}
+.tl-hline{position:absolute;left:0;right:0;height:0.5px;background:var(--border-light);pointer-events:none}
+.tl-fixed{position:absolute;left:2px;right:2px;border-radius:5px;padding:3px 7px;background:var(--bg-secondary);border:0.5px solid var(--border-mid);overflow:hidden;box-sizing:border-box;pointer-events:none}
+.tl-fixed-lbl{font-size:10px;font-weight:500;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-fixed-sub{font-size:9px;color:var(--text-tertiary);display:flex;align-items:center;gap:4px;margin-top:1px}
+.tl-task{position:absolute;left:2px;right:2px;border-radius:6px;padding:4px 8px;cursor:grab;overflow:hidden;box-sizing:border-box;min-height:28px;user-select:none;border-left-width:3px;border-left-style:solid}
+.tl-task:active{cursor:grabbing}
+.tl-task.drag-over{outline:2px dashed rgba(80,60,160,0.4);outline-offset:-2px}
+.tl-task-time{font-size:9px;font-weight:700;white-space:nowrap;line-height:1.4;opacity:0.85}
+.tl-task-row{display:flex;align-items:center;gap:4px;margin-top:1px}
+.tl-task-icon{font-size:11px;flex-shrink:0}
+.tl-task-lbl{font-size:11px;font-weight:600;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.tl-task-sub{font-size:9px;opacity:0.65;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-top:1px}
+.tl-break{position:absolute;left:2px;right:2px;box-sizing:border-box;display:flex;align-items:center;padding:0 8px;border-radius:4px;border:0.5px dashed var(--border-mid)}
+.tl-break-lbl{font-size:9px;color:var(--text-tertiary);white-space:nowrap}
+.tl-now{position:absolute;left:0;right:0;pointer-events:none;z-index:20}
+.tl-now-line{position:absolute;top:0;left:10px;right:0;height:2px;background:#E53935}
+.tl-now-dot{position:absolute;top:-4px;left:4px;width:10px;height:10px;border-radius:50%;background:#E53935}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="topbar">
+    <div class="goals-row">
+      <div class="goal-chip"><i class="ti ti-music"></i><strong>Learn jazz</strong><span>violin · piano · theory · history</span></div>
+      <div class="goal-chip"><i class="ti ti-briefcase"></i><strong>Get a job</strong><span>reach out · portfolio · research</span></div>
+      <div class="goal-chip"><i class="ti ti-heart"></i><strong>Health</strong><span>workout · posture · skin · invisalign</span></div>
+    </div>
+    <div class="nav-row">
+      <div style="display:flex;align-items:center;gap:7px">
+        <button class="nav-btn" onclick="changeDay(-1)"><i class="ti ti-chevron-left"></i></button>
+        <span class="date-label" id="date-label"></span>
+        <button class="nav-btn" onclick="changeDay(1)"><i class="ti ti-chevron-right"></i></button>
+        <span class="badge" id="day-badge"></span>
+        <button class="today-btn" onclick="goToToday()">Today</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span id="summer-progress" style="font-size:11px;color:var(--text-secondary)"></span>
+        <div class="views">
+          <button class="view-btn active" id="btn-day" onclick="setView('day')">Day</button>
+          <button class="view-btn" id="btn-cal" onclick="setView('cal')">Calendar</button>
+          <button class="view-btn" id="btn-seb" onclick="setView('seb')">Sebastian's lessons</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="day-view show" id="day-view">
+    <div class="panel">
+      <div class="panel-title">To-do</div>
+      <div id="todo-area"></div>
+      <div class="sep"></div>
+      <div class="add-todo">
+        <input type="text" id="todo-input" placeholder="Add task…" onkeydown="if(event.key==='Enter')addTodo()">
+        <select id="todo-cat">
+          <option value="violin">violin</option>
+          <option value="music">music</option>
+          <option value="job">job</option>
+          <option value="health">health</option>
+          <option value="custom">other</option>
+        </select>
+        <button onclick="addTodo()"><i class="ti ti-plus"></i></button>
+      </div>
+      <div class="offday-row">
+        <span id="offday-label"></span>
+        <button class="offday-btn" onclick="toggleDayOff()" id="offday-btn"></button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Schedule</div>
+      <div id="schedule-area"></div>
+    </div>
+  </div>
+
+  <div class="cal-view" id="cal-view">
+    <div class="panel">
+      <div class="cal-nav">
+        <button class="nav-btn" onclick="calPrevMonth()"><i class="ti ti-chevron-left"></i></button>
+        <span style="font-size:14px;font-weight:500" id="cal-month-label"></span>
+        <button class="nav-btn" onclick="calNextMonth()"><i class="ti ti-chevron-right"></i></button>
+      </div>
+      <div id="cal-inner"></div>
+    </div>
+  </div>
+
+  <div class="seb-view" id="seb-view">
+    <div class="panel">
+      <div class="panel-title">Sebastian's weekly focus</div>
+      <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">Type each week's instructions — shows up in your daily to-do automatically.</p>
+      <div id="seb-weeks"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── Config ───────────────────────────────────────────────────────────────────
+const START = new Date(2026, 5, 1);  // June 1 2026
+const END   = new Date(2026, 7, 28); // Aug 28 2026
+const TOTAL_WEEKS = 13;
+
+const KEYS_ORDER = ['C','F','B♭','E♭','G','D','A♭','A','D♭','E','B','G♭/F♯'];
+const SEC_COLOR = { violin:'#5A8A5A', music:'#C2185B', job:'#2563EB', health:'#E8920A' };
+const MONTHS_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS_SHORT  = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+// Sebastian weeks run Thu–Wed, starting May 28 2026
+const SEB_WEEK_START = new Date(2026, 4, 28);
+
+let sebastianNotes = { '1': 'Charlie Parker — Anthropology solo + altered scale licks' };
+let sebastianTimes = { '1': '45m' };
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+function weekNum(date) {
+  let d = new Date(date); d.setHours(0,0,0,0);
+  let s = new Date(START); s.setHours(0,0,0,0);
+  return Math.floor((d - s) / (7 * 86400000));
+}
+
+function sebWeekNum(date) {
+  let d = new Date(date); d.setHours(0,0,0,0);
+  let s = new Date(SEB_WEEK_START); s.setHours(0,0,0,0);
+  return Math.floor((d - s) / (7 * 86400000));
+}
+
+function getKeysForWeek(wn) {
+  let keys = [];
+  for (let i = 0; i <= wn && i < KEYS_ORDER.length; i++) keys.push(KEYS_ORDER[i]);
+  return keys;
+}
+
+function getKeySchedule(wn) {
+  let keys = getKeysForWeek(wn);
+  if (!keys.length) return '';
+  return keys.map((k, i) => i < keys.length - 1 ? `${k} 5min` : `${k} 20min`).join(' · ');
+}
+
+function dayKey(d) {
+  let y = d.getFullYear();
+  let m = String(d.getMonth() + 1).padStart(2, '0');
+  let dd = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${dd}`;
+}
+
+function inSummer(d) { return d >= START && d <= END; }
+
+function getBookPage(d) {
+  let diff = Math.floor((new Date(d) - START) / 86400000);
+  return Math.min(524, 1 + diff * 10);
+}
+
+// ─── State ────────────────────────────────────────────────────────────────────
+let today = new Date(); today.setHours(0,0,0,0);
+let current = new Date(START);
+if (today >= START && today <= END) current = new Date(today);
+let savedDay = localStorage.getItem('planner-current-day');
+if (savedDay) { let [sy,sm,sd] = savedDay.split('-').map(Number); let d = new Date(sy, sm-1, sd); if (d >= START && d <= END) current = d; }
+
+function saveCurrentDay() { localStorage.setItem('planner-current-day', dayKey(current)); }
+
+let state = {};
+// loadState() is defined later — called just before render() at the bottom
+let calMonth = { year: 2026, month: 5 };
+
+function getDay(d) {
+  let k = dayKey(d);
+  if (!state[k]) {
+    let dow = d.getDay();
+    state[k] = { off: dow === 0 || dow === 6, todos: [], schedule: {}, fixed: {} };
+  }
+  return state[k];
+}
+
+// ─── Navigation ───────────────────────────────────────────────────────────────
+function changeDay(n) {
+  let nd = new Date(current);
+  nd.setDate(nd.getDate() + n);
+  if (nd >= START && nd <= END) { current = nd; saveCurrentDay(); render(); }
+}
+
+function setView(v) {
+  ['day', 'cal', 'seb'].forEach(x => {
+    document.getElementById(x + '-view').className = x + '-view' + (v === x ? ' show' : '');
+    document.getElementById('btn-' + x).className = 'view-btn' + (v === x ? ' active' : '');
+  });
+  if (v === 'cal') renderCal();
+  if (v === 'seb') renderSeb();
+}
+
+function toggleDayOff() { getDay(current).off = !getDay(current).off; saveState(); render(); }
+
+// ─── To-do ────────────────────────────────────────────────────────────────────
+function addTodo() {
+  let inp = document.getElementById('todo-input');
+  let cat = document.getElementById('todo-cat').value;
+  let txt = inp.value.trim();
+  if (!txt) return;
+  getDay(current).todos.push({ txt, cat, done: false });
+  inp.value = '';
+  saveState(); renderTodos();
+}
+
+function toggleTodo(k, i) { state[k].todos[i].done = !state[k].todos[i].done; saveState(); renderTodos(); }
+
+function toggleFixed(k, id) {
+  let d = state[k];
+  if (!d.fixed) d.fixed = {};
+  d.fixed[id] = !d.fixed[id];
+  saveState(); renderTodos();
+}
+
+function saveSeb(wn, val) { sebastianNotes[String(wn)] = val; }
+function saveSebTime(wn, val) { sebastianTimes[String(wn)] = val; renderTodos(); renderSchedule(); }
+
+// ─── Fixed tasks ──────────────────────────────────────────────────────────────
+function computeFixedTasks(date) {
+  let wn = weekNum(date);
+  let swn = sebWeekNum(date);
+  let keyStr = getKeySchedule(wn);
+  let scaleKeys = getKeysForWeek(wn);
+  let scaleTime = scaleKeys.length ? `${(scaleKeys.length - 1) * 5 + 20}m` : '20m';
+  let sebKey = String(swn + 1);
+  let sebastian = sebastianNotes[sebKey] || '— open Sebastian tab to add this week\'s focus';
+  let sebTime = sebastianTimes[sebKey] || '45m';
+  let pageStart = getBookPage(date);
+  let pageEnd = Math.min(524, pageStart + 9);
+  let progress = Math.round((pageStart / 524) * 100);
+  return {
+    tasks: [
+      { id: 'v1', cat: 'violin', icon: 'ti-music',          color: SEC_COLOR.violin, label: 'Mozart 5 + UCBSO excerpts', sub: 'Prepare for UCBPO audition', time: '45m' },
+      { id: 'v2', cat: 'violin', icon: 'ti-notes',          color: SEC_COLOR.violin, label: `Scales & chords: ${keyStr}`, sub: `Week ${wn + 1} · ${getKeysForWeek(wn).slice(-1)[0]} major`, time: scaleTime },
+      { id: 'v3', cat: 'violin', icon: 'ti-pencil',         color: SEC_COLOR.violin, label: 'George Coleman — Naima transcription', sub: '20 min', time: '20m', afterMin: 15*60 },
+      { id: 'v4', cat: 'violin', icon: 'ti-star',           color: SEC_COLOR.violin, label: sebastian, sub: "Sebastian's weekly focus", time: sebTime },
+      { id: 'm1', cat: 'music',  icon: 'ti-book',           color: SEC_COLOR.music,  label: `Jazz history — pp. ${pageStart}–${pageEnd}`, sub: `${progress}% through · 10 pages/day`, time: '30m', afterMin: 15*60 },
+      { id: 'm2', cat: 'music',  icon: 'ti-headphones',     color: SEC_COLOR.music,  label: 'Ear training app', sub: 'During breakfast', time: '20m' },
+      { id: 'm3', cat: 'music',  icon: 'ti-piano',          color: SEC_COLOR.music,  label: 'Jazz piano — lesson book', sub: '30 min', time: '30m' },
+      { id: 'm4', cat: 'music',  icon: 'ti-book-2',         color: SEC_COLOR.music,  label: 'Jazz piano — Real Book sight-read', sub: 'Pick a random song, chords only', time: '15m' },
+      { id: 'j1', cat: 'job',    icon: 'ti-message-circle', color: SEC_COLOR.job,    label: 'Reach out to 10 people', sub: 'Networking outreach', time: '90m', afterMin: 15*60 },
+      { id: 'j2', cat: 'job',    icon: 'ti-briefcase',      color: SEC_COLOR.job,    label: 'Portfolio & job research', sub: 'Savvly work, postings, skills', time: '90m' },
+      { id: 'h0', cat: 'health', icon: 'ti-run',             color: SEC_COLOR.health, label: 'Posture exercises', sub: '', time: '—' },
+      { id: 'h1', cat: 'health', icon: 'ti-barbell',        color: SEC_COLOR.health, label: 'Workout', sub: '', time: '—' },
+      { id: 'h2', cat: 'health', icon: 'ti-masks-theater',  color: SEC_COLOR.health, label: 'Skincare routine', sub: '', time: '—' },
+      { id: 'h3', cat: 'health', icon: 'ti-tooth',          color: SEC_COLOR.health, label: 'Invisalign', sub: 'All day', time: '—' },
+    ],
+    progress,
+    pageStart,
+  };
+}
+
+function renderTodos() {
+  let k = dayKey(current);
+  let d = getDay(current);
+  if (!d.fixed) d.fixed = {};
+  let { tasks: fixedTasks, progress, pageStart } = computeFixedTasks(current);
+
+  const sections = [
+    { label: 'Violin', ids: ['v2', 'v4', 'v3', 'v1'] },
+    { label: 'Music',  ids: ['m2', 'm3', 'm4', 'm1'] },
+    { label: 'Jobs',   ids: ['j1', 'j2'] },
+    { label: 'Health', ids: ['h0', 'h1', 'h2', 'h3'] },
+  ];
+
+  let html = '';
+  if (d.off) {
+    html = `<div class="day-off-banner"><i class="ti ti-beach"></i><span>Day off</span></div>`;
+  } else {
+    sections.forEach(sec => {
+      let secTasks = sec.ids.map(id => fixedTasks.find(x => x.id === id));
+      let totalMins = secTasks.reduce((sum, t) => {
+        let m = t.time.match(/^(\d+)m$/);
+        return sum + (m ? parseInt(m[1]) : 0);
+      }, 0);
+      let totalStr = totalMins > 0 ? (totalMins >= 60 ? `${Math.floor(totalMins/60)}h${totalMins%60 ? (totalMins%60)+'m' : ''}` : `${totalMins}m`) : '';
+      html += `<div class="section-label">${sec.label}${totalStr ? `<span class="section-total">${totalStr}</span>` : ''}</div>`;
+      sec.ids.forEach(id => {
+        let t = fixedTasks.find(x => x.id === id);
+        let done = !!d.fixed[id];
+        html += `<div class="todo-item${done ? ' done' : ''}" onclick="toggleFixed('${k}','${id}')">
+          <div class="todo-check${done ? ' checked' : ''}">${done ? '<i class="ti ti-check" style="font-size:10px;color:#fff"></i>' : ''}</div>
+          <span style="flex-shrink:0;margin-top:1px;line-height:1;display:inline-flex">${taskIcon(t.icon, t.color, 15)}</span>
+          <div style="flex:1">
+            <div class="todo-label">${t.label}</div>
+            ${t.sub ? `<div class="todo-sub">${t.sub}</div>` : ''}
+            ${id === 'm1' ? `<div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div><div class="book-info">${pageStart} of 524 pages</div>` : ''}
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+            <span class="cat-${t.cat}">${t.cat}</span>
+            <span class="todo-time">${t.time}</span>
+          </div>
+        </div>`;
+      });
+    });
+    if (d.todos.length) {
+      html += `<div class="section-label">Custom</div>`;
+      d.todos.forEach((t, i) => {
+        html += `<div class="todo-item${t.done ? ' done' : ''}" onclick="toggleTodo('${k}',${i})">
+          <div class="todo-check${t.done ? ' checked' : ''}">${t.done ? '<i class="ti ti-check" style="font-size:10px;color:#fff"></i>' : ''}</div>
+          <div class="todo-label" style="flex:1">${t.txt}</div>
+          <span class="cat-${t.cat}">${t.cat}</span>
+          <button class="del-todo" onclick="event.stopPropagation();deleteTodo('${k}',${i})">&times;</button>
+        </div>`;
+      });
+    }
+  }
+  document.getElementById('todo-area').innerHTML = html;
+}
+
+// ─── Schedule ─────────────────────────────────────────────────────────────────
+const SCHED_IDS = ['v1','v2','v3','v4','m1','m3','m4','j1','j2'];
+const SCHED_ZONES = [
+  { start: 9*60+25, end: 14*60 }, { start: 15*60, end: 18*60 }, { start: 21*60+30, end: 22*60+30 },
+];
+const SCHED_FIXED = [
+  { s: 8*60,     e: 8*60+30,  label: 'Wake up', icon: 'ti-run', iconColor: SEC_COLOR.health, sub: 'Posture exercises' },
+  { s: 8*60+30,  e: 9*60+25,  label: 'Breakfast + ear training', icon: 'ti-headphones', iconColor: SEC_COLOR.music },
+  { s: 14*60,    e: 15*60,    label: 'Lunch' },
+  { s: 18*60,    e: 21*60+30, label: 'Workout · shower · dinner', icon: 'ti-barbell', iconColor: SEC_COLOR.health },
+  { s: 22*60+30, e: 23*60,    label: 'Wind down & sleep', windDown: true },
+];
+
+function minToStr(m) {
+  let h = Math.floor(m/60), min = m%60, ap = Math.floor(m/60)<12?'am':'pm';
+  h = h%12||12;
+  return `${h}${min?':'+String(min).padStart(2,'0'):''}${ap}`;
+}
+function hexRgba(hex, a) {
+  let r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+// morning: v2,v4,m3,m4,j2,v1 · afternoon (after 3pm): m1,j1,v3
+const SCHED_DEFAULT_ORDER = ['v2','v4','m3','m4','j2','v1','m1','j1','v3'];
+const TL_PX = 1.2;       // px per minute → 72px/hour
+const TL_START = 8*60;   // 8am
+const TL_END   = 23*60;  // 11pm
+function tlY(m) { return (m - TL_START) * TL_PX; }
+const INLINE_SVGS = {
+  'ti-tooth': `<path d="M12 2c-2.4 0-4 1.6-4 3 0 1.1.5 2 1 2.5 1 1 1 2 .5 4-.5 2-1.5 3-1.5 4.5C9 17.7 10.3 19 12 19s3-1.3 3-3c0-1.5-1-2.5-1.5-4.5-.5-2-.5-3 .5-4 .5-.5 1-1.4 1-2.5 0-1.4-1.6-3-4-3z"/>`,
+};
+function taskIcon(icon, color, sz) {
+  if (INLINE_SVGS[icon]) {
+    return `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">${INLINE_SVGS[icon]}</svg>`;
+  }
+  return icon.startsWith('ti-')
+    ? `<i class="ti ${icon}" style="font-size:${sz}px;color:${color};flex-shrink:0"></i>`
+    : `<span style="font-size:${sz-1}px;flex-shrink:0;line-height:1">${icon}</span>`;
+}
+
+function renderSchedule() {
+  let d = getDay(current);
+  if (d.off) { document.getElementById('schedule-area').innerHTML = ''; return; }
+
+  let { tasks: allTasks } = computeFixedTasks(current);
+  if (!d.schedOrder) d.schedOrder = [...SCHED_DEFAULT_ORDER];
+  SCHED_DEFAULT_ORDER.forEach(id => { if (!d.schedOrder.includes(id)) d.schedOrder.push(id); });
+
+  let ordered = d.schedOrder.filter(id => SCHED_DEFAULT_ORDER.includes(id))
+    .map(id => allTasks.find(t => t.id === id)).filter(Boolean);
+
+  // Lay out blocks sequentially, breaking at fixed block times
+  // Each block's top = sum of all preceding durations + fixed block heights
+  const H = (TL_END - TL_START) * TL_PX;
+
+  // Build a merged timeline: fixed anchors + task blocks in order
+  // Tasks fill sequentially between fixed blocks
+  let schedule = []; // { type:'fixed'|'task'|'break', ... }
+  let taskQueue = [...ordered];
+  let curMin = TL_START;
+  let lastCat = null; // track last placed task's category for break insertion
+
+  function placeTask(t, dur) {
+    let needBreak = lastCat && lastCat !== t.cat;
+    if (needBreak) {
+      schedule.push({ type: 'break', startMin: curMin, durMin: 10, label: '10 min break' });
+      curMin += 10;
+    }
+    schedule.push({ type: 'task', data: t, startMin: curMin, durMin: dur });
+    curMin += dur;
+    lastCat = t.cat;
+  }
+
+  for (let fb of SCHED_FIXED) {
+    let consecutive_skips = 0;
+    while (taskQueue.length > 0 && consecutive_skips < taskQueue.length) {
+      let t = taskQueue[0];
+      let dur = parseInt((t.time.match(/^(\d+)m$/) || ['',30])[1]);
+      if (t.afterMin && curMin < t.afterMin) {
+        taskQueue.push(taskQueue.shift());
+        consecutive_skips++;
+        continue;
+      }
+      consecutive_skips = 0;
+      let breakDur = (lastCat && lastCat !== t.cat) ? 10 : 0;
+      if (curMin + breakDur + dur > fb.s) break;
+      taskQueue.shift();
+      placeTask(t, dur);
+    }
+    // Show any remaining gap before this fixed block as a free break
+    if (fb.s > curMin) {
+      let gap = fb.s - curMin;
+      schedule.push({ type: 'break', startMin: curMin, durMin: gap, label: `${gap} min break` });
+      curMin = fb.s;
+    }
+    lastCat = null;
+    schedule.push({ type: 'fixed', data: fb, startMin: fb.s, durMin: fb.e - fb.s });
+    curMin = fb.e;
+  }
+  while (taskQueue.length > 0) {
+    let t = taskQueue.shift();
+    let dur = parseInt((t.time.match(/^(\d+)m$/) || ['',30])[1]);
+    placeTask(t, dur);
+  }
+
+  // Assign each item a rendered height, then stack tops from accumulated Y
+  // (min-height on short tasks would cause overlap if we used tlY(startMin) directly)
+  const MIN_TASK_H = 28, MIN_FIXED_H = 22;
+  let accY = 0;
+  schedule.forEach(item => {
+    let naturalH = item.durMin * TL_PX;
+    item.renderedH = item.type === 'task' ? Math.max(MIN_TASK_H, naturalH)
+                   : item.type === 'break' ? Math.max(14, naturalH)
+                   : Math.max(MIN_FIXED_H, naturalH);
+    item.renderedY = accY;
+    // Store axis position: where this item's startMin maps to in real time
+    item.axisY = tlY(item.startMin);
+    accY += item.renderedH;
+  });
+  const totalH = accY;
+
+  // Build axis labels and gridlines by walking schedule items directly.
+  // Hours that land exactly on a block boundary use that block's renderedY.
+  // Hours that land inside a block interpolate within that block's rendered height.
+  // Hours that land in a gap (no block covers that minute) are skipped.
+  let axis = '', grid = '';
+  let seenHours = new Set();
+  function addHourLabel(h, y) {
+    if (seenHours.has(h) || y > totalH + 4) return;
+    seenHours.add(h);
+    let lbl = h < 12 ? `${h}am` : h === 12 ? '12pm' : `${h-12}pm`;
+    axis += `<div class="tl-axis-lbl" style="top:${y}px">${lbl}</div>`;
+    grid += `<div class="tl-hline" style="top:${y}px"></div>`;
+  }
+  // Pass 1: exact hour boundaries at block starts/ends
+  schedule.forEach(item => {
+    let sh = item.startMin / 60;
+    if (Number.isInteger(sh)) addHourLabel(sh, item.renderedY);
+    let eh = (item.startMin + item.durMin) / 60;
+    if (Number.isInteger(eh)) addHourLabel(eh, item.renderedY + item.renderedH);
+  });
+  // Pass 2: hours inside long blocks (interpolate)
+  for (let h = 8; h <= 22; h++) {
+    if (seenHours.has(h)) continue;
+    let m = h * 60;
+    for (let item of schedule) {
+      if (m > item.startMin && m < item.startMin + item.durMin) {
+        let frac = (m - item.startMin) / item.durMin;
+        addHourLabel(h, item.renderedY + frac * item.renderedH);
+        break;
+      }
+    }
+  }
+
+  // Render all items using accumulated Y (no overlap)
+  let itemsHtml = schedule.map(item => {
+    let top = item.renderedY, ht = item.renderedH;
+    if (item.type === 'break') {
+      return `<div class="tl-break" style="top:${top}px;height:${ht}px"><span class="tl-break-lbl">— ${item.label} —</span></div>`;
+    } else if (item.type === 'fixed') {
+      let fb = item.data;
+      let inner = `<div class="tl-fixed-lbl">${fb.label}</div>`;
+      if (fb.windDown) inner += `<div class="tl-fixed-sub">${taskIcon('ti-masks-theater', SEC_COLOR.health, 11)}<span>Skincare</span>${taskIcon('ti-tooth', SEC_COLOR.health, 11)}<span>Invisalign</span></div>`;
+      else if (fb.icon) inner += `<div class="tl-fixed-sub">${taskIcon(fb.icon, fb.iconColor, 11)}${fb.sub ? `<span>${fb.sub}</span>` : ''}</div>`;
+      return `<div class="tl-fixed" style="top:${top}px;height:${ht}px">${inner}</div>`;
+    } else {
+      let t = item.data;
+      let ts = `${minToStr(item.startMin)}–${minToStr(item.startMin + item.durMin)}`;
+      return `<div class="tl-task" id="tb-${t.id}" draggable="true"
+        style="top:${top}px;height:${ht}px;background:${hexRgba(t.color,0.13)};border-left-color:${t.color}"
+        ondragstart="schedDragStart(event,'${t.id}')"
+        ondragover="schedDragOver(event,'${t.id}')"
+        ondrop="schedDrop(event,'${t.id}')"
+        ondragleave="this.classList.remove('drag-over')">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:4px">
+          <div class="tl-task-time" style="color:${t.color}">${ts}</div>
+          <div style="font-size:9px;font-weight:700;opacity:0.55;color:${t.color};white-space:nowrap;flex-shrink:0">${item.durMin >= 60 ? Math.floor(item.durMin/60)+'h'+(item.durMin%60?item.durMin%60+'m':'') : item.durMin+'m'}</div>
+        </div>
+        <div class="tl-task-row">
+          ${taskIcon(t.icon, t.color, 11)}
+          <div class="tl-task-lbl" style="color:${t.color}">${t.label}</div>
+        </div>
+        ${item.durMin >= 45 && t.sub ? `<div class="tl-task-sub">${t.sub}</div>` : ''}
+      </div>`;
+    }
+  }).join('');
+
+  let isToday = dayKey(current) === dayKey(today);
+  document.getElementById('schedule-area').innerHTML =
+    `<div class="tl-outer"><div class="tl-axis" style="height:${totalH}px">${axis}</div>` +
+    `<div class="tl-canvas" id="tl-canvas" style="height:${totalH}px">${grid}${itemsHtml}` +
+    `${isToday ? '<div class="tl-now" id="tl-now"><div class="tl-now-dot"></div><div class="tl-now-line"></div></div>' : ''}` +
+    `</div></div>`;
+
+  if (isToday) {
+    lastScheduleItems = schedule;
+    updateNowLine();
+  }
+}
+
+let lastScheduleItems = [];
+function scheduleItemToY(minFromMidnight) {
+  for (let item of lastScheduleItems) {
+    if (minFromMidnight >= item.startMin && minFromMidnight < item.startMin + item.durMin) {
+      let frac = (minFromMidnight - item.startMin) / item.durMin;
+      return item.renderedY + frac * item.renderedH;
+    }
+  }
+  if (lastScheduleItems.length && minFromMidnight >= lastScheduleItems[lastScheduleItems.length-1].startMin + lastScheduleItems[lastScheduleItems.length-1].durMin)
+    return lastScheduleItems[lastScheduleItems.length-1].renderedY + lastScheduleItems[lastScheduleItems.length-1].renderedH;
+  return -1;
+}
+
+function updateNowLine() {
+  let el = document.getElementById('tl-now');
+  if (!el) return;
+  let now = new Date();
+  let nowMin = now.getHours() * 60 + now.getMinutes();
+  let y = scheduleItemToY(nowMin);
+  if (y < 0) { el.style.display = 'none'; return; }
+  el.style.display = '';
+  el.style.top = y + 'px';
+}
+
+setInterval(updateNowLine, 60000);
+
+// Drag-to-reorder (HTML5, reorders schedOrder)
+let dragSrcId = null;
+function schedDragStart(e, id) {
+  dragSrcId = id;
+  e.dataTransfer.effectAllowed = 'move';
+  setTimeout(() => { let el = document.getElementById('tb-'+id); if (el) el.style.opacity='0.4'; }, 0);
+}
+function schedDragOver(e, id) {
+  e.preventDefault();
+  document.querySelectorAll('.tl-task').forEach(el => el.classList.remove('drag-over'));
+  if (id !== dragSrcId) e.currentTarget.classList.add('drag-over');
+}
+function schedDrop(e, id) {
+  e.preventDefault();
+  document.querySelectorAll('.tl-task').forEach(el => { el.classList.remove('drag-over'); el.style.opacity=''; });
+  if (!dragSrcId || dragSrcId === id) return;
+  let order = getDay(current).schedOrder;
+  let from = order.indexOf(dragSrcId), to = order.indexOf(id);
+  if (from === -1) return;
+  order.splice(from, 1); order.splice(to, 0, dragSrcId);
+  saveState(); renderSchedule();
+}
+
+// ─── Calendar ─────────────────────────────────────────────────────────────────
+function calPrevMonth() {
+  calMonth.month--;
+  if (calMonth.month < 0) { calMonth.month = 11; calMonth.year--; }
+  renderCal();
+}
+function calNextMonth() {
+  calMonth.month++;
+  if (calMonth.month > 11) { calMonth.month = 0; calMonth.year++; }
+  renderCal();
+}
+
+function renderCal() {
+  let { year, month } = calMonth;
+  document.getElementById('cal-month-label').textContent = `${MONTHS_FULL[month]} ${year}`;
+  let first = new Date(year, month, 1).getDay();
+  let daysInMonth = new Date(year, month + 1, 0).getDate();
+  let html = '<div class="cal-grid">';
+  DAYS_SHORT.forEach(d => { html += `<div class="cal-hdr">${d}</div>`; });
+  for (let i = 0; i < first; i++) html += `<div></div>`;
+  for (let dd = 1; dd <= daysInMonth; dd++) {
+    let date = new Date(year, month, dd);
+    let k = dayKey(date);
+    let isToday = k === dayKey(today);
+    let inS = inSummer(date);
+    let dayData = state[k];
+    let off = dayData ? dayData.off : (date.getDay() === 0 || date.getDay() === 6);
+    let wn = weekNum(date);
+    let keys = inS ? getKeysForWeek(wn) : [];
+    let keyLabel = keys.length ? keys[keys.length - 1] : '';
+    let doneCnt = 0;
+    if (dayData && dayData.fixed) doneCnt = Object.values(dayData.fixed).filter(Boolean).length;
+    html += `<div class="cal-day${isToday ? ' today' : ''}${off ? ' is-off' : ''}${!inS ? ' out-range' : ''}" onclick="goToDay(${year},${month},${dd})">
+      <div class="cal-num">${dd}</div>
+      ${inS && keyLabel ? `<div class="cal-key">${keyLabel}</div>` : ''}
+      ${doneCnt ? `<div class="cal-done">${doneCnt}✓</div>` : ''}
+    </div>`;
+  }
+  html += '</div>';
+  document.getElementById('cal-inner').innerHTML = html;
+}
+
+function goToDay(y, m, d) {
+  let nd = new Date(y, m, d);
+  if (nd >= START && nd <= END) { current = nd; saveCurrentDay(); setView('day'); render(); }
+}
+
+function deleteTodo(k, i) { state[k].todos.splice(i, 1); saveState(); renderTodos(); }
+
+function goToToday() {
+  if (today >= START && today <= END) { current = new Date(today); saveCurrentDay(); render(); }
+}
+
+// ─── State persistence ────────────────────────────────────────────────────────
+function saveState() { localStorage.setItem('planner-state', JSON.stringify(state)); }
+const SCHED_ORDER_VERSION = '6';
+function loadState() {
+  let s = localStorage.getItem('planner-state');
+  if (s) try { state = JSON.parse(s); } catch(e) {}
+  if (localStorage.getItem('sched-order-v') !== SCHED_ORDER_VERSION) {
+    Object.values(state).forEach(d => { delete d.schedOrder; delete d.schedTimes; });
+    localStorage.setItem('sched-order-v', SCHED_ORDER_VERSION);
+    saveState();
+  }
+}
+
+// ─── Sebastian tab ────────────────────────────────────────────────────────────
+function renderSeb() {
+  let currentSwn = sebWeekNum(current);
+  let html = '';
+  for (let wn = 0; wn < TOTAL_WEEKS; wn++) {
+    let weekStart = new Date(SEB_WEEK_START); weekStart.setDate(weekStart.getDate() + wn * 7);
+    let weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate() + 6);
+    if (weekEnd > END) weekEnd = new Date(END);
+    let keys = getKeysForWeek(wn);
+    let keyLabel = keys.length ? 'Key: ' + keys[keys.length - 1] : '';
+    let isCurrent = wn === currentSwn;
+    let key = String(wn + 1);
+    let note = sebastianNotes[key] || '';
+    let time = sebastianTimes[key] || '';
+    let m1 = MONTHS_FULL[weekStart.getMonth()];
+    let m2 = MONTHS_FULL[weekEnd.getMonth()];
+    let dateRange = m1 === m2
+      ? `${m1} ${weekStart.getDate()}–${weekEnd.getDate()}`
+      : `${m1} ${weekStart.getDate()} – ${m2} ${weekEnd.getDate()}`;
+    html += `<div class="seb-week-card${isCurrent ? ' current-week' : ''}">
+      <div class="seb-week-header">
+        <span class="seb-week-label">Week ${wn + 1} · ${dateRange}${isCurrent ? ` <span class="current-chip">current</span>` : ''}</span>
+        <span class="seb-week-keys">${keyLabel}</span>
+      </div>
+      <textarea class="seb-textarea${isCurrent ? ' current-wk' : ''}" placeholder="Paste Sebastian's instructions for this week…" oninput="saveSeb(${key},this.value)">${note}</textarea>
+      <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+        <label style="font-size:11px;color:var(--text-secondary)">Duration:</label>
+        <input type="text" style="width:70px;padding:4px 7px;border:0.5px solid var(--border-light);border-radius:var(--radius-md);font-size:12px;background:var(--bg-secondary);color:var(--text-primary)" placeholder="e.g. 45m" value="${time}" oninput="saveSebTime(${key},this.value)">
+      </div>
+    </div>`;
+  }
+  document.getElementById('seb-weeks').innerHTML = html;
+}
+
+// ─── Main render ──────────────────────────────────────────────────────────────
+function render() {
+  let k = dayKey(current);
+  let d = getDay(current);
+  let isToday = k === dayKey(today);
+  let dow = DAYS_SHORT[current.getDay()];
+  let label = `${dow}, ${MONTHS_FULL[current.getMonth()]} ${current.getDate()}, 2026${isToday ? ' · Today' : ''}`;
+  document.getElementById('date-label').textContent = label;
+  let badge = document.getElementById('day-badge');
+  badge.textContent = d.off ? 'day off' : 'work day';
+  badge.className = 'badge ' + (d.off ? 'badge-off' : 'badge-work');
+  let dayNum = Math.floor((current - START) / 86400000) + 1;
+  let totalDays = Math.floor((END - START) / 86400000) + 1;
+  document.getElementById('summer-progress').textContent = `Day ${dayNum} of ${totalDays}`;
+  document.getElementById('offday-label').textContent = d.off ? 'Day off' : 'Work day';
+  document.getElementById('offday-btn').textContent = d.off ? 'Mark as work day' : 'Mark as day off';
+  calMonth = { year: current.getFullYear(), month: current.getMonth() };
+  renderTodos();
+  renderSchedule();
+}
+
+
+loadState();
+render();
+</script>
+</body>
+</html>
