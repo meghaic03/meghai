@@ -133,9 +133,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1
 .tl-now{position:absolute;left:0;right:0;pointer-events:none;z-index:20}
 .tl-now-line{position:absolute;top:0;left:10px;right:0;height:2px;background:#E53935}
 .tl-now-dot{position:absolute;top:-4px;left:4px;width:10px;height:10px;border-radius:50%;background:#E53935}
+#lock-screen{position:fixed;inset:0;background:#ddd8f5;z-index:9999;display:flex;align-items:center;justify-content:center}
+.lock-box{background:var(--bg-primary);border:0.5px solid var(--border-light);border-radius:var(--radius-lg);padding:32px 28px;width:100%;max-width:320px;display:flex;flex-direction:column;align-items:center;gap:16px;box-shadow:0 4px 24px rgba(100,80,180,0.10)}
+.lock-title{font-size:17px;font-weight:600;color:var(--text-primary)}
+.lock-sub{font-size:12px;color:var(--text-tertiary)}
+.lock-input{width:100%;padding:9px 12px;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);font-size:14px;background:var(--bg-secondary);color:var(--text-primary);text-align:center;letter-spacing:0.08em}
+.lock-input:focus{outline:none;border-color:#7F77DD}
+.lock-btn{width:100%;padding:9px;border:none;border-radius:var(--radius-md);background:#7F77DD;color:#fff;font-size:14px;font-weight:500;cursor:pointer}
+.lock-btn:hover{background:#6B63CC}
+.lock-error{font-size:12px;color:#E53935;min-height:16px}
 </style>
 </head>
 <body>
+<div id="lock-screen">
+  <div class="lock-box">
+    <div class="lock-title">Meghai's Planner</div>
+    <div class="lock-sub">Enter password to continue</div>
+    <input class="lock-input" type="password" id="lock-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkPassword()" autofocus>
+    <button class="lock-btn" onclick="checkPassword()">Unlock</button>
+    <div class="lock-error" id="lock-error"></div>
+  </div>
+</div>
 <div id="app">
   <div class="topbar">
     <div class="goals-row">
@@ -792,6 +810,32 @@ function render() {
   renderSchedule();
 }
 
+
+// ─── Lock screen ─────────────────────────────────────────────────────────────
+const PW_HASH = '74989800627bd188d14f710e182bac11781f2ccb68ec26964d2f5048b271a1d8';
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function checkPassword() {
+  let pw = document.getElementById('lock-input').value;
+  let hash = await sha256(pw);
+  if (hash === PW_HASH) {
+    sessionStorage.setItem('planner-unlocked', '1');
+    document.getElementById('lock-screen').style.display = 'none';
+  } else {
+    let err = document.getElementById('lock-error');
+    err.textContent = 'Incorrect password';
+    document.getElementById('lock-input').value = '';
+    setTimeout(() => err.textContent = '', 2000);
+  }
+}
+
+if (sessionStorage.getItem('planner-unlocked') === '1') {
+  document.getElementById('lock-screen').style.display = 'none';
+}
 
 loadState();
 render();
