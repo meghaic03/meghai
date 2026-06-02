@@ -347,6 +347,18 @@ function saveSeb(wn, val) { sebastianNotes[String(wn)] = val; }
 function saveSebTime(wn, val) { sebastianTimes[String(wn)] = val; renderTodos(); renderSchedule(); }
 
 // ─── Fixed tasks ──────────────────────────────────────────────────────────────
+// Date-specific overrides: keyed by 'YYYY-MM-DD'
+const DAY_OVERRIDES = {
+  '2026-06-02': {
+    wakeUp: 10*60,          // 10:00am
+    breakfastEnd: 11*60,    // 10:00–11:00am breakfast + ear training
+    excludeTasks: ['v1','m1','m3','m4'],
+    extraFixed: [
+      { s: 13*60, e: 14*60+30, label: 'Meetings', icon: 'ti-users', iconColor: SEC_COLOR.job },
+    ],
+  },
+};
+
 function computeFixedTasks(date) {
   let wn = weekNum(date);
   let swn = sebWeekNum(date);
@@ -359,25 +371,28 @@ function computeFixedTasks(date) {
   let pageStart = getBookPage(date);
   let pageEnd = Math.min(524, pageStart + 9);
   let progress = Math.round((pageStart / 524) * 100);
+  let ov = DAY_OVERRIDES[dayKey(date)] || {};
+  let exclude = ov.excludeTasks || [];
+  let allTasks = [
+    { id: 'v1', cat: 'violin', icon: 'ti-music',          color: SEC_COLOR.violin, label: 'Mozart 5 + UCBSO excerpts', sub: 'Prepare for UCBPO audition', time: '45m' },
+    { id: 'v2', cat: 'violin', icon: 'ti-notes',          color: SEC_COLOR.violin, label: `Scales & chords: ${keyStr}`, sub: `Week ${wn + 1} · ${getKeysForWeek(wn).slice(-1)[0]} major`, time: scaleTime },
+    { id: 'v3', cat: 'violin', icon: 'ti-pencil',         color: SEC_COLOR.violin, label: 'George Coleman — Naima transcription', sub: '20 min', time: '20m', afterMin: 15*60 },
+    { id: 'v4', cat: 'violin', icon: 'ti-star',           color: SEC_COLOR.violin, label: sebastian, sub: "Sebastian's weekly focus", time: sebTime },
+    { id: 'm1', cat: 'music',  icon: 'ti-book',           color: SEC_COLOR.music,  label: `Jazz history — pp. ${pageStart}–${pageEnd}`, sub: `${progress}% through · 10 pages/day`, time: '30m', afterMin: 15*60 },
+    { id: 'm2', cat: 'music',  icon: 'ti-headphones',     color: SEC_COLOR.music,  label: 'Ear training app', sub: 'During breakfast', time: '20m' },
+    { id: 'm3', cat: 'music',  icon: 'ti-piano',          color: SEC_COLOR.music,  label: 'Jazz piano — lesson book', sub: '30 min', time: '30m' },
+    { id: 'm4', cat: 'music',  icon: 'ti-book-2',         color: SEC_COLOR.music,  label: 'Jazz piano — Real Book sight-read', sub: 'Pick a random song, chords only', time: '15m' },
+    { id: 'j1', cat: 'job',    icon: 'ti-message-circle', color: SEC_COLOR.job,    label: 'Reach out to 8 people', sub: 'Networking outreach', time: '45m', afterMin: 15*60 },
+    { id: 'j1b', cat: 'job',   icon: 'ti-tools',          color: SEC_COLOR.job,    label: 'Work on portfolio', sub: 'Build & polish portfolio', time: '45m', afterMin: 15*60 },
+    { id: 'j2', cat: 'job',    icon: 'ti-search',         color: SEC_COLOR.job,    label: 'Job positions research', sub: 'Browse postings, find roles', time: '45m' },
+    { id: 'j2b', cat: 'job',   icon: 'ti-cpu',            color: SEC_COLOR.job,    label: 'Technology research', sub: 'Skills, tools, tech stacks', time: '45m' },
+    { id: 'h0', cat: 'health', icon: 'ti-run',             color: SEC_COLOR.health, label: 'Posture exercises', sub: '', time: '—' },
+    { id: 'h1', cat: 'health', icon: 'ti-barbell',        color: SEC_COLOR.health, label: 'Workout', sub: '', time: '—' },
+    { id: 'h2', cat: 'health', icon: 'ti-masks-theater',  color: SEC_COLOR.health, label: 'Skincare routine', sub: '', time: '—' },
+    { id: 'h3', cat: 'health', icon: 'ti-tooth',          color: SEC_COLOR.health, label: 'Invisalign', sub: 'All day', time: '—' },
+  ];
   return {
-    tasks: [
-      { id: 'v1', cat: 'violin', icon: 'ti-music',          color: SEC_COLOR.violin, label: 'Mozart 5 + UCBSO excerpts', sub: 'Prepare for UCBPO audition', time: '45m' },
-      { id: 'v2', cat: 'violin', icon: 'ti-notes',          color: SEC_COLOR.violin, label: `Scales & chords: ${keyStr}`, sub: `Week ${wn + 1} · ${getKeysForWeek(wn).slice(-1)[0]} major`, time: scaleTime },
-      { id: 'v3', cat: 'violin', icon: 'ti-pencil',         color: SEC_COLOR.violin, label: 'George Coleman — Naima transcription', sub: '20 min', time: '20m', afterMin: 15*60 },
-      { id: 'v4', cat: 'violin', icon: 'ti-star',           color: SEC_COLOR.violin, label: sebastian, sub: "Sebastian's weekly focus", time: sebTime },
-      { id: 'm1', cat: 'music',  icon: 'ti-book',           color: SEC_COLOR.music,  label: `Jazz history — pp. ${pageStart}–${pageEnd}`, sub: `${progress}% through · 10 pages/day`, time: '30m', afterMin: 15*60 },
-      { id: 'm2', cat: 'music',  icon: 'ti-headphones',     color: SEC_COLOR.music,  label: 'Ear training app', sub: 'During breakfast', time: '20m' },
-      { id: 'm3', cat: 'music',  icon: 'ti-piano',          color: SEC_COLOR.music,  label: 'Jazz piano — lesson book', sub: '30 min', time: '30m' },
-      { id: 'm4', cat: 'music',  icon: 'ti-book-2',         color: SEC_COLOR.music,  label: 'Jazz piano — Real Book sight-read', sub: 'Pick a random song, chords only', time: '15m' },
-      { id: 'j1', cat: 'job',    icon: 'ti-message-circle', color: SEC_COLOR.job,    label: 'Reach out to 8 people', sub: 'Networking outreach', time: '45m', afterMin: 15*60 },
-      { id: 'j1b', cat: 'job',   icon: 'ti-tools',          color: SEC_COLOR.job,    label: 'Work on portfolio', sub: 'Build & polish portfolio', time: '45m', afterMin: 15*60 },
-      { id: 'j2', cat: 'job',    icon: 'ti-search',         color: SEC_COLOR.job,    label: 'Job positions research', sub: 'Browse postings, find roles', time: '45m' },
-      { id: 'j2b', cat: 'job',   icon: 'ti-cpu',            color: SEC_COLOR.job,    label: 'Technology research', sub: 'Skills, tools, tech stacks', time: '45m' },
-      { id: 'h0', cat: 'health', icon: 'ti-run',             color: SEC_COLOR.health, label: 'Posture exercises', sub: '', time: '—' },
-      { id: 'h1', cat: 'health', icon: 'ti-barbell',        color: SEC_COLOR.health, label: 'Workout', sub: '', time: '—' },
-      { id: 'h2', cat: 'health', icon: 'ti-masks-theater',  color: SEC_COLOR.health, label: 'Skincare routine', sub: '', time: '—' },
-      { id: 'h3', cat: 'health', icon: 'ti-tooth',          color: SEC_COLOR.health, label: 'Invisalign', sub: 'All day', time: '—' },
-    ],
+    tasks: allTasks.filter(t => !exclude.includes(t.id)),
     progress,
     pageStart,
   };
@@ -389,12 +404,14 @@ function renderTodos() {
   if (!d.fixed) d.fixed = {};
   let { tasks: fixedTasks, progress, pageStart } = computeFixedTasks(current);
 
+  let _ov = DAY_OVERRIDES[k] || {};
+  let _ex = _ov.excludeTasks || [];
   const sections = [
-    { label: 'Violin', ids: ['v2', 'v4', 'v3', 'v1'] },
-    { label: 'Music',  ids: ['m2', 'm3', 'm4', 'm1'] },
-    { label: 'Jobs',   ids: ['j2', 'j2b', 'j1', 'j1b'] },
-    { label: 'Health', ids: ['h0', 'h1', 'h2', 'h3'] },
-  ];
+    { label: 'Violin', ids: ['v2', 'v4', 'v3', 'v1'].filter(id => !_ex.includes(id)) },
+    { label: 'Music',  ids: ['m2', 'm3', 'm4', 'm1'].filter(id => !_ex.includes(id)) },
+    { label: 'Jobs',   ids: ['j2', 'j2b', 'j1', 'j1b'].filter(id => !_ex.includes(id)) },
+    { label: 'Health', ids: ['h0', 'h1', 'h2', 'h3'].filter(id => !_ex.includes(id)) },
+  ].filter(sec => sec.ids.length > 0);
 
   let html = '';
   if (d.off) {
@@ -446,13 +463,36 @@ const SCHED_IDS = ['v1','v2','v3','v4','m1','m3','m4','j1','j1b','j2','j2b'];
 const SCHED_ZONES = [
   { start: 9*60+25, end: 14*60 }, { start: 15*60, end: 18*60 }, { start: 21*60+30, end: 22*60+30 },
 ];
-const SCHED_FIXED = [
+const SCHED_FIXED_DEFAULT = [
   { s: 8*60,     e: 8*60+30,  label: 'Wake up', icon: 'ti-run', iconColor: SEC_COLOR.health, sub: 'Posture exercises' },
   { s: 8*60+30,  e: 9*60+25,  label: 'Breakfast + ear training', icon: 'ti-headphones', iconColor: SEC_COLOR.music },
   { s: 14*60,    e: 15*60,    label: 'Lunch' },
   { s: 18*60,    e: 21*60+30, label: 'Workout · shower · dinner', icon: 'ti-barbell', iconColor: SEC_COLOR.health },
   { s: 22*60+30, e: 23*60,    label: 'Wind down & sleep', windDown: true },
 ];
+
+function getSchedFixed(date) {
+  let ov = DAY_OVERRIDES[dayKey(date)];
+  if (!ov) return SCHED_FIXED_DEFAULT;
+  let wake = ov.wakeUp != null ? ov.wakeUp : 8*60;
+  let bfEnd = ov.breakfastEnd != null ? ov.breakfastEnd : wake + 55;
+  let fixed = [
+    { s: wake,    e: wake+30,  label: 'Wake up', icon: 'ti-run', iconColor: SEC_COLOR.health, sub: 'Posture exercises' },
+    { s: wake+30, e: bfEnd,    label: 'Breakfast + ear training', icon: 'ti-headphones', iconColor: SEC_COLOR.music },
+    { s: 14*60,   e: 15*60,    label: 'Lunch' },
+    ...(ov.extraFixed || []),
+    { s: 18*60,   e: 21*60+30, label: 'Workout · shower · dinner', icon: 'ti-barbell', iconColor: SEC_COLOR.health },
+    { s: 22*60+30,e: 23*60,    label: 'Wind down & sleep', windDown: true },
+  ].sort((a, b) => a.s - b.s);
+  return fixed;
+}
+
+function getSchedOrder(date) {
+  let ov = DAY_OVERRIDES[dayKey(date)];
+  if (!ov) return SCHED_DEFAULT_ORDER;
+  let exclude = ov.excludeTasks || [];
+  return SCHED_DEFAULT_ORDER.filter(id => !exclude.includes(id));
+}
 
 function minToStr(m) {
   let h = Math.floor(m/60), min = m%60, ap = Math.floor(m/60)<12?'am':'pm';
@@ -487,21 +527,23 @@ function renderSchedule() {
   if (d.off) { document.getElementById('schedule-area').innerHTML = ''; return; }
 
   let { tasks: allTasks } = computeFixedTasks(current);
-  if (!d.schedOrder) d.schedOrder = [...SCHED_DEFAULT_ORDER];
-  SCHED_DEFAULT_ORDER.forEach(id => { if (!d.schedOrder.includes(id)) d.schedOrder.push(id); });
+  let schedDefaultForDay = getSchedOrder(current);
+  let schedFixed = getSchedFixed(current);
+  let tlStart = schedFixed[0] ? schedFixed[0].s : TL_START;
+  if (!d.schedOrder) d.schedOrder = [...schedDefaultForDay];
+  schedDefaultForDay.forEach(id => { if (!d.schedOrder.includes(id)) d.schedOrder.push(id); });
 
-  let ordered = d.schedOrder.filter(id => SCHED_DEFAULT_ORDER.includes(id))
+  let ordered = d.schedOrder.filter(id => schedDefaultForDay.includes(id))
     .map(id => allTasks.find(t => t.id === id)).filter(Boolean);
 
   // Lay out blocks sequentially, breaking at fixed block times
   // Each block's top = sum of all preceding durations + fixed block heights
-  const H = (TL_END - TL_START) * TL_PX;
 
   // Build a merged timeline: fixed anchors + task blocks in order
   // Tasks fill sequentially between fixed blocks
   let schedule = []; // { type:'fixed'|'task'|'break', ... }
   let taskQueue = [...ordered];
-  let curMin = TL_START;
+  let curMin = tlStart;
   let lastCat = null; // track last placed task's category for break insertion
 
   function placeTask(t, dur) {
@@ -515,7 +557,7 @@ function renderSchedule() {
     lastCat = t.cat;
   }
 
-  for (let fb of SCHED_FIXED) {
+  for (let fb of schedFixed) {
     let consecutive_skips = 0;
     while (taskQueue.length > 0 && consecutive_skips < taskQueue.length) {
       let t = taskQueue[0];
@@ -584,7 +626,7 @@ function renderSchedule() {
     if (Number.isInteger(eh)) addHourLabel(eh, item.renderedY + item.renderedH);
   });
   // Pass 2: hours inside long blocks (interpolate)
-  for (let h = 8; h <= 22; h++) {
+  for (let h = Math.floor(tlStart/60); h <= 22; h++) {
     if (seenHours.has(h)) continue;
     let m = h * 60;
     for (let item of schedule) {
@@ -746,7 +788,7 @@ function goToToday() {
 
 // ─── State persistence ────────────────────────────────────────────────────────
 function saveState() { localStorage.setItem('planner-state', JSON.stringify(state)); }
-const SCHED_ORDER_VERSION = '7';
+const SCHED_ORDER_VERSION = '8';
 function loadState() {
   let s = localStorage.getItem('planner-state');
   if (s) try { state = JSON.parse(s); } catch(e) {}
