@@ -468,7 +468,7 @@ const SCHED_FIXED_DEFAULT = [
   { s: 8*60+30,  e: 9*60+25,  label: 'Breakfast + ear training', icon: 'ti-headphones', iconColor: SEC_COLOR.music },
   { s: 14*60,    e: 15*60,    label: 'Lunch' },
   { s: 18*60,    e: 21*60+30, label: 'Workout · shower · dinner', icon: 'ti-barbell', iconColor: SEC_COLOR.health },
-  { s: 22*60+30, e: 23*60,    label: 'Wind down & sleep', windDown: true },
+  { s: 21*60+30, e: 22*60,    label: 'Wind down & sleep', windDown: true },
 ];
 
 function getSchedFixed(date) {
@@ -482,7 +482,7 @@ function getSchedFixed(date) {
     { s: 14*60,   e: 15*60,    label: 'Lunch' },
     ...(ov.extraFixed || []),
     { s: 18*60,   e: 21*60+30, label: 'Workout · shower · dinner', icon: 'ti-barbell', iconColor: SEC_COLOR.health },
-    { s: 22*60+30,e: 23*60,    label: 'Wind down & sleep', windDown: true },
+    { s: 21*60+30,e: 22*60,    label: 'Wind down & sleep', windDown: true },
   ].sort((a, b) => a.s - b.s);
   return fixed;
 }
@@ -508,7 +508,7 @@ function hexRgba(hex, a) {
 const SCHED_DEFAULT_ORDER = ['v2','v4','m3','m4','j2','j2b','v1','m1','j1','j1b','v3'];
 const TL_PX = 1.2;       // px per minute → 72px/hour
 const TL_START = 8*60;   // 8am
-const TL_END   = 23*60;  // 11pm
+const TL_END   = 22*60;  // 10pm
 function tlY(m) { return (m - TL_START) * TL_PX; }
 const INLINE_SVGS = {
   'ti-tooth': `<path d="M12 2c-2.4 0-4 1.6-4 3 0 1.1.5 2 1 2.5 1 1 1 2 .5 4-.5 2-1.5 3-1.5 4.5C9 17.7 10.3 19 12 19s3-1.3 3-3c0-1.5-1-2.5-1.5-4.5-.5-2-.5-3 .5-4 .5-.5 1-1.4 1-2.5 0-1.4-1.6-3-4-3z"/>`,
@@ -645,7 +645,11 @@ function renderSchedule() {
       return `<div class="tl-break" style="top:${top}px;height:${ht}px"><span class="tl-break-lbl">— ${item.label} —</span></div>`;
     } else if (item.type === 'fixed') {
       let fb = item.data;
-      let inner = `<div class="tl-fixed-lbl">${fb.label}</div>`;
+      let ts = `${minToStr(item.startMin)}–${minToStr(item.startMin + item.durMin)}`;
+      let dur = item.durMin;
+      let durStr = dur >= 60 ? Math.floor(dur/60)+'h'+(dur%60?dur%60+'m':'') : dur+'m';
+      let inner = `<div style="display:flex;justify-content:space-between;align-items:baseline;gap:4px"><div class="tl-task-time" style="color:var(--text-secondary)">${ts}</div><div style="font-size:9px;font-weight:700;opacity:0.55;color:var(--text-secondary);white-space:nowrap;flex-shrink:0">${durStr}</div></div>`;
+      inner += `<div class="tl-fixed-lbl">${fb.label}</div>`;
       if (fb.windDown) inner += `<div class="tl-fixed-sub">${taskIcon('ti-masks-theater', SEC_COLOR.health, 11)}<span>Skincare</span>${taskIcon('ti-tooth', SEC_COLOR.health, 11)}<span>Invisalign</span></div>`;
       else if (fb.icon) inner += `<div class="tl-fixed-sub">${taskIcon(fb.icon, fb.iconColor, 11)}${fb.sub ? `<span>${fb.sub}</span>` : ''}</div>`;
       return `<div class="tl-fixed" style="top:${top}px;height:${ht}px">${inner}</div>`;
