@@ -369,8 +369,10 @@ function computeFixedTasks(date) {
       { id: 'm2', cat: 'music',  icon: 'ti-headphones',     color: SEC_COLOR.music,  label: 'Ear training app', sub: 'During breakfast', time: '20m' },
       { id: 'm3', cat: 'music',  icon: 'ti-piano',          color: SEC_COLOR.music,  label: 'Jazz piano — lesson book', sub: '30 min', time: '30m' },
       { id: 'm4', cat: 'music',  icon: 'ti-book-2',         color: SEC_COLOR.music,  label: 'Jazz piano — Real Book sight-read', sub: 'Pick a random song, chords only', time: '15m' },
-      { id: 'j1', cat: 'job',    icon: 'ti-message-circle', color: SEC_COLOR.job,    label: 'Reach out to 10 people', sub: 'Networking outreach', time: '90m', afterMin: 15*60 },
-      { id: 'j2', cat: 'job',    icon: 'ti-briefcase',      color: SEC_COLOR.job,    label: 'Portfolio & job research', sub: 'Savvly work, postings, skills', time: '90m' },
+      { id: 'j1', cat: 'job',    icon: 'ti-message-circle', color: SEC_COLOR.job,    label: 'Reach out to 8 people', sub: 'Networking outreach', time: '45m', afterMin: 15*60 },
+      { id: 'j1b', cat: 'job',   icon: 'ti-tools',          color: SEC_COLOR.job,    label: 'Work on portfolio', sub: 'Build & polish portfolio', time: '45m', afterMin: 15*60 },
+      { id: 'j2', cat: 'job',    icon: 'ti-search',         color: SEC_COLOR.job,    label: 'Job positions research', sub: 'Browse postings, find roles', time: '45m' },
+      { id: 'j2b', cat: 'job',   icon: 'ti-cpu',            color: SEC_COLOR.job,    label: 'Technology research', sub: 'Skills, tools, tech stacks', time: '45m' },
       { id: 'h0', cat: 'health', icon: 'ti-run',             color: SEC_COLOR.health, label: 'Posture exercises', sub: '', time: '—' },
       { id: 'h1', cat: 'health', icon: 'ti-barbell',        color: SEC_COLOR.health, label: 'Workout', sub: '', time: '—' },
       { id: 'h2', cat: 'health', icon: 'ti-masks-theater',  color: SEC_COLOR.health, label: 'Skincare routine', sub: '', time: '—' },
@@ -390,7 +392,7 @@ function renderTodos() {
   const sections = [
     { label: 'Violin', ids: ['v2', 'v4', 'v3', 'v1'] },
     { label: 'Music',  ids: ['m2', 'm3', 'm4', 'm1'] },
-    { label: 'Jobs',   ids: ['j1', 'j2'] },
+    { label: 'Jobs',   ids: ['j2', 'j2b', 'j1', 'j1b'] },
     { label: 'Health', ids: ['h0', 'h1', 'h2', 'h3'] },
   ];
 
@@ -440,7 +442,7 @@ function renderTodos() {
 }
 
 // ─── Schedule ─────────────────────────────────────────────────────────────────
-const SCHED_IDS = ['v1','v2','v3','v4','m1','m3','m4','j1','j2'];
+const SCHED_IDS = ['v1','v2','v3','v4','m1','m3','m4','j1','j1b','j2','j2b'];
 const SCHED_ZONES = [
   { start: 9*60+25, end: 14*60 }, { start: 15*60, end: 18*60 }, { start: 21*60+30, end: 22*60+30 },
 ];
@@ -463,7 +465,7 @@ function hexRgba(hex, a) {
 }
 
 // morning: v2,v4,m3,m4,j2,v1 · afternoon (after 3pm): m1,j1,v3
-const SCHED_DEFAULT_ORDER = ['v2','v4','m3','m4','j2','v1','m1','j1','v3'];
+const SCHED_DEFAULT_ORDER = ['v2','v4','m3','m4','j2','j2b','v1','m1','j1','j1b','v3'];
 const TL_PX = 1.2;       // px per minute → 72px/hour
 const TL_START = 8*60;   // 8am
 const TL_END   = 23*60;  // 11pm
@@ -744,7 +746,7 @@ function goToToday() {
 
 // ─── State persistence ────────────────────────────────────────────────────────
 function saveState() { localStorage.setItem('planner-state', JSON.stringify(state)); }
-const SCHED_ORDER_VERSION = '6';
+const SCHED_ORDER_VERSION = '7';
 function loadState() {
   let s = localStorage.getItem('planner-state');
   if (s) try { state = JSON.parse(s); } catch(e) {}
