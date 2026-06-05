@@ -343,8 +343,8 @@ function toggleFixed(k, id) {
   saveState(); renderTodos();
 }
 
-function saveSeb(wn, val) { sebastianNotes[String(wn)] = val; }
-function saveSebTime(wn, val) { sebastianTimes[String(wn)] = val; renderTodos(); renderSchedule(); }
+function saveSeb(wn, val) { sebastianNotes[String(wn)] = val; saveState(); }
+function saveSebTime(wn, val) { sebastianTimes[String(wn)] = val; saveState(); renderTodos(); renderSchedule(); }
 
 // ─── Fixed tasks ──────────────────────────────────────────────────────────────
 // Date-specific overrides: keyed by 'YYYY-MM-DD'
@@ -791,11 +791,19 @@ function goToToday() {
 }
 
 // ─── State persistence ────────────────────────────────────────────────────────
-function saveState() { localStorage.setItem('planner-state', JSON.stringify(state)); }
+function saveState() {
+  localStorage.setItem('planner-state', JSON.stringify(state));
+  localStorage.setItem('planner-seb-notes', JSON.stringify(sebastianNotes));
+  localStorage.setItem('planner-seb-times', JSON.stringify(sebastianTimes));
+}
 const SCHED_ORDER_VERSION = '8';
 function loadState() {
   let s = localStorage.getItem('planner-state');
   if (s) try { state = JSON.parse(s); } catch(e) {}
+  let sn = localStorage.getItem('planner-seb-notes');
+  if (sn) try { sebastianNotes = JSON.parse(sn); } catch(e) {}
+  let st = localStorage.getItem('planner-seb-times');
+  if (st) try { sebastianTimes = JSON.parse(st); } catch(e) {}
   if (localStorage.getItem('sched-order-v') !== SCHED_ORDER_VERSION) {
     Object.values(state).forEach(d => { delete d.schedOrder; delete d.schedTimes; });
     localStorage.setItem('sched-order-v', SCHED_ORDER_VERSION);
@@ -828,10 +836,6 @@ function renderSeb() {
         <span class="seb-week-keys">${keyLabel}</span>
       </div>
       <textarea class="seb-textarea${isCurrent ? ' current-wk' : ''}" placeholder="Paste Sebastian's instructions for this week…" oninput="saveSeb(${key},this.value)">${note}</textarea>
-      <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
-        <label style="font-size:11px;color:var(--text-secondary)">Duration:</label>
-        <input type="text" style="width:70px;padding:4px 7px;border:0.5px solid var(--border-light);border-radius:var(--radius-md);font-size:12px;background:var(--bg-secondary);color:var(--text-primary)" placeholder="e.g. 45m" value="${time}" oninput="saveSebTime(${key},this.value)">
-      </div>
     </div>`;
   }
   document.getElementById('seb-weeks').innerHTML = html;
