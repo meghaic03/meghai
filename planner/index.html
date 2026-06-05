@@ -387,12 +387,12 @@ function computeFixedTasks(date) {
     { id: 'v2', cat: 'violin', icon: 'ti-notes',          color: SEC_COLOR.violin, label: `Scales & chords: ${keyStr}`, sub: `Week ${wn + 1} · ${getKeysForWeek(wn).slice(-1)[0]} major`, time: scaleTime },
     { id: 'v3', cat: 'violin', icon: 'ti-pencil',         color: SEC_COLOR.violin, label: 'George Coleman — Naima transcription', sub: '20 min', time: '20m', afterMin: 15*60 },
     { id: 'v4', cat: 'violin', icon: 'ti-star',           color: SEC_COLOR.violin, label: sebastian, sub: "Sebastian's weekly focus", time: sebTime },
-    { id: 'm1', cat: 'music',  icon: 'ti-book',           color: SEC_COLOR.music,  label: `Jazz history — pp. ${pageStart}–${pageEnd}`, sub: `${progress}% through · 10 pages/day`, time: '30m', afterMin: 15*60 },
+    { id: 'm1', cat: 'music',  icon: 'ti-book',           color: SEC_COLOR.music,  label: `Jazz history — pp. ${pageStart}–${pageEnd}`, sub: `${progress}% through · 10 pages/day`, time: '30m', afterMin: 14*60 },
     { id: 'm2', cat: 'music',  icon: 'ti-headphones',     color: SEC_COLOR.music,  label: 'Ear training app', sub: 'During breakfast', time: '20m' },
     { id: 'm3', cat: 'music',  icon: 'ti-piano',          color: SEC_COLOR.music,  label: 'Jazz piano — lesson book', sub: '30 min', time: '30m' },
     { id: 'm4', cat: 'music',  icon: 'ti-book-2',         color: SEC_COLOR.music,  label: 'Jazz piano — Real Book sight-read', sub: 'Pick a random song, chords only', time: '15m' },
-    { id: 'j1', cat: 'job',    icon: 'ti-message-circle', color: SEC_COLOR.job,    label: 'Reach out to 8 people', sub: 'Networking outreach', time: '45m', afterMin: 15*60 },
-    { id: 'j1b', cat: 'job',   icon: 'ti-tools',          color: SEC_COLOR.job,    label: 'Work on portfolio', sub: 'Build & polish portfolio', time: '45m', afterMin: 15*60 },
+    { id: 'j1', cat: 'job',    icon: 'ti-message-circle', color: SEC_COLOR.job,    label: 'Reach out to 8 people', sub: 'Networking outreach', time: '45m' },
+    { id: 'j1b', cat: 'job',   icon: 'ti-tools',          color: SEC_COLOR.job,    label: 'Work on portfolio', sub: 'Build & polish portfolio', time: '45m' },
     { id: 'j2', cat: 'job',    icon: 'ti-search',         color: SEC_COLOR.job,    label: 'Job positions research', sub: 'Browse postings, find roles', time: '45m' },
     { id: 'j2b', cat: 'job',   icon: 'ti-cpu',            color: SEC_COLOR.job,    label: 'Technology research', sub: 'podcasts, readings', time: '45m' },
     { id: 'h0', cat: 'health', icon: 'ti-run',             color: SEC_COLOR.health, label: 'Posture exercises', sub: '', time: '—' },
@@ -516,7 +516,7 @@ function hexRgba(hex, a) {
 }
 
 // morning: v2,v4,m3,m4,j2,v1 · afternoon (after 3pm): m1,j1,v3
-const SCHED_DEFAULT_ORDER = ['v2','v4','j1b','j2','j1','j2b','m3','m4','m1','v3'];
+const SCHED_DEFAULT_ORDER = ['v2','v4','j1b','j2','m3','m4','m1','j1','j2b','v3'];
 const TL_PX = 1.2;       // px per minute → 72px/hour
 const TL_START = 8*60;   // 8am
 const TL_END   = 22*60;  // 10pm
@@ -582,16 +582,19 @@ function renderSchedule() {
       let breakDur = (lastCat && lastCat !== t.cat) ? 10 : 0;
       let available = fb.s - curMin - breakDur;
       if (available <= 0) break;
-      taskQueue.shift();
-      if (curMin + breakDur + dur > fb.s && available >= 15) {
-        // split: place partial chunk before fixed block, remainder after
-        if (breakDur) { schedule.push({ type: 'break', startMin: curMin, durMin: breakDur, label: '10 min break' }); curMin += breakDur; lastCat = t.cat; }
-        schedule.push({ type: 'task', data: t, startMin: curMin, durMin: available, split: true });
-        curMin += available;
-        lastCat = t.cat;
-        taskQueue.unshift({ ...t, time: (dur - available) + 'm', splitContinued: true });
+      if (curMin + breakDur + dur > fb.s) {
+        if (available > 30 && (dur - available) > 30) {
+          // split: place partial chunk before fixed block, remainder after
+          taskQueue.shift();
+          if (breakDur) { schedule.push({ type: 'break', startMin: curMin, durMin: breakDur, label: '10 min break' }); curMin += breakDur; lastCat = t.cat; }
+          schedule.push({ type: 'task', data: t, startMin: curMin, durMin: available, split: true });
+          curMin += available;
+          lastCat = t.cat;
+          taskQueue.unshift({ ...t, time: (dur - available) + 'm', splitContinued: true });
+        }
         break;
       }
+      taskQueue.shift();
       placeTask(t, dur);
     }
     // Show any remaining gap before this fixed block as a free break
@@ -817,7 +820,7 @@ function saveState() {
   localStorage.setItem('planner-seb-notes', JSON.stringify(sebastianNotes));
   localStorage.setItem('planner-seb-times', JSON.stringify(sebastianTimes));
 }
-const SCHED_ORDER_VERSION = '10';
+const SCHED_ORDER_VERSION = '11';
 function loadState() {
   let s = localStorage.getItem('planner-state');
   if (s) try { state = JSON.parse(s); } catch(e) {}
