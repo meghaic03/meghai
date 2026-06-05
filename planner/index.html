@@ -28,7 +28,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1
 .nav-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .nav-btn{background:none;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);padding:5px 9px;cursor:pointer;color:var(--text-primary);display:flex;align-items:center}
 .nav-btn:hover{background:var(--bg-secondary)}
-.date-label{font-size:15px;font-weight:500}
+.date-label{font-size:15px;font-weight:500;display:inline-block;min-width:22ch}
 .badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500}
 .badge-work{background:#E6F1FB;color:#0C447C}
 .badge-off{background:#EAF3DE;color:#27500A}
@@ -279,8 +279,18 @@ function dayKey(d) {
 function inSummer(d) { return d >= START && d <= END; }
 
 function getBookPage(d) {
-  let diff = Math.floor((new Date(d) - START) / 86400000);
-  return Math.min(524, 1 + diff * 10);
+  let today0 = new Date(2026, 5, 5);
+  let target = new Date(d); target.setHours(0,0,0,0);
+  let cur = new Date(today0);
+  let workDays = 0;
+  while (cur < target) {
+    let dow = cur.getDay();
+    let k = dayKey(cur);
+    let off = state[k] ? state[k].off : (dow === 0 || dow === 6);
+    if (!off) workDays++;
+    cur.setDate(cur.getDate() + 1);
+  }
+  return Math.min(524, 11 + workDays * 10);
 }
 
 // ─── State ────────────────────────────────────────────────────────────────────
@@ -352,7 +362,7 @@ const DAY_OVERRIDES = {
   '2026-06-02': {
     wakeUp: 10*60,          // 10:00am
     breakfastEnd: 11*60,    // 10:00–11:00am breakfast + ear training
-    excludeTasks: ['v1','m1','m3','m4'],
+    excludeTasks: ['m1','m3','m4'],
     extraFixed: [
       { s: 13*60, e: 14*60+30, label: 'Meetings', icon: 'ti-users', iconColor: SEC_COLOR.job },
     ],
@@ -367,14 +377,13 @@ function computeFixedTasks(date) {
   let scaleTime = scaleKeys.length ? `${(scaleKeys.length - 1) * 5 + 20}m` : '20m';
   let sebKey = String(swn + 1);
   let sebastian = sebastianNotes[sebKey] || '— open Sebastian tab to add this week\'s focus';
-  let sebTime = sebastianTimes[sebKey] || '45m';
+  let sebTime = '90m';
   let pageStart = getBookPage(date);
   let pageEnd = Math.min(524, pageStart + 9);
   let progress = Math.round((pageStart / 524) * 100);
   let ov = DAY_OVERRIDES[dayKey(date)] || {};
   let exclude = ov.excludeTasks || [];
   let allTasks = [
-    { id: 'v1', cat: 'violin', icon: 'ti-music',          color: SEC_COLOR.violin, label: 'Mozart 5 + UCBSO excerpts', sub: 'Prepare for UCBPO audition', time: '45m' },
     { id: 'v2', cat: 'violin', icon: 'ti-notes',          color: SEC_COLOR.violin, label: `Scales & chords: ${keyStr}`, sub: `Week ${wn + 1} · ${getKeysForWeek(wn).slice(-1)[0]} major`, time: scaleTime },
     { id: 'v3', cat: 'violin', icon: 'ti-pencil',         color: SEC_COLOR.violin, label: 'George Coleman — Naima transcription', sub: '20 min', time: '20m', afterMin: 15*60 },
     { id: 'v4', cat: 'violin', icon: 'ti-star',           color: SEC_COLOR.violin, label: sebastian, sub: "Sebastian's weekly focus", time: sebTime },
@@ -385,7 +394,7 @@ function computeFixedTasks(date) {
     { id: 'j1', cat: 'job',    icon: 'ti-message-circle', color: SEC_COLOR.job,    label: 'Reach out to 8 people', sub: 'Networking outreach', time: '45m', afterMin: 15*60 },
     { id: 'j1b', cat: 'job',   icon: 'ti-tools',          color: SEC_COLOR.job,    label: 'Work on portfolio', sub: 'Build & polish portfolio', time: '45m', afterMin: 15*60 },
     { id: 'j2', cat: 'job',    icon: 'ti-search',         color: SEC_COLOR.job,    label: 'Job positions research', sub: 'Browse postings, find roles', time: '45m' },
-    { id: 'j2b', cat: 'job',   icon: 'ti-cpu',            color: SEC_COLOR.job,    label: 'Technology research', sub: 'Skills, tools, tech stacks', time: '45m' },
+    { id: 'j2b', cat: 'job',   icon: 'ti-cpu',            color: SEC_COLOR.job,    label: 'Technology research', sub: 'podcasts, readings', time: '45m' },
     { id: 'h0', cat: 'health', icon: 'ti-run',             color: SEC_COLOR.health, label: 'Posture exercises', sub: '', time: '—' },
     { id: 'h1', cat: 'health', icon: 'ti-barbell',        color: SEC_COLOR.health, label: 'Workout', sub: '', time: '—' },
     { id: 'h2', cat: 'health', icon: 'ti-masks-theater',  color: SEC_COLOR.health, label: 'Skincare routine', sub: '', time: '—' },
@@ -407,7 +416,7 @@ function renderTodos() {
   let _ov = DAY_OVERRIDES[k] || {};
   let _ex = _ov.excludeTasks || [];
   const sections = [
-    { label: 'Violin', ids: ['v2', 'v4', 'v3', 'v1'].filter(id => !_ex.includes(id)) },
+    { label: 'Violin', ids: ['v2', 'v4', 'v3'].filter(id => !_ex.includes(id)) },
     { label: 'Music',  ids: ['m2', 'm3', 'm4', 'm1'].filter(id => !_ex.includes(id)) },
     { label: 'Jobs',   ids: ['j2', 'j2b', 'j1', 'j1b'].filter(id => !_ex.includes(id)) },
     { label: 'Health', ids: ['h0', 'h1', 'h2', 'h3'].filter(id => !_ex.includes(id)) },
@@ -459,15 +468,16 @@ function renderTodos() {
 }
 
 // ─── Schedule ─────────────────────────────────────────────────────────────────
-const SCHED_IDS = ['v1','v2','v3','v4','m1','m3','m4','j1','j1b','j2','j2b'];
+const SCHED_IDS = ['v2','v3','v4','m1','m3','m4','j1','j1b','j2','j2b'];
 const SCHED_ZONES = [
   { start: 9*60+25, end: 14*60 }, { start: 15*60, end: 18*60 }, { start: 21*60+30, end: 22*60+30 },
 ];
 const SCHED_FIXED_DEFAULT = [
   { s: 8*60,     e: 8*60+30,  label: 'Wake up', icon: 'ti-run', iconColor: SEC_COLOR.health, sub: 'Posture exercises' },
   { s: 8*60+30,  e: 9*60+25,  label: 'Breakfast + ear training', icon: 'ti-headphones', iconColor: SEC_COLOR.music },
-  { s: 14*60,    e: 15*60,    label: 'Lunch' },
-  { s: 18*60,    e: 21*60+30, label: 'Workout · shower · dinner', icon: 'ti-barbell', iconColor: SEC_COLOR.health },
+  { s: 11*60+45, e: 13*60+30, label: 'Gym', icon: 'ti-barbell', iconColor: SEC_COLOR.health },
+  { s: 13*60+30, e: 14*60,    label: 'Lunch' },
+  { s: 20*60+30, e: 21*60+30, label: 'Dinner', icon: 'ti-bowl-chopsticks', iconColor: SEC_COLOR.health },
   { s: 21*60+30, e: 22*60,    label: 'Wind down & sleep', windDown: true },
 ];
 
@@ -479,9 +489,10 @@ function getSchedFixed(date) {
   let fixed = [
     { s: wake,    e: wake+30,  label: 'Wake up', icon: 'ti-run', iconColor: SEC_COLOR.health, sub: 'Posture exercises' },
     { s: wake+30, e: bfEnd,    label: 'Breakfast + ear training', icon: 'ti-headphones', iconColor: SEC_COLOR.music },
-    { s: 14*60,   e: 15*60,    label: 'Lunch' },
+    { s: 11*60+45, e: 13*60+30, label: 'Gym', icon: 'ti-barbell', iconColor: SEC_COLOR.health },
+    { s: 13*60+30, e: 14*60,   label: 'Lunch' },
     ...(ov.extraFixed || []),
-    { s: 18*60,   e: 21*60+30, label: 'Workout · shower · dinner', icon: 'ti-barbell', iconColor: SEC_COLOR.health },
+    { s: 20*60+30, e: 21*60+30, label: 'Dinner', icon: 'ti-bowl-chopsticks', iconColor: SEC_COLOR.health },
     { s: 21*60+30,e: 22*60,    label: 'Wind down & sleep', windDown: true },
   ].sort((a, b) => a.s - b.s);
   return fixed;
@@ -505,7 +516,7 @@ function hexRgba(hex, a) {
 }
 
 // morning: v2,v4,m3,m4,j2,v1 · afternoon (after 3pm): m1,j1,v3
-const SCHED_DEFAULT_ORDER = ['v2','v4','m3','m4','j2','j2b','v1','m1','j1','j1b','v3'];
+const SCHED_DEFAULT_ORDER = ['v2','v4','j2','j2b','m3','m4','m1','j1','j1b','v3'];
 const TL_PX = 1.2;       // px per minute → 72px/hour
 const TL_START = 8*60;   // 8am
 const TL_END   = 22*60;  // 10pm
@@ -569,8 +580,18 @@ function renderSchedule() {
       }
       consecutive_skips = 0;
       let breakDur = (lastCat && lastCat !== t.cat) ? 10 : 0;
-      if (curMin + breakDur + dur > fb.s) break;
+      let available = fb.s - curMin - breakDur;
+      if (available <= 0) break;
       taskQueue.shift();
+      if (curMin + breakDur + dur > fb.s && available >= 15) {
+        // split: place partial chunk before fixed block, remainder after
+        if (breakDur) { schedule.push({ type: 'break', startMin: curMin, durMin: breakDur, label: '10 min break' }); curMin += breakDur; lastCat = t.cat; }
+        schedule.push({ type: 'task', data: t, startMin: curMin, durMin: available, split: true });
+        curMin += available;
+        lastCat = t.cat;
+        taskQueue.unshift({ ...t, time: (dur - available) + 'm', splitContinued: true });
+        break;
+      }
       placeTask(t, dur);
     }
     // Show any remaining gap before this fixed block as a free break
@@ -796,7 +817,7 @@ function saveState() {
   localStorage.setItem('planner-seb-notes', JSON.stringify(sebastianNotes));
   localStorage.setItem('planner-seb-times', JSON.stringify(sebastianTimes));
 }
-const SCHED_ORDER_VERSION = '8';
+const SCHED_ORDER_VERSION = '9';
 function loadState() {
   let s = localStorage.getItem('planner-state');
   if (s) try { state = JSON.parse(s); } catch(e) {}
