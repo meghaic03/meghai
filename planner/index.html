@@ -418,7 +418,7 @@ function renderTodos() {
   const sections = [
     { label: 'Violin', ids: ['v2', 'v4', 'v3'].filter(id => !_ex.includes(id)) },
     { label: 'Music',  ids: ['m2', 'm3', 'm4', 'm1'].filter(id => !_ex.includes(id)) },
-    { label: 'Jobs',   ids: ['j2', 'j2b', 'j1', 'j1b'].filter(id => !_ex.includes(id)) },
+    { label: 'Jobs',   ids: ['j1b', 'j2', 'j1', 'j2b'].filter(id => !_ex.includes(id)) },
     { label: 'Health', ids: ['h0', 'h1', 'h2', 'h3'].filter(id => !_ex.includes(id)) },
   ].filter(sec => sec.ids.length > 0);
 
@@ -516,7 +516,7 @@ function hexRgba(hex, a) {
 }
 
 // morning: v2,v4,m3,m4,j2,v1 · afternoon (after 3pm): m1,j1,v3
-const SCHED_DEFAULT_ORDER = ['v2','v4','j2','j2b','m3','m4','m1','j1','j1b','v3'];
+const SCHED_DEFAULT_ORDER = ['v2','v4','j1b','j2','j1','j2b','m3','m4','m1','v3'];
 const TL_PX = 1.2;       // px per minute → 72px/hour
 const TL_START = 8*60;   // 8am
 const TL_END   = 22*60;  // 10pm
@@ -817,7 +817,7 @@ function saveState() {
   localStorage.setItem('planner-seb-notes', JSON.stringify(sebastianNotes));
   localStorage.setItem('planner-seb-times', JSON.stringify(sebastianTimes));
 }
-const SCHED_ORDER_VERSION = '9';
+const SCHED_ORDER_VERSION = '10';
 function loadState() {
   let s = localStorage.getItem('planner-state');
   if (s) try { state = JSON.parse(s); } catch(e) {}
