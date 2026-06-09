@@ -1511,6 +1511,69 @@ nav.visible {
     top: 20px !important;
     right: 20px !important;
   }
+
+  /* Savvly: stack image above text */
+  .savvly-problem-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  /* Savvly: estimator full width, shorter */
+  .savvly-estimator-wrap {
+    height: 340px !important;
+  }
+  /* Savvly: problem/solution iframes stacked */
+  .savvly-landing-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* EmpowerHealth: smaller interview images */
+  .empower-interview-row {
+    height: clamp(80px, 22vw, 130px) !important;
+  }
+
+  /* Pathrise: taller video to show full height */
+  .pathrise-video-wrap {
+    padding-bottom: 75% !important;
+  }
+
+  /* Freelance: stack image rows vertically */
+  .fi-d-img-row {
+    flex-direction: column !important;
+  }
+  .fi-d-img-row img,
+  .fi-d-img-row--match img,
+  .fi-d-img-row--phone img {
+    width: 100% !important;
+    height: auto !important;
+    flex: none !important;
+  }
+
+  /* Freelance: full-screen overlay on mobile */
+  .freelance-item.open {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 9999 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    grid-column: unset !important;
+    grid-row: unset !important;
+    overflow-y: auto !important;
+  }
+  .freelance-item.open .fi-content {
+    height: auto !important;
+    max-height: none !important;
+    overflow-y: visible !important;
+  }
+  .fi-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    float: none !important;
+    z-index: 10000 !important;
+    background: var(--white) !important;
+    padding: 4px 8px !important;
+    font-size: 18px !important;
+  }
 }
 </style>
 </head>
@@ -1899,7 +1962,7 @@ nav.visible {
     <span class="cs-section-header">The Problem</span>
     <p>Savvly is a longevity benefit: a financial product that pools contributions and pays out structured cash at ages 80, 85, 90, and 95. The core promise is protection against outliving your savings. But the existing product experience was telling the wrong story.</p>
 
-    <div style="display:grid;grid-template-columns:1fr 2fr;gap:60px;align-items:stretch;margin-bottom:28px;">
+    <div class="savvly-problem-grid" style="display:grid;grid-template-columns:1fr 2fr;gap:60px;align-items:stretch;margin-bottom:28px;">
       <div style="display:flex;flex-direction:column;">
         <img src="../portfolio_media/savvly/savvly_old_estimator.png" alt="Savvly estimator before redesign" onclick="openImgLightbox(this.src)" style="width:100%;height:100%;object-fit:contain;object-position:top left;display:block;cursor:zoom-in;border-radius:6px;">
         <div style="font-size:11px;color:var(--mid);margin-top:8px;letter-spacing:0.04em;flex-shrink:0;">Savvly estimator, before redesign — leads with return percentage, no narrative context</div>
@@ -1918,7 +1981,7 @@ nav.visible {
     <p><em>I proposed a fuller narrative experience to the team, but the scope was focused on the estimator itself, so that's where I concentrated the work.</em></p>
 
     <div style="margin-bottom:28px;">
-      <div style="width:100%;border-radius:8px;overflow:hidden;" class="savvly-iframe-wrap" data-src="../portfolio_media/savvly/savvly_estimator_condensed.html" data-height="500" data-scroll="1"></div>
+      <div style="width:100%;border-radius:8px;overflow:hidden;" class="savvly-iframe-wrap savvly-estimator-wrap" data-src="../portfolio_media/savvly/savvly_estimator_condensed.html" data-height="500" data-scroll="1"></div>
       <div style="font-size:11px;color:var(--mid);margin-top:8px;letter-spacing:0.04em;">The redesigned estimator — simplified inputs, payout milestones as gift cards, shark-fin protection curve, and simple answers to frequently asked questions</div>
     </div>
 
@@ -1929,7 +1992,7 @@ nav.visible {
     <p>The existing page led with product mechanics. I restructured it around the same storytelling arc: establish the emotional problem, introduce longevity risk with supporting statistics, then present Savvly as the solution with the estimator as the call to action.</p>
     <p style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);margin-bottom:12px;">Design exploration, January–May 2026</p>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:8px;">
+    <div class="savvly-landing-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:8px;">
       <div>
         <div style="border-radius:8px;overflow:hidden;" class="savvly-iframe-wrap" data-src="../portfolio_media/savvly/savvly_meghaiproblem.html" data-height="280" data-scroll="1" data-half="1"></div>
         <div style="font-size:11px;color:var(--mid);margin-top:6px;letter-spacing:0.04em;">Introducing the problem statement first</div>
@@ -2027,7 +2090,7 @@ nav.visible {
 
     <span class="cs-section-header">Research</span>
     <p>We conducted several interviews with users living with chronic illness and with providers. The users we spoke with had between them: years of misdiagnosis, $17,000 paid out of pocket, 50+ specialist appointments for a single condition, and a job lost mid-treatment.</p>
-    <div style="display:flex;gap:6px;align-items:flex-start;margin-bottom:20px;height:clamp(140px, 18vw, 220px);">
+    <div class="empower-interview-row" style="display:flex;gap:6px;align-items:flex-start;margin-bottom:20px;height:clamp(140px, 18vw, 220px);">
       <img src="../portfolio_media/empowerhealth/interview.png" alt="Interview" onclick="openImgLightbox(this.src)" style="height:100%;width:auto;cursor:zoom-in;display:block;">
       <img src="../portfolio_media/empowerhealth/interview2.png" alt="Interview 2" onclick="openImgLightbox(this.src)" style="height:100%;width:auto;cursor:zoom-in;display:block;">
       <img src="../portfolio_media/empowerhealth/interview3.png" alt="Interview 3" onclick="openImgLightbox(this.src)" style="height:100%;width:auto;cursor:zoom-in;display:block;">
@@ -2093,7 +2156,7 @@ nav.visible {
     <span class="cs-section-header">The Portal</span>
     <p>The portal walks students through five phases: building a story bank, grouping experiences into themes, matching themes to essay types, drafting outlines, and generating a college-specific timeline. Instead of managing ten separate essays for ten schools, students build one narrative system that maps across all their applications.</p>
 
-    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin-bottom:20px;">
+    <div class="pathrise-video-wrap" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin-bottom:20px;">
       <iframe src="https://drive.google.com/file/d/1Mj7LBMW1OLlAxz1MiZXRv9l0QhjLabZk/preview" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allow="autoplay" allowfullscreen></iframe>
     </div>
 
@@ -2230,7 +2293,7 @@ function buildSavvlyIframes() {
     var scrollable = wrap.dataset.scroll === '1';
     var srcW = 1200;
     // Check if inside a 2-col grid (cols-2 parent or grid parent with two children)
-    var isHalf = wrap.dataset.half === '1';
+    var isHalf = wrap.dataset.half === '1' && window.innerWidth > 600;
     var containerW = isHalf ? Math.floor((panelW - 16) / 2) : panelW;
     containerW = containerW || 600;
     var scale = containerW / srcW;
@@ -2326,19 +2389,18 @@ function toggleFreelance(item) {
     el.style.gridRow = '';
   });
   if (!isOpen) {
-    var grid = item.closest('.freelance-grid');
-    var items = Array.from(grid.querySelectorAll('.freelance-item'));
-    var idx = items.indexOf(item);
-    var col = (idx % 3) + 1;
-    var row = Math.floor(idx / 3) + 1;
-    var colStart;
-    if (col === 3) {
-      colStart = 2;
+    if (window.innerWidth > 600) {
+      var grid = item.closest('.freelance-grid');
+      var items = Array.from(grid.querySelectorAll('.freelance-item'));
+      var idx = items.indexOf(item);
+      var col = (idx % 3) + 1;
+      var row = Math.floor(idx / 3) + 1;
+      var colStart = col === 3 ? 2 : col;
+      item.style.gridColumn = colStart + ' / span 2';
+      item.style.gridRow = row + ' / span 2';
     } else {
-      colStart = col;
+      document.body.style.overflow = 'hidden';
     }
-    item.style.gridColumn = colStart + ' / span 2';
-    item.style.gridRow = row + ' / span 2';
     item.classList.add('open');
   }
 }
@@ -2349,6 +2411,9 @@ function closeFreelance(e, btn) {
   item.classList.remove('open');
   item.style.gridColumn = '';
   item.style.gridRow = '';
+  if (window.innerWidth <= 600) {
+    document.body.style.overflow = '';
+  }
 }
 
 function copyEmail(e) {
