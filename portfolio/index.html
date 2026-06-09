@@ -1270,7 +1270,7 @@ nav.visible {
 
 #case-study-panel h1, #empower-panel h1, #savvly-panel h1, #pathrise-panel h1 {
   font-family: var(--serif);
-  font-size: clamp(60px, 3vw, 36px);
+  font-size: clamp(28px, 3vw, 60px);
   font-weight: 400;
   line-height: 1.1;
   margin-bottom: 32px;
@@ -2284,7 +2284,8 @@ function openImgLightbox(src) {
 /* ── Case study overlay ── */
 function buildSavvlyIframes() {
   var panel = document.getElementById('savvly-panel');
-  var panelW = panel ? panel.clientWidth - 112 : 600; // subtract padding (56px each side)
+  var panelPad = window.innerWidth <= 600 ? 64 : 112;
+  var panelW = panel ? panel.clientWidth - panelPad : 600;
   document.querySelectorAll('#savvly-panel .savvly-iframe-wrap').forEach(function(wrap) {
     if (wrap.dataset.built) return;
     wrap.dataset.built = '1';
