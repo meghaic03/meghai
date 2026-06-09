@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Savvly — Retirement Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #ffffff;
+      color: #111;
+      min-height: 100vh;
+      padding: 2.5rem 2rem;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ── TWO-COLUMN LAYOUT ── */
+    .main-layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 3rem;
+      align-items: flex-start;
+    }
+
+    /* ── LEFT: INPUTS ── */
+
+    .input-block {
+      margin-bottom: 1.25rem;
+    }
+
+    .input-block label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #111;
+      margin-bottom: 6px;
+    }
+
+    .input-block input[type=number] {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      color: #111;
+      background: #fff;
+    }
+
+    .input-block input[type=number]:focus {
+      outline: none;
+      border-color: #4f8ef7;
+    }
+
+    .input-prefix {
+      position: relative;
+    }
+
+    .input-prefix::before {
+      content: '$';
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 15px;
+      color: #111;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .input-prefix input[type=number] {
+      padding-left: 24px;
+    }
+
+    .slider-block { margin-bottom: 1.25rem; }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .slider-header .slider-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111;
+    }
+
+    .slider-header .slider-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: #4f8ef7;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #aaa;
+      margin-top: 5px;
+    }
+
+    input[type=range] {
+      width: 100%;
+      accent-color: #4f8ef7;
+      cursor: pointer;
+    }
+
+    /* ── RIGHT: CHART + PAYOUTS + QA ── */
+    .right-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      max-width: 480px;
+      margin-top: -50px;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      height: 320px;
+    }
+
+    .legend {
+      display: flex;
+      gap: 20px;
+      margin-top: 10px;
+      font-size: 12px;
+      color: #888;
+    }
+
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+
+    .legend-line {
+      width: 28px; height: 3px;
+      background: #b0b8c4;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ── PAYOUT CARDS ── */
+    .payout-cards-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    .payout-card-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .payout-card-lid {
+      background: #4f8ef7;
+      border-radius: 6px 6px 0 0;
+      height: 13px;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .payout-card-lid::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%; transform: translateX(-50%);
+      width: 14%;
+      background: rgba(255,255,255,0.35);
+    }
+
+    .payout-card-bow {
+      position: absolute;
+      top: -7px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 22px;
+      height: 8px;
+      display: flex;
+      justify-content: center;
+      gap: 1px;
+      z-index: 2;
+    }
+
+    .bow-left, .bow-right {
+      width: 10px; height: 8px;
+      background: #2563eb;
+      border-radius: 50% 50% 0 50%;
+    }
+
+    .bow-right { border-radius: 50% 50% 50% 0; }
+
+    .payout-card {
+      background: #eef4ff;
+      border: 1.5px solid #bfd4fc;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      padding: 6px 8px 8px;
+    }
+
+    .payout-card .label {
+      font-size: 10px;
+      color: #666;
+      margin-bottom: 2px;
+    }
+
+    .payout-card .amount {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111;
+    }
+
+    .payout-card.total {
+      background: #eef4ff;
+      border: 1.5px solid #bfd4fc;
+      border-radius: 8px;
+      padding: 6px 8px 8px;
+    }
+
+    .payout-card.total .label {
+      font-size: 10px;
+      color: #555;
+      margin-bottom: 2px;
+    }
+
+    .payout-card.total .amount {
+      font-size: 14px;
+      font-weight: 700;
+      color: #111;
+    }
+
+    /* ── Q&A ── */
+    .qa-section {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .qa-item {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 1rem 1.25rem;
+    }
+
+    .qa-item:last-child { border-bottom: none; }
+
+    .qa-q {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111;
+    }
+
+    .qa-a {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.7;
+      margin-top: 0.5rem;
+    }
+
+    /* ── WARNINGS / ASSUMPTIONS ── */
+    .assumptions {
+      font-size: 11px;
+      color: #aaa;
+      margin-top: 0.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    #e-warning {
+      border-left: 3px solid #e07b2a;
+      border-radius: 7px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #7c3a0a;
+      margin-bottom: 1.25rem;
+      line-height: 1.6;
+      background: #fff7ed;
+    }
+
+    @media (max-width: 800px) {
+      .main-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div id="tab-estimator">
+    <div class="main-layout">
+
+      <!-- LEFT: inputs -->
+      <div class="input-col">
+        <div class="input-block">
+          <label>Current age</label>
+          <input type="number" id="e-curage" value="40" min="20" max="79" oninput="updateEstimator()">
+        </div>
+        <div class="input-block">
+          <label>Current retirement savings</label>
+          <div class="input-prefix">
+            <input type="number" id="e-cursavings" value="135000" min="0" step="1000" oninput="updateEstimator()">
+          </div>
+        </div>
+        <div class="input-block">
+          <label>Planned retirement age</label>
+          <input type="number" id="e-retage" value="68" min="55" max="80" oninput="updateEstimator()">
+        </div>
+        <div class="input-block">
+          <label>Additional monthly contributions by you</label>
+          <div class="input-prefix">
+            <input type="number" id="e-personal" value="0" min="0" max="1000" step="25" oninput="updateEstimator()">
+          </div>
+        </div>
+        <div class="slider-block">
+          <div class="slider-header">
+            <span class="slider-title">Retirement lifestyle</span>
+            <span class="slider-value" id="lifestyle-value">$4,000/mo</span>
+          </div>
+          <input type="range" id="lifestyle-slider" min="0" max="100" step="1" value="33" oninput="updateEstimator()">
+          <div class="slider-labels">
+            <span>Basic</span><span>Comfortable</span><span>Affluent</span><span>Luxury</span>
+          </div>
+        </div>
+        <div class="assumptions">Assumes 7% annual growth during accumulation. Includes $800/mo baseline contributions from your employer.</div>
+        <div id="e-warning" style="display:none;">
+          ⚠️ At your current settings, your savings may run low before your next Savvly payout. Consider <strong>retiring later</strong>, choosing a <strong>less expensive lifestyle</strong>, or <strong>increasing your monthly contributions</strong>.
+        </div>
+      </div>
+
+      <!-- RIGHT: chart + payouts + Q&A -->
+      <div class="right-col">
+
+        <div>
+          <div class="chart-wrapper">
+            <canvas id="estimatorChart" role="img" aria-label="Shark-fin chart showing retirement savings growing, declining through retirement spending, with Savvly payouts at ages 80, 85, 90, and 95"></canvas>
+          </div>
+          <div class="legend">
+            <div class="legend-item"><div class="legend-line"></div> Retirement savings</div>
+            <div class="legend-item"><div class="legend-line" style="background:none;border-top:2px dashed #e53e3e;"></div> <span id="no-savvly-label" style="background:#e53e3e;color:#fff;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;">Without Savvly</span></div>
+          </div>
+        </div>
+
+        <div class="payout-cards-row">
+          <div class="payout-card-wrap">
+            <div class="payout-card-lid"><div class="payout-card-bow"><div class="bow-left"></div><div class="bow-right"></div></div></div>
+            <div class="payout-card"><div class="label">Age 80</div><div class="amount" id="e-c80">$210K</div></div>
+          </div>
+          <div class="payout-card-wrap">
+            <div class="payout-card-lid"><div class="payout-card-bow"><div class="bow-left"></div><div class="bow-right"></div></div></div>
+            <div class="payout-card"><div class="label">Age 85</div><div class="amount" id="e-c85">$320K</div></div>
+          </div>
+          <div class="payout-card-wrap">
+            <div class="payout-card-lid"><div class="payout-card-bow"><div class="bow-left"></div><div class="bow-right"></div></div></div>
+            <div class="payout-card"><div class="label">Age 90</div><div class="amount" id="e-c90">$540K</div></div>
+          </div>
+          <div class="payout-card-wrap">
+            <div class="payout-card-lid"><div class="payout-card-bow"><div class="bow-left"></div><div class="bow-right"></div></div></div>
+            <div class="payout-card"><div class="label">Age 95</div><div class="amount" id="e-c95">$650K</div></div>
+          </div>
+          <div class="payout-card total">
+            <div class="label">Total lifetime payouts</div>
+            <div class="amount" id="e-ctotal">$1.72M</div>
+          </div>
+        </div>
+
+        <div class="qa-section">
+          <div class="qa-item">
+            <div class="qa-q">How is Savvly able to provide more income later in life than traditional investing?</div>
+            <div class="qa-a">Savvly combines long-term investing with longevity pooling. While markets like the S&P 500 rely only on investment returns, Savvly also reallocates shared growth from the longevity pool to people who live longer. This additional source of value can result in significantly higher income later in life, without requiring individuals to plan alone for a very long lifespan.</div>
+          </div>
+          <div class="qa-item">
+            <div class="qa-q">What happens when I die?</div>
+            <div class="qa-a">Unlike traditional pensions, Savvly returns all or most of your original contributions to your family or estate. Use the age slider to see the value at each age, before your original contributions are returned.</div>
+          </div>
+          <div class="qa-item">
+            <div class="qa-q">What happens if I want to leave Savvly?</div>
+            <div class="qa-a">If you leave Savvly, all or most of your original contributions remain yours. You keep the value of what you put in, while any shared longevity growth stays in the pool. Use the age slider to see how much you would have at the point of leaving, before your original contributions are returned.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ── SHARED DATA ─────────────────────────────── */
+  function fmtK(k) {
+    return k >= 1000 ? '$' + (k / 1000).toFixed(2).replace(/\.?0+$/, '') + 'M' : '$' + k + 'K';
+  }
+
+  const savvlyPayoutVals = [210, 320, 540, 650];
+  const lifestyleAmounts = [2000, 4000, 7000, 12000];
+  const lifestyleSpendK  = [60, 90, 130, 200];
+
+  // slider is 0–100; anchors sit at 0, 33, 67, 100
+  const lifestyleAnchors = [0, 33, 67, 100];
+
+  function interpLifestyle(arr, val) {
+    for (let i = 0; i < lifestyleAnchors.length - 1; i++) {
+      if (val <= lifestyleAnchors[i + 1]) {
+        const t = (val - lifestyleAnchors[i]) / (lifestyleAnchors[i + 1] - lifestyleAnchors[i]);
+        return arr[i] + t * (arr[i + 1] - arr[i]);
+      }
+    }
+    return arr[arr.length - 1];
+  }
+
+  let estimatorChart = null;
+
+  function buildEstimatorData() {
+    const retAge     = Math.max(55, Math.min(80, parseInt(document.getElementById('e-retage').value) || 68));
+    const personal   = Math.max(0,  parseInt(document.getElementById('e-personal').value) || 0);
+    const curAge     = Math.max(20, Math.min(retAge - 1, parseInt(document.getElementById('e-curage').value) || 40));
+    const curSavings = Math.max(0,  parseInt(document.getElementById('e-cursavings').value) || 0);
+
+    const lifestyleVal = parseInt(document.getElementById('lifestyle-slider').value);
+    const annualSpendK = interpLifestyle(lifestyleSpendK, lifestyleVal);
+
+    const baseMonthly = 800; // baseline employer contributions
+    const annualContribK = (baseMonthly + personal) * 12 / 1000;
+    const accumReturn = 0.07;
+    const sv = savvlyPayoutVals;
+    const savvlyPayouts = { 80: sv[0], 85: sv[1], 90: sv[2], 95: sv[3] };
+
+    const allLabels = [];
+    const mainCurve = [];
+
+    // Accumulation: curAge → retAge using real compound growth
+    let balK = curSavings / 1000;
+    let peakK = 0;
+    for (let age = curAge; age <= retAge; age++) {
+      allLabels.push(String(age));
+      mainCurve.push(Math.round(balK));
+      peakK = Math.round(balK);
+      balK = balK * (1 + accumReturn) + annualContribK;
+    }
+
+    // Depletion: retAge+1 → 100
+    // ageVals[age] = balance BEFORE payout is added (bottom of spike)
+    // balK carries the post-payout balance into the next year
+    const ageVals = {};
+    balK = peakK;
+    for (let age = retAge + 1; age <= 100; age++) {
+      balK = balK - annualSpendK;
+      if (balK < 0) balK = 0;
+      ageVals[age] = Math.round(balK);
+      allLabels.push(String(age));
+      mainCurve.push(ageVals[age]);
+      if (savvlyPayouts[age]) {
+        balK += savvlyPayouts[age];
+      }
+    }
+
+    // Spike bottoms and tops for the canvas plugin
+    const payoutAges = [80, 85, 90, 95];
+    const payoutBottoms = payoutAges.map(age => ageVals[age] ?? 0);
+    const payoutTops    = payoutAges.map((age, i) => payoutBottoms[i] + savvlyPayouts[age]);
+
+    // No-Savvly curve: same depletion but without payout boosts
+    const noSavvlyCurve = [];
+    let noBalK = peakK;
+    let noSavvlyRunsOutAge = null;
+    for (let age = retAge + 1; age <= 100; age++) {
+      noBalK = noBalK - annualSpendK;
+      if (noBalK <= 0) {
+        if (noSavvlyRunsOutAge === null) noSavvlyRunsOutAge = age;
+        noSavvlyCurve.push(0);
+        // stop drawing after hitting zero
+        while (noSavvlyCurve.length < (100 - retAge)) noSavvlyCurve.push(null);
+        break;
+      }
+      noSavvlyCurve.push(Math.round(noBalK));
+    }
+    // Fill accumulation phase with nulls so it only draws from peak onward
+    const noSavvlyData = new Array(allLabels.indexOf(String(retAge + 1))).fill(null).concat(noSavvlyCurve);
+
+    return { allLabels, mainCurve, payoutAges, payoutBottoms, payoutTops, noSavvlyData, noSavvlyRunsOutAge };
+  }
+
+  function updateEstimator() {
+    const personal  = parseInt(document.getElementById('e-personal').value) || 0;
+    const lifestyleVal = parseInt(document.getElementById('lifestyle-slider').value);
+    const lifestyleAmt = Math.round(interpLifestyle(lifestyleAmounts, lifestyleVal) / 100) * 100;
+
+    document.getElementById('lifestyle-value').textContent = '$' + lifestyleAmt.toLocaleString() + '/mo';
+
+    const basePayouts = savvlyPayoutVals;
+    const boost = personal > 0 ? Math.round((personal / 800) * 0.15 * (basePayouts[0] + basePayouts[1] + basePayouts[2] + basePayouts[3])) : 0;
+    const totalBase = basePayouts[0] + basePayouts[1] + basePayouts[2] + basePayouts[3];
+    const totalBoosted = totalBase + boost;
+    const p = basePayouts.map(v => v + Math.round(boost * v / totalBase));
+
+    document.getElementById('e-c80').textContent  = fmtK(p[0]);
+    document.getElementById('e-c85').textContent  = fmtK(p[1]);
+    document.getElementById('e-c90').textContent  = fmtK(p[2]);
+    document.getElementById('e-c95').textContent  = fmtK(p[3]);
+    document.getElementById('e-ctotal').textContent = fmtK(totalBoosted);
+
+    // Always build data so the warning check runs even before the chart is drawn
+    const { allLabels, mainCurve, payoutAges, payoutBottoms, payoutTops, noSavvlyData, noSavvlyRunsOutAge } = buildEstimatorData();
+
+    // Warning: check if balance dips near zero between payout ages
+    const retAgeVal = parseInt(document.getElementById('e-retage').value) || 68;
+    const peakVal = Math.max(...mainCurve.filter(v => v !== null));
+    const threshold = peakVal * 0.18;
+    const payoutAgeSet = new Set([80, 85, 90, 95]);
+    const depletionStart = allLabels.indexOf(String(Math.max(55, Math.min(80, retAgeVal)) + 1));
+    const depleting = mainCurve.slice(depletionStart);
+    const runsLow = depleting.some((v, i) => {
+      const age = Number(allLabels[depletionStart + i]);
+      return v !== null && v < threshold && !payoutAgeSet.has(age);
+    });
+    document.getElementById('e-warning').style.display = runsLow ? 'block' : 'none';
+    document.getElementById('no-savvly-label').textContent = noSavvlyRunsOutAge
+      ? 'Without Savvly, savings run out at age ' + noSavvlyRunsOutAge
+      : 'Without Savvly';
+
+    if (estimatorChart) {
+      estimatorChart.data.labels = allLabels;
+      estimatorChart.data.datasets[0].data = mainCurve;
+      estimatorChart.data.datasets[1].data = noSavvlyData;
+      estimatorChart.config._payoutAges         = payoutAges;
+      estimatorChart.config._payoutBottoms      = payoutBottoms;
+      estimatorChart.config._payoutTops         = payoutTops;
+      estimatorChart.config._scenarioVals       = savvlyPayoutVals;
+      estimatorChart.config._noSavvlyRunsOutAge = noSavvlyRunsOutAge;
+      const dataMax = Math.max(...mainCurve.filter(v => v !== null), ...payoutTops);
+      estimatorChart.options.scales.y.max = Math.ceil(dataMax * 1.15 / 100) * 100;
+      estimatorChart.update('active');
+    }
+  }
+
+  function drawEstimatorChart() {
+    if (estimatorChart) return;
+    const { allLabels, mainCurve, payoutAges, payoutBottoms, payoutTops, noSavvlyData, noSavvlyRunsOutAge } = buildEstimatorData();
+
+    const spikePlugin = {
+      id: 'spikeLines',
+      afterDatasetsDraw(chart) {
+        const { ctx, scales: { x, y } } = chart;
+        const ages    = chart.config._payoutAges;
+        const bottoms = chart.config._payoutBottoms;
+        const tops    = chart.config._payoutTops;
+        const scenarioVals = chart.config._scenarioVals;
+        if (!ages) return;
+        ctx.save();
+
+
+        // Payout pill labels
+        ages.forEach((age, i) => {
+          const idx = chart.data.labels.indexOf(String(age));
+          if (idx === -1) return;
+          const px    = x.getPixelForValue(idx);
+          const pyTop = y.getPixelForValue(tops[i]);
+
+          const txt = '+' + fmtK(scenarioVals[i]);
+          ctx.font = '500 11px Arial';
+          const tw = ctx.measureText(txt).width;
+          const pw = tw + 12, ph = 20, pr = 4;
+          const lx = px - pw / 2, ly = pyTop - 8 - ph;
+          ctx.fillStyle = '#1a6bc4';
+          ctx.beginPath();
+          ctx.roundRect(lx, ly, pw, ph, pr);
+          ctx.fill();
+          ctx.fillStyle = '#fff';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(txt, px, ly + ph / 2);
+        });
+        ctx.restore();
+      }
+    };
+
+    estimatorChart = new Chart(document.getElementById('estimatorChart').getContext('2d'), {
+      type: 'line',
+      _payoutAges:         payoutAges,
+      _payoutBottoms:      payoutBottoms,
+      _payoutTops:         payoutTops,
+      _scenarioVals:       savvlyPayoutVals,
+      _noSavvlyRunsOutAge: noSavvlyRunsOutAge,
+      plugins: [spikePlugin],
+      data: {
+        labels: allLabels,
+        datasets: [
+          {
+            label: 'Savings',
+            data: mainCurve,
+            fill: true,
+            backgroundColor: 'rgba(176,184,196,0.2)',
+            borderColor: '#b0b8c4',
+            borderWidth: 2,
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            tension: 0.3
+          },
+          {
+            label: 'Without Savvly',
+            data: noSavvlyData,
+            fill: false,
+            borderColor: '#e53e3e',
+            borderWidth: 2,
+            borderDash: [6, 4],
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            tension: 0.3,
+            spanGaps: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        layout: { padding: { top: 50 } },
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        scales: {
+          x: {
+            grid: { display: false },
+            border: { display: false },
+            ticks: {
+              color: '#999', font: { size: 11, family: 'Arial' }, maxRotation: 0,
+              callback: function(val) {
+                const lbl = this.getLabelForValue(val);
+                return [40,50,60,70,80,85,90,95,100].includes(Number(lbl)) ? lbl : '';
+              }
+            }
+          },
+          y: {
+            grid: { color: 'rgba(0,0,0,0.06)' },
+            border: { display: false },
+            beginAtZero: true,
+            max: Math.ceil(Math.max(...mainCurve.filter(v => v !== null), ...payoutTops) * 1.15 / 100) * 100,
+            ticks: {
+              color: '#999', font: { size: 11, family: 'Arial' },
+              callback: v => v === 0 ? '$0' : v >= 1000 ? '$' + (v/1000).toFixed(1).replace('.0','') + 'M' : '$' + v + 'K'
+            }
+          }
+        },
+        animation: { duration: 300 }
+      }
+    });
+    // Chart.js 4.x wraps config in a Config instance, so top-level custom properties
+    // passed to the constructor are not accessible via chart.config.X on first render.
+    // Assign them directly so the spikePlugin can read them immediately.
+    estimatorChart.config._payoutAges         = payoutAges;
+    estimatorChart.config._payoutBottoms      = payoutBottoms;
+    estimatorChart.config._payoutTops         = payoutTops;
+    estimatorChart.config._scenarioVals       = savvlyPayoutVals;
+    estimatorChart.config._noSavvlyRunsOutAge = noSavvlyRunsOutAge;
+  }
+
+  // init estimator display values
+  updateEstimator();
+  setTimeout(drawEstimatorChart, 50);
+</script>
+
+</body>
+</html>

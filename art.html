@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Art — Meghai Choudhury</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&family=EB+Garamond:ital,wght@0,400;1,400&family=Karla:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --serif: 'Bodoni Moda', Georgia, serif;
+  --sans: 'Karla', Helvetica, sans-serif;
+  --black: #0e0e0e;
+  --white: #fafaf8;
+  --mid: #888;
+  --border: #d8d5cf;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: #0e0e0e;
+  color: var(--white);
+  font-size: 12px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 44px 64px;
+}
+
+nav .name {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--white);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  opacity: 0.8;
+}
+
+nav ul {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+
+nav ul a {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--white);
+  text-decoration: none;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+nav ul a:hover { opacity: 1; }
+nav ul a.active { opacity: 1; }
+
+/* ── PAGE HEADER ── */
+.page-header {
+  padding: 160px 80px 0;
+}
+.page-header h1 {
+  font-family: var(--serif);
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: #f0ede8;
+  margin-bottom: 0;
+}
+
+/* ── SECTION DIVIDER ── */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 80px 80px 60px;
+}
+.section-divider .label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #555;
+  white-space: nowrap;
+}
+.section-divider .line {
+  flex: 1;
+  height: 1px;
+  background: #2a2a2a;
+}
+
+/* ── ART SERIES ── */
+.art-series {
+  margin-bottom: 0;
+  position: relative;
+  overflow: visible;
+}
+.series-intro {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #0e0e0e;
+  padding: 40px 80px 40px;
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 0 60px;
+}
+.series-num {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #555;
+  padding-top: 4px;
+}
+.series-intro h4 {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.1;
+  margin-bottom: 4px;
+  color: #f0ede8;
+}
+.series-med {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #555;
+  display: block;
+  margin-bottom: 10px;
+}
+.series-intro p {
+  font-size: 14px;
+  color: #888;
+  line-height: 1.7;
+  max-width: 480px;
+}
+.series-pan-wrap {
+  position: relative;
+  margin-bottom: 60px;
+}
+.series-pan-wrap:last-child { margin-bottom: 0; }
+.series-pan-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.series-pan-sticky--2row { height: calc(88vh + 12px + 60px); }
+.series-pan-sticky--3row { height: calc(132vh + 24px + 90px); }
+.series-pan-row { display: flex; flex-direction: column; }
+.series-pan-row-label {
+  padding: 8px 320px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #888;
+}
+.series-pan-sticky .series-pan-row-label {
+  padding: 0 320px 8px;
+  flex-shrink: 0;
+}
+.series-pan-track {
+  display: flex;
+  gap: 8px;
+  padding: 0 0 0 320px;
+  will-change: transform;
+  transition: transform 0.05s linear;
+}
+.series-pan-img {
+  flex-shrink: 0;
+  height: 33vh;
+  width: auto;
+  aspect-ratio: 4/3;
+  background: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-style: italic;
+  color: #444;
+  font-size: 13px;
+  overflow: hidden;
+}
+.series-pan-img img { height: 100%; width: 100%; object-fit: cover; }
+
+/* ── GALLERY ── */
+.gallery-stream {
+  display: grid;
+  grid-template-columns: 1fr 200px 1fr;
+  padding: 0 80px;
+  padding-bottom: 120px;
+}
+.gallery-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.gallery-center-text {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px;
+}
+.gallery-label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px 0;
+  min-height: 120px;
+}
+.gallery-label .title {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 3px;
+  line-height: 1.3;
+  color: #f0ede8;
+}
+.gallery-label .desc {
+  font-size: 11px;
+  color: #555;
+  line-height: 1.45;
+}
+.gallery-img {
+  overflow: hidden;
+  background: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-style: italic;
+  color: #444;
+  font-size: 12px;
+}
+.gallery-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gallery-img.tall { aspect-ratio: 3/4; }
+.gallery-img.wide { aspect-ratio: 4/3; }
+.gallery-img.sq { aspect-ratio: 1; }
+.gallery-img.portrait { aspect-ratio: 2/3; }
+
+/* ── LIGHTBOX ── */
+#lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,0.92);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  gap: 20px;
+}
+#lightbox.active { display: flex; }
+#lightbox img { max-height: 80vh; max-width: 90vw; object-fit: contain; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="portfolio.html" class="name">Meghai Choudhury</a>
+  <ul>
+    <li><a href="portfolio.html#projects">Selected Work</a></li>
+    <li><a href="portfolio.html#freelance">Freelance</a></li>
+    <li><a href="art.html" class="active">Art</a></li>
+    <li><a href="mailto:meghai@berkeley.edu">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <h1>Art</h1>
+</div>
+
+<section id="other" style="padding:0;background:#0e0e0e;position:relative;z-index:1;">
+
+  <!-- PHOTOGRAPHY -->
+  <div class="section-divider"><span class="label">Photography</span><div class="line"></div></div>
+
+  <!-- Series A -->
+  <div class="art-series" id="series-a">
+    <div class="series-intro">
+      <span class="series-num">Series A</span>
+      <div>
+        <h4>Series Title</h4>
+        <span class="series-med">Medium &middot; Year</span>
+        <p>Description of this unified body of work — concept, process, what connects the images.</p>
+      </div>
+    </div>
+    <div class="series-pan-wrap">
+      <div class="series-pan-sticky">
+        <div class="series-pan-row-label">Row 1 description</div>
+        <div class="series-pan-track">
+          <div class="series-pan-img">Image 1</div>
+          <div class="series-pan-img">Image 2</div>
+          <div class="series-pan-img">Image 3</div>
+          <div class="series-pan-img">Image 4</div>
+          <div class="series-pan-img">Image 5</div>
+          <div class="series-pan-img">Image 6</div>
+        </div>
+      </div>
+    </div>
+    <div class="series-pan-wrap">
+      <div class="series-pan-sticky">
+        <div class="series-pan-row-label">Row 2 description</div>
+        <div class="series-pan-track">
+          <div class="series-pan-img">Image 7</div>
+          <div class="series-pan-img">Image 8</div>
+          <div class="series-pan-img">Image 9</div>
+          <div class="series-pan-img">Image 10</div>
+          <div class="series-pan-img">Image 11</div>
+          <div class="series-pan-img">Image 12</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Series B -->
+  <div class="art-series" id="series-b">
+    <div class="series-intro">
+      <span class="series-num">Series B</span>
+      <div>
+        <h4>Series Title</h4>
+        <span class="series-med">Medium &middot; Year</span>
+        <p>Description of this unified body of work — what you were exploring across these pieces.</p>
+      </div>
+    </div>
+    <div class="series-pan-wrap">
+      <div class="series-pan-sticky">
+        <div class="series-pan-track">
+          <div class="series-pan-img">Image 1</div>
+          <div class="series-pan-img">Image 2</div>
+          <div class="series-pan-img">Image 3</div>
+          <div class="series-pan-img">Image 4</div>
+          <div class="series-pan-img">Image 5</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Series C -->
+  <div class="art-series" id="series-c">
+    <div class="series-intro">
+      <span class="series-num">Series C</span>
+      <div>
+        <h4>Series Title</h4>
+        <span class="series-med">Medium &middot; Year</span>
+        <p>Description of this unified body of work — what you were exploring across these pieces.</p>
+      </div>
+    </div>
+    <div class="series-pan-wrap">
+      <div class="series-pan-sticky">
+        <div class="series-pan-track">
+          <div class="series-pan-img">Image 1</div>
+          <div class="series-pan-img">Image 2</div>
+          <div class="series-pan-img">Image 3</div>
+          <div class="series-pan-img">Image 4</div>
+          <div class="series-pan-img">Image 5</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Series D -->
+  <div class="art-series" id="series-d">
+    <div class="series-intro">
+      <span class="series-num">Series D</span>
+      <div>
+        <h4>Series Title</h4>
+        <span class="series-med">Medium &middot; Year</span>
+        <p>Description of this unified body of work — what you were exploring across these pieces.</p>
+      </div>
+    </div>
+    <div class="series-pan-wrap">
+      <div class="series-pan-sticky">
+        <div class="series-pan-track">
+          <div class="series-pan-img">Image 1</div>
+          <div class="series-pan-img">Image 2</div>
+          <div class="series-pan-img">Image 3</div>
+          <div class="series-pan-img">Image 4</div>
+          <div class="series-pan-img">Image 5</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Series E -->
+  <div class="art-series" id="series-e">
+    <div class="series-intro">
+      <span class="series-num">Series E</span>
+      <div>
+        <h4>Series Title</h4>
+        <span class="series-med">Medium &middot; Year</span>
+        <p>Description of this unified body of work — what you were exploring across these pieces.</p>
+      </div>
+    </div>
+    <div class="series-pan-wrap">
+      <div class="series-pan-sticky">
+        <div class="series-pan-row-label">Row 1 description</div>
+        <div class="series-pan-track">
+          <div class="series-pan-img">Image 1</div>
+          <div class="series-pan-img">Image 2</div>
+          <div class="series-pan-img">Image 3</div>
+          <div class="series-pan-img">Image 4</div>
+          <div class="series-pan-img">Image 5</div>
+        </div>
+      </div>
+    </div>
+    <div class="series-pan-wrap">
+      <div class="series-pan-sticky">
+        <div class="series-pan-row-label">Row 2 description</div>
+        <div class="series-pan-track">
+          <div class="series-pan-img">Image 6</div>
+          <div class="series-pan-img">Image 7</div>
+          <div class="series-pan-img">Image 8</div>
+          <div class="series-pan-img">Image 9</div>
+          <div class="series-pan-img">Image 10</div>
+        </div>
+      </div>
+    </div>
+    <div class="series-pan-wrap">
+      <div class="series-pan-sticky">
+        <div class="series-pan-row-label">Row 3 description</div>
+        <div class="series-pan-track">
+          <div class="series-pan-img">Image 11</div>
+          <div class="series-pan-img">Image 12</div>
+          <div class="series-pan-img">Image 13</div>
+          <div class="series-pan-img">Image 14</div>
+          <div class="series-pan-img">Image 15</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GALLERY -->
+  <div class="section-divider"><span class="label">Gallery</span><div class="line"></div></div>
+  <div class="gallery-stream">
+    <div class="gallery-col">
+      <div class="gallery-img tall">img</div>
+      <div class="gallery-img wide">img</div>
+      <div class="gallery-img sq">img</div>
+      <div class="gallery-img portrait">img</div>
+      <div class="gallery-img wide">img</div>
+      <div class="gallery-img sq">img</div>
+    </div>
+    <div class="gallery-center-text">
+      <div class="gallery-label"><div class="title">Title</div><div class="desc">medium, year</div></div>
+      <div class="gallery-label" style="min-height:140px;"></div>
+      <div class="gallery-label"><div class="title">Title</div><div class="desc">medium, year</div></div>
+      <div class="gallery-label"><div class="title">Title</div><div class="desc">medium, year</div></div>
+      <div class="gallery-label" style="min-height:140px;"></div>
+      <div class="gallery-label"><div class="title">Title</div><div class="desc">medium, year</div></div>
+    </div>
+    <div class="gallery-col">
+      <div class="gallery-img wide">img</div>
+      <div class="gallery-img tall">img</div>
+      <div class="gallery-img sq">img</div>
+      <div class="gallery-img wide">img</div>
+      <div class="gallery-img portrait">img</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('active');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('active');
+}
+
+/* ── HORIZONTAL PAN SCROLL ── */
+(function() {
+  var wraps = document.querySelectorAll('.series-pan-wrap');
+  wraps.forEach(function(wrap) {
+    var track = wrap.querySelector('.series-pan-track');
+    if (!track) return;
+    var imgs = track.querySelectorAll('.series-pan-img');
+    var imgCount = imgs.length;
+    var imgW = 0;
+    var gap = 8;
+
+    function measure() {
+      var sample = imgs[0];
+      if (!sample) return;
+      imgW = sample.offsetWidth;
+    }
+
+    function update() {
+      measure();
+      var totalScroll = wrap.scrollHeight - window.innerHeight;
+      if (totalScroll <= 0) return;
+      var rect = wrap.getBoundingClientRect();
+      var scrolled = -rect.top;
+      if (scrolled < 0) scrolled = 0;
+      if (scrolled > totalScroll) scrolled = totalScroll;
+      var frac = scrolled / totalScroll;
+      var maxShift = (imgW + gap) * (imgCount - 1);
+      track.style.transform = 'translateX(-' + (frac * maxShift) + 'px)';
+    }
+
+    var wrapH = Math.max(window.innerHeight * 3, imgCount * 120);
+    wrap.style.height = wrapH + 'px';
+    var sticky = wrap.querySelector('.series-pan-sticky');
+    if (sticky) sticky.style.height = window.innerHeight + 'px';
+
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', function() {
+      var wrapH2 = Math.max(window.innerHeight * 3, imgCount * 120);
+      wrap.style.height = wrapH2 + 'px';
+      if (sticky) sticky.style.height = window.innerHeight + 'px';
+      update();
+    });
+    update();
+  });
+})();
+</script>
+</body>
+</html>
