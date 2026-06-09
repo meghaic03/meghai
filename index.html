@@ -1,65 +1,2458 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W48TX27F7M"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-W48TX27F7M');
-    </script>
+<meta charset="UTF-8">
+<link rel="icon" href="favicon.png" type="image/png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meghai Choudhury</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&family=EB+Garamond:ital,wght@0,400;1,400&family=Karla:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <meta charset="UTF-8">
-    <link rel="icon" href="favicon.png" type="image/png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meghai Choudhury</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+:root {
+  --serif: 'Bodoni Moda', Georgia, serif;
+  --sans: 'Karla', Helvetica, sans-serif;
+  --black: #0e0e0e;
+  --white: #fafaf8;
+  --mid: #888;
+  --border: #d8d5cf;
+  --preview-height: min(320px, 25vw);
+}
 
-        body {
-            min-height: 100vh;
-            background: white;
-            font-family: 'Times New Roman', serif;
-            color: black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+html { scroll-behavior: smooth; }
 
-        .container {
-            text-align: center;
-            padding: 2rem;
-        }
+body {
+  font-family: var(--sans);
+  background: var(--white);
+  color: var(--black);
+  font-size: 12px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
 
-        h1 {
-            font-size: 2.4rem;
-            margin-bottom: 1rem;
-            letter-spacing: 0.02em;
-        }
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 44px 64px;
+  mix-blend-mode: difference;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+nav.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
 
-        p {
-            font-size: 0.95rem;
-            color: rgba(0, 0, 0, 0.4);
-            margin-bottom: 1.5rem;
-        }
+nav .name {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--white);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
 
-        a {
-            color: blue;
-            text-decoration: underline;
-            font-size: 0.95rem;
-        }
-    </style>
+nav ul {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+
+nav ul a {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--white);
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+nav ul a:hover { opacity: 1; }
+
+/* ── NAV HIDDEN UNTIL SCROLL ── */
+nav {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+nav.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── COVER ── */
+#cover {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 0;
+}
+
+#cover .bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+#cover .bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 52%;
+  display: block;
+}
+
+#cover-spacer {
+  height: 100vh;
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+
+#projects-outer, #projects, #freelance, footer, section:not(#cover) {
+  position: relative;
+  z-index: 1;
+  background: var(--white);
+}
+
+#cover .overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.22) 0%,
+    rgba(0,0,0,0.0) 35%,
+    rgba(0,0,0,0.0) 65%,
+    rgba(0,0,0,0.3) 100%
+  );
+}
+
+#cover .corner {
+  position: absolute;
+  color: var(--white);
+  font-family: var(--sans);
+  z-index: 2;
+}
+
+#cover .corner--tl {
+  top: 44px; left: 64px;
+  display: block;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  line-height: 2;
+  opacity: 0.8;
+  color: var(--white);
+}
+
+#cover .corner--tr {
+  top: 44px; right: 64px;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-align: right;
+  line-height: 2;
+  opacity: 0.8;
+}
+
+#cover .corner--bl {
+  bottom: 48px; left: 64px;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  line-height: 2;
+  opacity: 0.7;
+}
+
+#cover .corner--br {
+  bottom: 48px; right: 64px;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-align: right;
+  line-height: 2;
+  opacity: 0.7;
+}
+
+#cover .corner a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.35);
+  padding-bottom: 1px;
+  transition: border-color 0.2s;
+}
+#cover .corner a:hover { border-color: rgba(255,255,255,0.9); }
+
+.narrow-only { display: none; }
+.wide-only { display: revert; }
+.credits-break { display: none; }
+
+/* ── SECTION DIVIDER ── */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 60px 80px 40px;
+}
+
+.section-divider .label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mid);
+  white-space: nowrap;
+}
+
+.section-divider .line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── SCROLL PANEL CONTAINERS ── */
+.scroll-panel-container {
+  position: relative;
+  padding: 60px 80px 60px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.scroll-panel-container .sticky-photo {
+  display: block;
+  order: 1;
+}
+
+.scroll-panel-container .sticky-photo .ph-bg {
+  width: 100%;
+  aspect-ratio: 3/2;
+  background: #ede9e3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-style: italic;
+  color: #bbb;
+  font-size: 13px;
+  overflow: hidden;
+}
+
+.scroll-panel-container .sticky-photo img {
+  width: 100%;
+  display: block;
+  image-rendering: -webkit-optimize-contrast;
+  transition: transform 0.4s ease;
+}
+.scroll-panel-container .sticky-photo:hover img {
+  transform: scale(1.04);
+}
+.scroll-panel-container .sticky-photo {
+  overflow: hidden;
+}
+
+/* Static text panel */
+.lifting-panel {
+  display: contents;
+}
+
+.lifting-panel.right .inner {
+  order: 0;
+}
+
+.lifting-panel .inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.lifting-panel .inner {
+  max-width: 380px;
+}
+
+.lifting-panel .project-num {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 48px;
+  display: block;
+}
+
+.lifting-panel h2 {
+  font-family: var(--serif);
+  font-size: clamp(20px, 2vw, 30px);
+  font-weight: 400;
+  line-height: 1.08;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.lifting-panel .role {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 36px;
+  display: block;
+}
+
+.lifting-panel p {
+  font-family: var(--serif);
+  font-size: 13px;
+  line-height: 1.85;
+  color: #3a3a3a;
+  margin-bottom: 28px;
+}
+
+.lifting-panel .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 32px;
+}
+
+.lifting-panel .tag {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  padding: 4px 11px;
+  color: var(--mid);
+}
+
+.proj-thumb {
+  display: none;
+}
+
+.proj-thumb-img {
+  width: 100%;
+  aspect-ratio: 3/2;
+  background: #ede9e3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-style: italic;
+  color: #bbb;
+  font-size: 12px;
+  overflow: hidden;
+}
+
+.proj-thumb-img img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+
+.lifting-panel .view-link {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--black);
+  text-decoration: none;
+  border-bottom: 1px solid var(--black);
+  padding-bottom: 2px;
+  display: inline-block;
+  transition: opacity 0.2s;
+}
+.lifting-panel .view-link:hover { opacity: 0.45; }
+
+
+
+.proj-img-area .single-img {
+  width: 100%;
+  aspect-ratio: 3/2;
+  background: #ede9e3;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-style: italic;
+  color: #aaa;
+  font-size: 13px;
+}
+
+.proj-img-area .single-img img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+
+.proj-img-area .carousel-track {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  cursor: grab;
+}
+.proj-img-area .carousel-track::-webkit-scrollbar { display: none; }
+.proj-img-area .carousel-track:active { cursor: grabbing; }
+
+.proj-img-area .c-img {
+  flex-shrink: 0;
+  width: 100%;
+  height: 220px;
+  background: #ede9e3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-style: italic;
+  color: #aaa;
+  font-size: 13px;
+  overflow: hidden;
+}
+
+.proj-img-area .c-img img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+
+.proj-img-area .scroll-hint {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: #bbb;
+  margin-top: 6px;
+}
+
+/* ── FREELANCE ── */
+#freelance {
+  padding: 0 80px 100px;
+}
+
+#freelance .intro {
+  max-width: 460px;
+  margin-bottom: 48px;
+}
+
+#freelance .intro h3 {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+#freelance .intro p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.7;
+}
+
+.freelance-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: calc((100vw - 160px - 4px) / 3 * 3 / 4);
+  gap: 2px;
+}
+
+.freelance-item {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  background: #ede9e3;
+}
+
+.freelance-item:not(.ph):not(.open) {
+  cursor: pointer;
+}
+
+/* Open: fills exactly its 2×2 grid area, content scrolls inside */
+.freelance-item.open {
+  cursor: default;
+  background: var(--white);
+  overflow: hidden;
+  height: 100%;
+  min-height: 0;
+}
+
+/* Closed: thumbnail fills the cell */
+.freelance-item .fi-preview {
+  position: relative;
+  overflow: hidden;
+  background: #ede9e3;
+  aspect-ratio: 4/3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.freelance-item.open .fi-preview { display: none; }
+
+.freelance-item:not(.open):hover img { transform: scale(1.03); }
+.freelance-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+
+.freelance-item .fi-hover-label {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 14px 18px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.55));
+  color: white;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  pointer-events: none;
+}
+.freelance-item:not(.open):hover .fi-hover-label { opacity: 1; }
+.fi-hover-label .fi-hl-name { font-family: var(--serif); font-size: 14px; }
+.fi-hover-label .fi-hl-type { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.7; }
+
+.fi-preview--icon { background: #f0ede8; padding: 24px; }
+.fi-preview--icon img { width: auto !important; height: auto !important; max-width: 60%; max-height: 60%; object-fit: contain; }
+
+/* Content panel — plain block flow, scrollable */
+.freelance-item .fi-content { display: none; }
+.freelance-item.open .fi-content {
+  display: block;
+  height: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 28px 30px 32px;
+  box-sizing: border-box;
+}
+
+.fi-close {
+  position: sticky;
+  top: 0;
+  float: right;
+  background: none; border: none;
+  font-size: 14px; color: var(--mid);
+  cursor: pointer; padding: 0;
+  line-height: 1;
+  z-index: 1;
+}
+.fi-close:hover { color: var(--black); }
+
+.fi-d-name {
+  font-family: var(--serif);
+  font-size: clamp(18px, 1.6vw, 60px);
+  font-weight: 400;
+  color: var(--black);
+  line-height: 1.1;
+  display: block;
+  margin-bottom: 4px;
+}
+.fi-d-badge {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mid);
+  display: block;
+  margin-bottom: 20px;
+}
+.fi-d-img-row {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.fi-d-img-row--tall img {
+  height: auto !important;
+  width: 100%;
+  object-fit: unset;
+  object-position: unset;
+  align-self: flex-start;
+}
+.fi-d-img-row--match img {
+  flex: 1 1 0;
+  width: 50%;
+  height: auto !important;
+  object-fit: unset;
+  align-self: flex-start;
+}
+.fi-d-img-row--phone img {
+  height: 160px !important;
+  width: auto;
+  flex-shrink: 1;
+  object-fit: unset;
+}
+.fi-d-img-row img {
+  display: block;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 140px;
+  object-fit: contain;
+  object-position: left center;
+  cursor: zoom-in;
+}
+.fi-d-img-row .fi-d-asset-ph {
+  flex: 1;
+  height: 130px;
+  background: #ede9e3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 10px;
+  color: #bbb;
+}
+.fi-d-desc {
+  font-family: var(--serif);
+  font-size: 13px;
+  line-height: 1.8;
+  color: #3a3a3a;
+  margin-bottom: 16px;
+}
+.fi-d-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+.fi-d-tag {
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  padding: 3px 10px;
+  color: var(--mid);
+}
+
+/* hide old structure elements */
+.freelance-item .fi-top-row,
+.freelance-item .fi-top-right,
+.freelance-item .fi-bottom,
+.freelance-item .fi-drawer,
+.freelance-item .fi-foot { display: none; }
+
+.fi-d-img-caption {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #bbb;
+  margin-top: 4px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.freelance-item.ph {
+  cursor: default;
+}
+
+.freelance-item.ph .fi-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px dashed var(--border);
+  background: #f7f5f2;
+  aspect-ratio: 4/3;
+}
+
+.freelance-item.ph .ph-name {
+  font-family: var(--serif);
+  font-size: 16px;
+  color: #999;
+}
+.freelance-item.ph .ph-type {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ccc;
+}
+
+/* ── OTHER SECTION ── */
+#black {
+  padding: 0 0 100px;
+}
+
+/* Merch */
+.other-sub-label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 56px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.merch-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-bottom: 80px;
+}
+
+.merch-card .num {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--mid);
+  margin-bottom: 14px;
+}
+
+.merch-card .thumb {
+  width: 100%;
+  aspect-ratio: 1;
+  background: #ede9e3;
+  margin-bottom: 18px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-style: italic;
+  color: #bbb;
+  font-size: 13px;
+}
+
+.merch-card .thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+.merch-card .thumb .hover-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.merch-card .thumb { position: relative; }
+.merch-card:hover .thumb .hover-img { opacity: 1; }
+
+.merch-card h4 {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 400;
+  margin-bottom: 5px;
+}
+
+.merch-card p {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.merch-year {
+  display: inline-block;
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 4px;
+}
+
+/* Art projects */
+.art-project-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+  margin-bottom: 80px;
+  padding-top: 40px;
+}
+
+.art-project-item.reverse { direction: rtl; }
+.art-project-item.reverse > * { direction: ltr; }
+
+.art-project-item .meta .num {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--mid);
+  margin-bottom: 14px;
+}
+
+.art-project-item .meta h4 {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 400;
+  margin-bottom: 10px;
+  line-height: 1.1;
+}
+
+.art-project-item .meta p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.art-project-item .meta .medium {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--mid);
+}
+
+.art-project-item .images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+
+.art-project-item .images .img-slot {
+  background: #ede9e3;
+  aspect-ratio: 4/5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-style: italic;
+  color: #bbb;
+  font-size: 12px;
+  overflow: hidden;
+}
+
+.art-project-item .images .img-slot img { width: 100%; height: 100%; object-fit: cover; }
+.art-project-item .images .img-slot.wide { grid-column: span 2; aspect-ratio: 16/9; }
+.art-project-item .images .img-slot.span3 { grid-column: span 3; aspect-ratio: 16/7; }
+
+.three-col-images {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+
+
+/* ── ART SERIES HORIZONTAL PAN ── */
+.art-series {
+  margin-bottom: 0;
+  position: relative;
+  overflow: visible;
+}
+
+.series-intro {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #0e0e0e;
+  padding: 40px 80px 40px;
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 0 60px;
+}
+
+.series-num {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mid);
+  padding-top: 4px;
+}
+
+.series-intro h4 {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.series-med {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mid);
+  display: block;
+  margin-bottom: 10px;
+}
+
+.series-intro p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.7;
+  max-width: 480px;
+}
+
+/* Sticky scroll pan container */
+.series-pan-wrap {
+  position: relative;
+  /* height set by JS */
+  margin-bottom: 60px;
+}
+.series-pan-wrap:last-child { margin-bottom: 0; }
+.series-pan-sticky .series-pan-row-label {
+  padding: 0 320px 8px;
+  flex-shrink: 0;
+}
+
+.series-pan-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.series-pan-sticky--2row { height: calc(88vh + 12px + 60px); }
+.series-pan-sticky--3row { height: calc(132vh + 60px + 90px); }
+.series-pan-row { display: flex; flex-direction: column; }
+.series-pan-row-label {
+  padding: 8px 320px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #888;
+}
+
+.series-pan-track {
+  display: flex;
+  gap: 8px;
+  padding: 0 0 0 320px;
+  will-change: transform;
+  transition: transform 0.05s linear;
+}
+
+.series-pan-img {
+  flex-shrink: 0;
+  height: 33vh;
+  width: auto;
+  aspect-ratio: 4/3;
+  background: #ede9e3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-style: italic;
+  color: #bbb;
+  font-size: 13px;
+  overflow: hidden;
+}
+
+.series-pan-img img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+/* standalone art cards */
+.art-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 36px;
+  margin-bottom: 80px;
+}
+
+.art-card .num {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--mid);
+  margin-bottom: 12px;
+}
+
+.art-card .thumb {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: #ede9e3;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-style: italic;
+  color: #bbb;
+  font-size: 12px;
+  overflow: hidden;
+}
+
+.art-card .thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+.art-card h5 {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 400;
+  margin-bottom: 4px;
+}
+
+.art-card p {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.55;
+}
+
+/* Posters */
+.poster-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 3px;
+  margin-bottom: 80px;
+}
+
+.poster-cell {
+  background: #1a1a1a;
+  aspect-ratio: 11/17;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+}
+.poster-cell.letter { aspect-ratio: 8.5/11; }
+
+.poster-cell img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; display: block; }
+.poster-cell:hover img { transform: none; }
+
+.poster-cell .poster-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.76);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+}
+.poster-cell:hover .poster-overlay { opacity: 1; }
+.poster-overlay .poster-year {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 4px;
+}
+.poster-overlay .poster-title { display: none; }
+.poster-overlay .poster-desc {
+  font-size: 10px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.5;
+}
+.tweet-wrap {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+  margin-top: 6px;
+}
+.tweet-wrap iframe {
+  transform: scale(0.45);
+  transform-origin: top left;
+  width: 222% !important;
+  pointer-events: auto;
+}
+
+/* ── LIGHTBOX ── */
+#lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,0.92);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  gap: 20px;
+}
+#lightbox.active { display: flex; }
+#lightbox img {
+  max-height: 80vh;
+  max-width: 90vw;
+  object-fit: contain;
+}
+#lightbox-meta {
+  text-align: center;
+}
+#lightbox-meta .lb-year {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 4px;
+}
+#lightbox-meta .lb-desc {
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  max-width: 480px;
+  line-height: 1.6;
+}
+.poster-cell .ph-text {
+  font-family: var(--serif);
+  font-style: italic;
+  color: #bbb;
+  font-size: 12px;
+}
+
+/* Gallery */
+.gallery-stream {
+  display: grid;
+  grid-template-columns: 1fr 200px 1fr;
+}
+
+.gallery-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gallery-center-text {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px;
+}
+
+.gallery-label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px 0;
+  min-height: 120px;
+}
+
+.gallery-label .title {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 3px;
+  line-height: 1.3;
+}
+
+.gallery-label .desc {
+  font-size: 11px;
+  color: var(--mid);
+  line-height: 1.45;
+}
+
+.gallery-img {
+  overflow: hidden;
+  background: #ede9e3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-style: italic;
+  color: #bbb;
+  font-size: 12px;
+}
+
+.gallery-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gallery-img.tall { aspect-ratio: 3/4; }
+.gallery-img.wide { aspect-ratio: 4/3; }
+.gallery-img.sq { aspect-ratio: 1; }
+.gallery-img.portrait { aspect-ratio: 2/3; }
+
+/* ── DARK THRESHOLD ── */
+#dark-threshold {
+  background: #0e0e0e;
+  height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+#dark-threshold p {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: clamp(60px, 3vw, 48px);
+  font-style: italic;
+  font-weight: 400;
+  color: #f0ede8;
+  text-align: center;
+  letter-spacing: 0.01em;
+  opacity: 0.85;
+}
+
+/* ── DARK SECTION (Other) ── */
+#black .section-divider .label { color: #555; }
+#black .section-divider .line { background: #2a2a2a; }
+#black .merch-card h4 { color: #f0ede8; }
+#black .merch-card p { color: #888; }
+#black .merch-card .thumb { background: #1a1a1a; color: #444; }
+#black .merch-year { color: #666; }
+#black .art-series .series-intro h4 { color: #f0ede8; }
+#black .art-series .series-intro p { color: #888; }
+#black .art-series .series-num { color: #555; }
+#black .art-series .series-med { color: #555; }
+#black .series-pan-img { background: #1a1a1a; color: #444; }
+#black .poster-cell { background: #1a1a1a; }
+#black .poster-cell .ph-text { color: #444; }
+#black .gallery-img { background: #1a1a1a; color: #444; }
+#black .gallery-label .title { color: #f0ede8; }
+#black .gallery-label .desc { color: #555; }
+#black .art-card .thumb { background: #1a1a1a; color: #444; }
+#black .art-card h5 { color: #f0ede8; }
+#black .art-card p { color: #888; }
+
+/* ── BOTTOM COVER REVEAL ── */
+#cover-bottom .corner {
+  position: absolute;
+  color: var(--white);
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  line-height: 2;
+  opacity: 0.8;
+}
+#cover-bottom .corner--bl {
+  bottom: 48px; left: 64px;
+}
+#cover-bottom .corner--br {
+  bottom: 48px; right: 64px;
+  text-align: right;
+}
+#cover-bottom .corner a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.35);
+  padding-bottom: 1px;
+  transition: border-color 0.2s;
+}
+#cover-bottom .corner a:hover { border-color: rgba(255,255,255,0.9); }
+#cover-bottom .credits {
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  line-height: 2;
+  color: var(--white);
+  opacity: 0.7;
+  white-space: normal;
+  max-width: calc(100% - 256px);
+  text-align: center;
+}
+#cover-bottom .credits a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  padding-bottom: 1px;
+  transition: border-color 0.2s;
+}
+#cover-bottom .credits a:hover { border-color: rgba(255,255,255,0.9); }
+
+
+#cover-bottom {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 0;
+}
+#cover-bottom .bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+#cover-bottom .bg img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center 52%;
+  display: block;
+}
+#cover-bottom .overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.0) 35%, rgba(0,0,0,0.0) 65%, rgba(0,0,0,0.3) 100%);
+}
+
+/* ── CASE STUDY OVERLAY ── */
+#case-study-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,0.75);
+  cursor: pointer;
+}
+#case-study-overlay.active { display: block; }
+
+#case-study-panel {
+  position: absolute;
+  top: 0; right: 0;
+  width: 66.67vw;
+  height: 100vh;
+  background: var(--white);
+  overflow-y: auto;
+  cursor: default;
+  padding: 64px 56px 80px;
+}
+
+#case-study-panel .cs-close, #empower-panel .cs-close, #savvly-panel .cs-close, #pathrise-panel .cs-close {
+  position: absolute;
+  top: 60px; right: 28px;
+  background: none; border: none;
+  font-size: 18px; color: var(--mid);
+  cursor: pointer; padding: 4px 8px;
+  line-height: 1;
+}
+#case-study-panel .cs-close:hover, #empower-panel .cs-close:hover, #savvly-panel .cs-close:hover, #pathrise-panel .cs-close:hover { color: var(--black); }
+
+#case-study-panel .cs-label, #empower-panel .cs-label, #savvly-panel .cs-label, #pathrise-panel .cs-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 10px;
+  display: block;
+}
+
+#case-study-panel h1, #empower-panel h1, #savvly-panel h1, #pathrise-panel h1 {
+  font-family: var(--serif);
+  font-size: clamp(28px, 3vw, 60px);
+  font-weight: 400;
+  line-height: 1.1;
+  margin-bottom: 32px;
+  letter-spacing: -0.01em;
+}
+
+.cs-images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 48px;
+}
+
+.cs-images a {
+  display: block;
+  overflow: hidden;
+}
+
+.cs-images img {
+  width: 100%;
+  display: block;
+  transition: opacity 0.2s;
+}
+.cs-images a:hover img { opacity: 0.85; }
+
+.cs-section-header {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-top: 40px;
+  margin-bottom: 14px;
+  display: block;
+}
+
+#case-study-panel p, #empower-panel p, #savvly-panel p, #pathrise-panel p {
+  font-family: var(--serif);
+  font-size: 14px;
+  line-height: 1.85;
+  color: #3a3a3a;
+  margin-bottom: 16px;
+}
+
+#case-study-panel ul, #empower-panel ul, #savvly-panel ul, #pathrise-panel ul {
+  margin: 0 0 16px 0;
+  padding-left: 20px;
+}
+
+#case-study-panel ul li, #empower-panel ul li, #savvly-panel ul li, #pathrise-panel ul li {
+  font-family: var(--serif);
+  font-size: 14px;
+  line-height: 1.85;
+  color: #3a3a3a;
+  margin-bottom: 8px;
+}
+
+.cs-result-flow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+.cs-flow-step {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  border: 1px solid var(--border);
+  padding: 5px 12px;
+  color: var(--black);
+}
+.cs-flow-arrow {
+  color: var(--mid);
+  font-size: 12px;
+}
+
+/* ── CASE STUDY: EMPOWERHEALTH extras ── */
+.cs-collaborators {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 36px;
+}
+.cs-collaborators a {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mid);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.cs-collaborators a:hover { color: var(--black); border-color: var(--black); }
+.cs-collaborators span { font-size: 10px; color: var(--border); }
+
+.cs-img-placeholder {
+  width: 100%;
+  background: #ede9e3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-style: italic;
+  color: #bbb;
+  font-size: 12px;
+}
+.cs-img-placeholder.ratio-3-2 { aspect-ratio: 3/2; }
+.cs-img-placeholder.ratio-16-9 { aspect-ratio: 16/9; }
+.cs-img-placeholder.ratio-4-3 { aspect-ratio: 4/3; }
+.cs-img-placeholder.ratio-1 { aspect-ratio: 1; }
+
+.cs-img-full {
+  width: 100%;
+  margin-bottom: 20px;
+  cursor: zoom-in;
+}
+.cs-img-full img, .cs-img-full .cs-img-placeholder {
+  width: 100%;
+  display: block;
+}
+.cs-img-full img { cursor: zoom-in; }
+
+.cs-img-row {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.cs-img-row.cols-2 { grid-template-columns: 1fr 1fr; }
+.cs-img-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+.cs-img-row img, .cs-img-row .cs-img-placeholder {
+  width: 100%;
+  display: block;
+}
+.cs-img-row img { cursor: zoom-in; }
+
+.cs-pullquote {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-style: italic;
+  color: #3a3a3a;
+  line-height: 1.7;
+  border-left: 2px solid var(--border);
+  padding-left: 18px;
+  margin: 20px 0;
+}
+
+.cs-finding {
+  margin-bottom: 14px;
+}
+.cs-finding strong {
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--black);
+  display: block;
+  margin-bottom: 4px;
+}
+.cs-finding p { margin-bottom: 0; }
+
+/* ── EMAIL TOAST ── */
+#email-toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 9px 18px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 10000;
+  white-space: nowrap;
+}
+#email-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── FOOTER ── */
+
+
+@media (max-width: 1000px) {
+  .credits-sep { display: none; }
+  .credits-break { display: inline; }
+}
+
+@media (max-width: 600px) {
+  #cover .corner--tr,
+  #cover .corner--br { display: none; }
+  .wide-only { display: none; }
+  .narrow-only { display: inline; }
+
+  .scroll-panel-container {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 40px 40px;
+  }
+
+  .scroll-panel-container .sticky-photo { order: 2; }
+  .scroll-panel-container .lifting-panel { order: 1; }
+
+  .section-divider { padding-left: 40px; padding-right: 40px; }
+  #freelance { padding-left: 40px; padding-right: 40px; }
+  #freelance-content { padding-left: 40px !important; padding-right: 40px !important; }
+  .merch-grid { padding-left: 40px !important; padding-right: 40px !important; grid-template-columns: 1fr; }
+  .poster-grid { padding-left: 40px !important; padding-right: 40px !important; grid-template-columns: repeat(2, 1fr) !important; }
+
+  .freelance-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: calc((100vw - 80px - 2px) / 2 * 3 / 4);
+  }
+
+  #cover .corner--tl { left: 40px; }
+  #cover .corner--bl { left: 40px; }
+  #cover-bottom .corner--bl { left: 40px; }
+  #cover-bottom .corner--br { right: 40px; }
+  #cover-bottom .credits { max-width: calc(100% - 80px); }
+
+  #case-study-panel,
+  #savvly-panel,
+  #empower-panel,
+  #pathrise-panel {
+    width: 100vw !important;
+    padding: 72px 32px 80px !important;
+  }
+
+  #case-study-panel .cs-close,
+  #savvly-panel .cs-close,
+  #empower-panel .cs-close,
+  #pathrise-panel .cs-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+  }
+
+  /* Savvly: stack image above text */
+  .savvly-problem-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  /* Savvly: estimator full width, shorter */
+  .savvly-estimator-wrap {
+    height: 340px !important;
+  }
+  /* Savvly: problem/solution iframes stacked */
+  .savvly-landing-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* EmpowerHealth: smaller interview images */
+  .empower-interview-row {
+    height: clamp(80px, 22vw, 130px) !important;
+  }
+
+  /* Pathrise: taller video to show full height */
+  .pathrise-video-wrap {
+    padding-bottom: 75% !important;
+  }
+
+  /* Freelance: stack image rows vertically */
+  .fi-d-img-row {
+    flex-direction: column !important;
+  }
+  .fi-d-img-row img,
+  .fi-d-img-row--match img,
+  .fi-d-img-row--phone img {
+    width: 100% !important;
+    height: auto !important;
+    flex: none !important;
+  }
+
+  /* Freelance: full-screen overlay on mobile */
+  .freelance-item.open {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 9999 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    grid-column: unset !important;
+    grid-row: unset !important;
+    overflow-y: auto !important;
+  }
+  .freelance-item.open .fi-content {
+    height: auto !important;
+    max-height: none !important;
+    overflow-y: visible !important;
+  }
+  .fi-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    float: none !important;
+    z-index: 10000 !important;
+    background: var(--white) !important;
+    padding: 4px 8px !important;
+    font-size: 18px !important;
+  }
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>Meghai Choudhury</h1>
-        <p>coming soon</p>
-        <a href="/links">links</a>
+
+<!-- NAV -->
+<nav>
+  <a href="#cover" class="name">Meghai Choudhury</a>
+  <ul>
+    <li><a href="#projects">Selected Work</a></li>
+    <li><a href="#freelance">Freelance</a></li>
+    <li><a href="art.html">Art</a></li>
+    <li><a href="#" onclick="copyEmail(event)">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- COVER: full image, panels lift off it -->
+<section id="cover">
+  <div class="bg">
+    <img id="coverImg" src="yes.jpg" alt="Meghai Choudhury">
+  </div>
+  <div class="overlay"></div>
+
+  <div class="corner corner--tl">
+    Meghai Choudhury
+    <span class="narrow-only"><br><a href="#" onclick="copyEmail(event)">meghai@berkeley.edu</a><br><a href="https://www.linkedin.com/in/meghai-choudhury-b5538418b/" target="_blank">LinkedIn</a></span>
+  </div>
+
+  <div class="corner corner--tr">
+    <a href="#" onclick="copyEmail(event)">meghai@berkeley.edu</a><br>
+    <a href="https://www.linkedin.com/in/meghai-choudhury-b5538418b/" target="_blank">LinkedIn</a>
+  </div>
+
+  <div class="corner corner--bl">
+    CS &amp; Design, UC Berkeley<br>
+    Jazz Violin &middot; Visual Arts
+    <span class="narrow-only"><br>UI/UX &middot; User Research</span>
+  </div>
+
+  <div class="corner corner--br">
+    UI/UX &middot; User Research
+  </div>
+</section>
+<div id="cover-spacer"></div>
+
+<!-- SELECTED WORK -->
+<div id="projects-outer">
+<div id="projects">
+
+  <div class="section-divider">
+    <span class="label">Selected Work</span>
+    <div class="line"></div>
+
+  </div>
+
+  <!-- 01: SAVVLY -->
+  <div class="scroll-panel-container">
+    <div class="sticky-photo" style="cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="openSavvlyCaseStudy()">
+      <img src="portfolio_media/savvly/savvlymockup.png" alt="Savvly" style="width:95%;display:block;border-radius:12px;">
     </div>
+    <div class="lifting-panel" id="panel-savvly">
+      <div class="inner">
+        <span class="project-num">01 / 04</span>
+        <h2>Savvly</h2>
+        <span class="role">Design Intern &middot; Jan–May 2026</span>
+        <p>A longevity benefit that pays out structured cash at ages 80–95. As the sole designer, part of my work included redesigning the client dashboard and landing page, where I worked on translating a complex financial product into a narrative people could resonate with.</p>
+        <div class="proj-thumb"><div class="proj-thumb-img"><img src="portfolio_media/savvly/savvlymockup.png" alt="Savvly"></div></div>
+        <div class="tags">
+          <span class="tag">User Research</span>
+          <span class="tag">Product Design</span>
+          <span class="tag">Storytelling</span>
+          <span class="tag">Financial User Experience</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02: THE SHED -->
+  <div class="scroll-panel-container">
+    <div class="sticky-photo">
+      <img src="portfolio_media/shed/shed.png" alt="The Shed" style="width:100%;display:block;cursor:pointer;" onclick="openCaseStudy()">
+    </div>
+    <div class="lifting-panel right" id="panel-jazz">
+      <div class="inner">
+        <span class="project-num">02 / 04</span>
+        <h2>The Shed</h2>
+        <span class="role">Personal Project &middot; 2026</span>
+        <p>A practice tool for jazz musicians learning solos by ear, built after watching real musicians transcribe.</p>
+        <div class="proj-thumb"><div class="proj-thumb-img">The Shed — add image</div></div>
+        <div class="tags">
+          <span class="tag">UX Research</span>
+          <span class="tag">Interaction Design</span>
+          <span class="tag">Development</span>
+          <span class="tag">Music</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03: EMPOWERHEALTH -->
+  <div class="scroll-panel-container">
+    <div class="sticky-photo" style="cursor:pointer;" onclick="openEmpowerCaseStudy()">
+      <div style="display:flex;gap:16px;align-items:center;justify-content:center;width:100%;">
+        <img src="portfolio_media/empowerhealth/diaryscreen.png" alt="Diary screen" style="width:30%;display:block;object-fit:contain;">
+        <img src="portfolio_media/empowerhealth/providerscreen.png" alt="Provider screen" style="width:70%;display:block;object-fit:contain;">
+      </div>
+    </div>
+    <div class="lifting-panel" id="panel-empower">
+      <div class="inner">
+        <span class="project-num">03 / 04</span>
+        <h2>EmpowerHealth</h2>
+        <span class="role">Fung Fellowship &middot; 2023–2024</span>
+        <p>An alternative patient portal for youth with chronic illnesses — designed to increase visibility and emotional connection within a healthcare system that often makes young patients feel invisible.</p>
+        <div class="proj-thumb"><div class="proj-thumb-img">EmpowerHealth — add image</div></div>
+        <div class="tags">
+          <span class="tag">User Research</span>
+          <span class="tag">Journey Mapping</span>
+          <span class="tag">Wireframing</span>
+          <span class="tag">Healthcare Design</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04: PATHRISE -->
+  <div class="scroll-panel-container">
+    <div class="sticky-photo" style="cursor:pointer;" onclick="openPathriseCaseStudy()">
+      <img src="portfolio_media/pathrise/pathrise.png" alt="Pathrise" style="width:100%;display:block;">
+    </div>
+    <div class="lifting-panel right" id="panel-pathrise">
+      <div class="inner">
+        <span class="project-num">04 / 04</span>
+        <h2>Pathrise<br>Education</h2>
+        <span class="role">Design Intern &middot; February – May 2025</span>
+        <p>A platform for college consultants to manage students through admissions. I noticed a gap in how students prepared for writing sessions and independently designed a five-phase brainstorm portal to address it.</p>
+        <div class="proj-thumb"><div class="proj-thumb-img" style="cursor:pointer;overflow:hidden;" onclick="openPathriseCaseStudy()"><img src="portfolio_media/pathrise/pathrise.png" alt="Pathrise" style="width:100%;height:100%;object-fit:cover;"></div></div>
+        <div class="tags">
+          <span class="tag">Product Design</span>
+          <span class="tag">Prototyping</span>
+          <span class="tag">Systems Thinking</span>
+          <span class="tag">EdTech</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /projects -->
+
+<!-- FREELANCE -->
+<div class="section-divider" id="freelance">
+  <span class="label">Freelance</span>
+  <div class="line"></div>
+</div>
+
+<section id="freelance-content" style="padding:0 80px 120px;background:var(--white);position:relative;z-index:1;">
+  <div style="max-width:460px;margin-bottom:52px;">
+    <h3 style="font-family:var(--serif);font-size:28px;font-weight:400;margin-bottom:10px;line-height:1.2;">Joined as the first designer.</h3>
+    <p style="font-size:14px;color:#555;line-height:1.7;">Joined seed-stage startups as first UI designer — logo, identity, marketing, and web from scratch. Several went on to YC or Sequoia-backed rounds.</p>
+  </div>
+
+  <div class="freelance-grid">
+
+    <div class="freelance-item" onclick="toggleFreelance(this)">
+      <div class="fi-preview fi-preview--icon">
+        <img src="portfolio_media/Flint/icon_transparent_padding.png" alt="Flint">
+        <div class="fi-hover-label">
+          <span class="fi-hl-name">Flint</span>
+          <span class="fi-hl-type">YC S'23</span>
+        </div>
+      </div>
+      <div class="fi-content">
+        <button class="fi-close" onclick="closeFreelance(event, this)">&#x2715;</button>
+        <span class="fi-d-name">Flint</span>
+        <span class="fi-d-badge">Logo &amp; Brand Identity &middot; YC S'23 &middot; May 2023</span>
+        <div class="fi-d-img-row">
+          <img src="portfolio_media/Flint/Pictoral_Mark.png" alt="Pictoral mark" onclick="openImgLightbox(this.src)">
+          <img src="portfolio_media/Flint/Combination_Mark.png" alt="Combination mark" onclick="openImgLightbox(this.src)">
+          <img src="portfolio_media/Flint/Color_Combos.png" alt="Color combos" onclick="openImgLightbox(this.src)">
+          <img src="portfolio_media/Flint/Both_Variants.png" alt="Both variants" onclick="openImgLightbox(this.src)">
+        </div>
+        <p class="fi-d-desc">Flint is an AI tutoring platform for K–12 students. I joined as the first designer to build the brand from scratch. The logo needed to feel approachable for students and teachers and embody their mission to ignite progress in the education sector.</p>
+        <div class="fi-d-img-row">
+          <img src="portfolio_media/Flint/earlysketches.png" alt="Early sketches" onclick="openImgLightbox(this.src)">
+          <img src="portfolio_media/Flint/iteration1.png" alt="Iteration 1" onclick="openImgLightbox(this.src)">
+          <img src="portfolio_media/Flint/iteration2.png" alt="Iteration 2" onclick="openImgLightbox(this.src)">
+          <img src="portfolio_media/Flint/iteration3.png" alt="Iteration 3" onclick="openImgLightbox(this.src)">
+        </div>
+        <p class="fi-d-desc">I explored a wide range of directions before landing on the flint stone with radiating sparks, taking its name as inspiration.</p>
+        <div class="fi-d-tags">
+          <span class="fi-d-tag">Logo</span>
+          <span class="fi-d-tag">Identity</span>
+          <span class="fi-d-tag">Merch</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="freelance-item" onclick="toggleFreelance(this)">
+      <div class="fi-preview fi-preview--icon">
+        <img src="portfolio_media/Aipeiron/Aipeiron.png" alt="Aipeiron">
+        <div class="fi-hover-label">
+          <span class="fi-hl-name">Aipeiron</span>
+          <span class="fi-hl-type">Dashboard &amp; Website</span>
+        </div>
+      </div>
+      <div class="fi-content">
+        <button class="fi-close" onclick="closeFreelance(event, this)">&#x2715;</button>
+        <span class="fi-d-name">Aipeiron</span>
+        <span class="fi-d-badge">Dashboard &amp; Website &middot; February 2024</span>
+        <p class="fi-d-desc">Aipeiron is an AI accounting platform for small businesses. I designed the accounting dashboard, and created a mockup for the landing page, using prior user research to inform the data visualization and layout decisions in the dashboard.</p>
+        <div class="fi-d-img-row fi-d-img-row--match">
+          <img src="portfolio_media/Aipeiron/dashboard.png" alt="Accounting dashboard" onclick="openImgLightbox(this.src)">
+          <img src="portfolio_media/Aipeiron/landingpage.png" alt="Landing page" onclick="openImgLightbox(this.src)">
+        </div>
+        <div class="fi-d-tags">
+          <span class="fi-d-tag">Platform</span>
+          <span class="fi-d-tag">Data Viz</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="freelance-item" onclick="toggleFreelance(this)">
+      <div class="fi-preview fi-preview--icon">
+        <img src="portfolio_media/Mediboard/icon_nopad.png" alt="Mediboard">
+        <div class="fi-hover-label">
+          <span class="fi-hl-name">Mediboard</span>
+          <span class="fi-hl-type">Logo &middot; Identity</span>
+        </div>
+      </div>
+      <div class="fi-content">
+        <button class="fi-close" onclick="closeFreelance(event, this)">&#x2715;</button>
+        <span class="fi-d-name">Mediboard</span>
+        <span class="fi-d-badge">Logo &middot; Identity &middot; August 2022</span>
+        <div class="fi-d-img-row" style="gap:8px;">
+          <img src="portfolio_media/Mediboard/Pictorial_Mark.png" alt="Pictorial mark" onclick="openImgLightbox(this.src)" style="flex:1 1 0;min-width:0;width:100%;height:auto;">
+          <img src="portfolio_media/Mediboard/combination.png" alt="Combination mark" onclick="openImgLightbox(this.src)" style="flex:1 1 0;min-width:0;width:100%;height:auto;">
+          <img src="portfolio_media/Mediboard/both.png" alt="Both variants" onclick="openImgLightbox(this.src)" style="flex:1 1 0;min-width:0;width:100%;height:auto;">
+        </div>
+        <p class="fi-d-desc">The Medical Board makes clinical trial data readable for patients. I designed the logo to feel approachable for a general audience while staying credible in a clinical space. The plague doctor mascot was an unexpected choice that ended up becoming widely recognized among their users.</p>
+        <div class="fi-d-img-row" style="gap:8px;align-items:flex-start;">
+          <img src="portfolio_media/Mediboard/sketch1.png" alt="Sketch 1" onclick="openImgLightbox(this.src)" style="flex:none;height:160px;width:auto;">
+          <img src="portfolio_media/Mediboard/sketch2.png" alt="Sketch 2" onclick="openImgLightbox(this.src)" style="flex:none;height:160px;width:auto;">
+          <img src="portfolio_media/Mediboard/icon_options.png" alt="Icon options" onclick="openImgLightbox(this.src)" style="flex:none;height:160px;width:auto;">
+        </div>
+        <div class="fi-d-tags">
+          <span class="fi-d-tag">Logo</span>
+          <span class="fi-d-tag">Identity</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="freelance-item" onclick="toggleFreelance(this)">
+      <div class="fi-preview fi-preview--icon">
+        <img src="portfolio_media/Mirage/mirageml_logo.png" alt="Mirage">
+        <div class="fi-hover-label">
+          <span class="fi-hl-name">Mirage</span>
+          <span class="fi-hl-type">Sequoia '23</span>
+        </div>
+      </div>
+      <div class="fi-content">
+        <button class="fi-close" onclick="closeFreelance(event, this)">&#x2715;</button>
+        <span class="fi-d-name">Mirage</span>
+        <span class="fi-d-badge">Website &amp; Branding &middot; Sequoia '23 &middot; May 2022</span>
+        <p class="fi-d-desc">Mirage is an ML platform for generating photorealistic synthetic data. I designed and built the initial website on Figma and Webflow for their Sequoia fundraise.</p>
+        <div class="fi-d-img-row fi-d-img-row--tall">
+          <img src="portfolio_media/Mirage/landingpage.png" alt="Landing page" onclick="openImgLightbox(this.src)">
+          <img src="portfolio_media/Mirage/early_access_page.png" alt="Early access page" onclick="openImgLightbox(this.src)">
+        </div>
+        <div class="fi-d-tags">
+          <span class="fi-d-tag">Website</span>
+          <span class="fi-d-tag">Brand</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="freelance-item" onclick="toggleFreelance(this)">
+      <div class="fi-preview fi-preview--icon">
+        <img src="portfolio_media/KnockKnock/app.png" alt="Knockknock">
+        <div class="fi-hover-label">
+          <span class="fi-hl-name">Knockknock</span>
+          <span class="fi-hl-type">Co-founder &middot; Lead Designer</span>
+        </div>
+      </div>
+      <div class="fi-content">
+        <button class="fi-close" onclick="closeFreelance(event, this)">&#x2715;</button>
+        <span class="fi-d-name">Knockknock</span>
+        <span class="fi-d-badge">Co-founder &amp; Lead Designer &middot; January 2023 – August 2023</span>
+        <p class="fi-d-desc">A language-exchange app connecting people through shared culture and conversation goals.</p>
+        <p class="fi-d-desc">KnockKnock pairs users for language exchange based on shared interests, location, and learning goals. I came in after the team had done early user interviews and competitive research, and built the entire visual and interaction language from that foundation — including brand identity, home dashboard, matching flow, and profile screens.</p>
+        <div class="fi-d-img-row" style="gap:0;align-items:flex-start;">
+          <img src="portfolio_media/KnockKnock/Untitled 1.png" alt="" onclick="openImgLightbox(this.src)" style="flex:none;width:20%;height:auto;">
+          <img src="portfolio_media/KnockKnock/Untitled 2.png" alt="" onclick="openImgLightbox(this.src)" style="flex:none;width:20%;height:auto;">
+          <img src="portfolio_media/KnockKnock/Untitled 3.png" alt="" onclick="openImgLightbox(this.src)" style="flex:none;width:20%;height:auto;">
+          <img src="portfolio_media/KnockKnock/Untitled 4.png" alt="" onclick="openImgLightbox(this.src)" style="flex:none;width:20%;height:auto;">
+          <img src="portfolio_media/KnockKnock/Untitled 5.png" alt="" onclick="openImgLightbox(this.src)" style="flex:none;width:20%;height:auto;">
+        </div>
+        <div class="fi-d-tags">
+          <span class="fi-d-tag">Product Design</span>
+          <span class="fi-d-tag">Brand</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="freelance-item ph">
+      <div class="fi-preview">
+        <span class="ph-name" style="text-align:center;">Want to work together?</span>
+        <a href="#" onclick="copyEmail(event)" class="ph-type" style="text-decoration:none;color:var(--mid);border-bottom:1px solid #ccc;padding-bottom:1px;">meghai@berkeley.edu</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="black" style="background:#0e0e0e;position:relative;z-index:1;padding-top:60px;">
+
+  <!-- MERCH -->
+  <div class="section-divider" style="padding-top:0;"><span class="label">Merch Design</span><div class="line"></div></div>
+  <div class="merch-grid" style="padding:0 80px;">
+    <div class="merch-card">
+      <div class="thumb"><img src="portfolio_media/merch/laya.png" style="width:100%;height:100%;object-fit:cover;"></div>
+      <h4>Laya</h4>
+      <span class="merch-year">2023</span>
+      <p>Sweatshirt, sticker, and tote bag designs for a South Asian music group at UC Berkeley: a mix of graphic design and original illustration drawing on traditional desi art.</p>
+    </div>
+    <div class="merch-card">
+      <div class="thumb"><video src="portfolio_media/merch/flintmerch.mov" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;"></video><img class="hover-img" src="portfolio_media/merch/flintwearing.jpg" alt="Flint wearing"></div>
+      <h4>Flint</h4>
+      <span class="merch-year">2024</span>
+      <p>Merch for an edtech startup: a stylized Flint logo built from bright, primary-colored geometry blocks that make learning feel like fun.</p>
+    </div>
+    <div class="merch-card">
+      <div class="thumb"><video src="portfolio_media/merch/ucjazz.mov" autoplay loop muted playsinline style="width:100%;height:101%;object-fit:cover;object-position:center top;"></video><img class="hover-img" src="portfolio_media/merch/ucjazzwearing.jpg" alt="UC Jazz wearing"></div>
+      <h4>UC Jazz</h4>
+      <span class="merch-year">2026</span>
+      <p>T-shirt and sticker designs for UC Berkeley's jazz organization, illustrated around the jazz slang "cat," the word musicians use for someone who really plays.</p>
+    </div>
+  </div>
+
+  <!-- POSTERS -->
+  <div class="section-divider"><span class="label">Poster Designs</span><div class="line"></div></div>
+  <div class="poster-grid" style="padding:0 80px;">
+    <div class="poster-cell"><img src="portfolio_media/posters/raveena.png" alt="Raveena"><div class="poster-overlay"><div class="poster-year">2022</div><div class="poster-title">Raveena — Asha's Awakening</div><div class="poster-desc">Album poster design. Raveena retweeted this!<div class="tweet-wrap"><blockquote class="twitter-tweet" data-theme="dark"><p lang="qme" dir="ltr">😍😍😍</p>&mdash; Raveena (@raveena_aurora) <a href="https://x.com/raveena_aurora/status/1573880845047189504?ref_src=twsrc%5Etfw">September 25, 2022</a></blockquote><script async src="https://platform.x.com/widgets.js" charset="utf-8"></script></div></div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/sailorrp.png" alt="Sailorr"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">Sailorr</div><div class="poster-desc">An album poster for Sailorr's From Florida's Finest.</div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/laufeyp.png" alt="Laufey"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">Laufey</div><div class="poster-desc">A discography poster for Laufey.</div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/rihanna.png" alt="Rihanna"><div class="poster-overlay"><div class="poster-year">2024</div><div class="poster-title">Rihanna</div><div class="poster-desc">A reimagined concert poster for Rihanna.</div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/mitski.png" alt="Mitski"><div class="poster-overlay"><div class="poster-year">2022</div><div class="poster-title">Mitski</div><div class="poster-desc">A reimagined concert poster for Mitski's Be the Cowboy tour.</div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/omshanti.png" alt="Om Shanti Om"><div class="poster-overlay"><div class="poster-year">2022</div><div class="poster-title">Om Shanti Om</div><div class="poster-desc">A movie poster of the 2007 Farah Khan film Om Shanti Om.</div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/nujazz.png" alt="Nu Jazz"><div class="poster-overlay"><div class="poster-year">2026</div><div class="poster-title">Nu Jazz</div><div class="poster-desc">A concert poster for the joint concert between UC Jazz Orchestra and Berkeley Nu Jazz Collective.</div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/ucjowinter.png" alt="UCJo Winter"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">UC Jazz Winter</div><div class="poster-desc">A concert poster for UCJO's December 2025 concert, which featured a Charlie Brown tune.</div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/lala.jpg" alt="La La Land"><div class="poster-overlay"><div class="poster-year">2026</div><div class="poster-title">La La Land</div><div class="poster-desc">A concert poster for UCJO's May 2026 concert, which featured a La La Land tune.</div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/beginningjazz.png" alt="Beginning Jazz"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">Beginning Jazz</div><div class="poster-desc">UC Jazz's Fall 2025 end of semester beginning combo concert poster.</div></div></div>
+    <div class="poster-cell letter"><img src="portfolio_media/posters/kendrick.png" alt="Kendrick"><div class="poster-overlay"><div class="poster-year">2023</div><div class="poster-title">Kendrick Lamar</div><div class="poster-desc">Album poster for To Pimp a Butterfly.</div></div></div>
+    <div class="poster-cell letter"><img src="portfolio_media/posters/fish.png" alt="Fish"><div class="poster-overlay"><div class="poster-year">2026</div><div class="poster-title">Fish</div><div class="poster-desc">UC Jazz's Spring 2026 beginning combo concert poster.</div></div></div>
+    <div class="poster-cell letter"><img src="portfolio_media/posters/116concert.png" alt="116 Concert"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">116 Concert</div><div class="poster-desc">Hand-illustrated concert poster for the end of semester concert for a free jazz improvisational class at UC Berkeley.</div></div></div>
+    <div class="poster-cell letter"><img src="portfolio_media/posters/dayinthe.png" alt="Day in the Life"><div class="poster-overlay"><div class="poster-year">2022</div><div class="poster-title">Day in the Life</div><div class="poster-desc">A fun graphic of what it actually feels like to be a Berkeley student, hour by hour.</div></div></div>
+  </div>
+
+
+</section>
+
+<!-- BOTTOM COVER REVEAL -->
+<div id="cover-bottom">
+  <div class="bg"><img src="back.jpg" alt="Meghai Choudhury"></div>
+  <div class="overlay"></div>
+  <div class="corner corner--tl narrow-only" style="top:48px;left:40px;">
+    Meghai Choudhury<br>
+    <a href="#" onclick="copyEmail(event)">Email</a> &nbsp; <a href="https://www.linkedin.com/in/meghai-choudhury-b5538418b/" target="_blank">LinkedIn</a>
+  </div>
+  <div class="corner corner--bl">
+    <span class="wide-only">Meghai Choudhury</span>
+    <span class="narrow-only">Photography <a href="https://www.instagram.com/naliniphoto/" target="_blank">Nalini Kumar</a><br>Mehendi &amp; stole <a href="https://www.instagram.com/ananya.mehendi/" target="_blank">Ananya Goenka</a><br>Nails <a href="https://www.instagram.com/n4i1.0/" target="_blank">Vân Anh</a></span>
+  </div>
+  <div class="corner corner--br wide-only">
+    <a href="#" onclick="copyEmail(event)">Email</a> &nbsp; <a href="https://www.linkedin.com/in/meghai-choudhury-b5538418b/" target="_blank">LinkedIn</a>
+  </div>
+  <div class="credits wide-only">Photography <a href="https://www.instagram.com/naliniphoto/" target="_blank">Nalini Kumar</a><span class="credits-sep"> &middot; </span><br class="credits-break">Mehendi &amp; stole <a href="https://www.instagram.com/ananya.mehendi/" target="_blank">Ananya Goenka</a><span class="credits-sep"> &middot; </span><br class="credits-break">Nails <a href="https://www.instagram.com/n4i1.0/" target="_blank">Vân Anh</a></div>
+</div>
+
+<!-- CASE STUDY OVERLAY: SAVVLY -->
+<div id="savvly-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);cursor:pointer;" onclick="closeSavvlyCaseStudy(event)">
+  <div id="savvly-panel" style="position:absolute;top:0;right:0;width:66.67vw;height:100vh;background:var(--white);overflow-y:auto;cursor:default;padding:64px 56px 80px;" onclick="event.stopPropagation()">
+    <button class="cs-close" onclick="closeSavvlyCaseStudy()">&#x2715;</button>
+
+    <span class="cs-label">Case Study &mdash; 01 / 04</span>
+    <h1>Savvly</h1>
+
+    <span class="cs-section-header">My Role</span>
+    <p>As the sole designer, I worked directly with the marketing and engineering leads across many workstreams, from user research and visual design to pitch decks and marketing assets. This case study focuses on two: redesigning the client dashboard and restructuring the landing page for narrative clarity.</p>
+
+    <span class="cs-section-header">The Problem</span>
+    <p>Savvly is a longevity benefit: a financial product that pools contributions and pays out structured cash at ages 80, 85, 90, and 95. The core promise is protection against outliving your savings. But the existing product experience was telling the wrong story.</p>
+
+    <div class="savvly-problem-grid" style="display:grid;grid-template-columns:1fr 2fr;gap:60px;align-items:stretch;margin-bottom:28px;">
+      <div style="display:flex;flex-direction:column;">
+        <img src="portfolio_media/savvly/savvly_old_estimator.png" alt="Savvly estimator before redesign" onclick="openImgLightbox(this.src)" style="width:100%;height:100%;object-fit:contain;object-position:top left;display:block;cursor:zoom-in;border-radius:6px;">
+        <div style="font-size:11px;color:var(--mid);margin-top:8px;letter-spacing:0.04em;flex-shrink:0;">Savvly estimator, before redesign — leads with return percentage, no narrative context</div>
+      </div>
+      <div>
+        <p style="margin-top:0;">The estimator led with projections: how much could you get, under which scenarios, compared to what. It framed Savvly as an investment product competing on returns. But the deeper issue was that most people didn't know longevity benefits exist or why they'd need one. The status quo wasn't even a competing product — there was no existing product at all.</p>
+        <p>User research confirmed this: thinking about retirement made people uncomfortable. Most had never named "outliving your savings" as a specific risk they needed to plan for. That was the key design signal: the experience couldn't open with a calculator.</p>
+        <p style="padding-left:16px;border-left:2px solid var(--border);font-style:italic;color:#555;margin-bottom:0;">Calculators are for people who've already decided to engage. The experience needed to meet people at the point of avoidance, make the problem feel real without triggering anxiety, and then present Savvly as the natural response.</p>
+      </div>
+    </div>
+    <p>An analogy that shaped the framing: nobody buys home insurance because it offers the best financial return — they buy it because of the specific fear that their house may burn down. The value is psychological before it's numerical. Savvly addresses the same emotional structure. The disaster isn't a house burning down; it's outliving your money. That reframes Savvly entirely: not an investment product competing on returns, but a risk management product offering protection against a specific, underacknowledged fear.</p>
+
+    <span class="cs-section-header">The Estimator Redesign</span>
+    <p>The estimator lives inside the employee dashboard — the view a client sees after onboarding, designed to help them understand their benefit, play with their numbers, and stay engaged with Savvly over time.</p>
+    <p>The redesign focused on fewer inputs, progressive disclosure, and a narrative arc that established the problem before introducing the solution. Rather than opening on a calculator, the new flow established longevity risk first — what it is and why traditional retirement planning doesn't address it — and then introduced Savvly as the response.</p>
+    <p><em>I proposed a fuller narrative experience to the team, but the scope was focused on the estimator itself, so that's where I concentrated the work.</em></p>
+
+    <div style="margin-bottom:28px;">
+      <div style="width:100%;border-radius:8px;overflow:hidden;" class="savvly-iframe-wrap savvly-estimator-wrap" data-src="portfolio_media/savvly/savvly_estimator_condensed.html" data-height="500" data-scroll="1"></div>
+      <div style="font-size:11px;color:var(--mid);margin-top:8px;letter-spacing:0.04em;">The redesigned estimator — simplified inputs, payout milestones as gift cards, shark-fin protection curve, and simple answers to frequently asked questions</div>
+    </div>
+
+    <p>Through user testing, I found that people are broadly skeptical of financial projections. What resonated was specificity about the downside: not "here's what you might get" but "here's what happens if you live to 95 and your savings run out." I changed the key visual to a shark-fin curve that shows how Savvly's payouts grow larger at exactly the ages when savings tend to run out.</p>
+    <p>The payout cards used a gift-box visual treatment — each age milestone presented as something you'd receive rather than a line on a graph, animating in sequence to reinforce the idea of payouts arriving over time rather than a single lump-sum projection.</p>
+
+    <span class="cs-section-header">Landing Page Restructure</span>
+    <p>The existing page led with product mechanics. I restructured it around the same storytelling arc: establish the emotional problem, introduce longevity risk with supporting statistics, then present Savvly as the solution with the estimator as the call to action.</p>
+    <p style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);margin-bottom:12px;">Design exploration, January–May 2026</p>
+
+    <div class="savvly-landing-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:8px;">
+      <div>
+        <div style="border-radius:8px;overflow:hidden;" class="savvly-iframe-wrap" data-src="portfolio_media/savvly/savvly_meghaiproblem.html" data-height="280" data-scroll="1" data-half="1"></div>
+        <div style="font-size:11px;color:var(--mid);margin-top:6px;letter-spacing:0.04em;">Introducing the problem statement first</div>
+      </div>
+      <div>
+        <div style="border-radius:8px;overflow:hidden;" class="savvly-iframe-wrap" data-src="portfolio_media/savvly/savvly_meghaisolution.html" data-height="280" data-scroll="1" data-half="1"></div>
+        <div style="font-size:11px;color:var(--mid);margin-top:6px;letter-spacing:0.04em;">Presenting Savvly as the solution</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CASE STUDY OVERLAY: THE SHED -->
+<div id="case-study-overlay" onclick="closeCaseStudy(event)">
+  <div id="case-study-panel" onclick="event.stopPropagation()">
+    <button class="cs-close" onclick="closeCaseStudy()">&#x2715;</button>
+
+    <span class="cs-label">Case Study &mdash; 02 / 04</span>
+    <h1>The Shed</h1>
+
+    <div class="cs-images">
+      <img src="portfolio_media/shed/shed.png" alt="The Shed screenshot" style="cursor:zoom-in;" onclick="openImgLightbox(this.src)">
+      <img src="portfolio_media/shed/shed2.png" alt="The Shed screenshot 2" style="cursor:zoom-in;" onclick="openImgLightbox(this.src)">
+    </div>
+
+    <span class="cs-section-header">The Problem</span>
+    <p>A transcription is learning a recorded solo by ear, note by note. One of the foundational ways jazz musicians learn is by copying the way the greats played. The process requires slowing audio down, looping short phrases, and marking moments to return to.</p>
+    <p>Most musicians have their own cobbled-together process: YouTube and a separate metronome, Chrome extensions, an MP3 download into whatever playback software they have. But across all methods, the workflow is fragmented and constantly pulls you out of the music.</p>
+    <p>I built this because my own process was fragmented — and I realized that only part of my slowness was my ear. The rest was the clumsy process itself.</p>
+
+    <span class="cs-section-header">Research</span>
+    <p>I observed three jazz musicians transcribing in their natural workflow before designing anything.</p>
+    <ul>
+      <li>One had opened a professional audio editing suite — not to edit anything, but purely to see the waveform so he could set loop points with precision. He was using a tool built for audio engineers just for that one visual.</li>
+      <li>Another was using his phone's YouTube app, double-tapping to skip forward and back. The 10-second jumps were too imprecise for phrase-level work, and he'd overshoot every time.</li>
+      <li>A third kept switching apps mid-session to use a separate metronome.</li>
+    </ul>
+    <p>I then ran think-aloud sessions with five musicians on an early version of the tool, and sent them iterations as I built.</p>
+
+    <span class="cs-section-header">Design Decisions</span>
+    <p><strong>Waveform over video:</strong> Watching a musician pull up an audio engineer tool was the clearest signal — musicians need to see the audio, not the video. I added an MP3 upload tab with a full waveform view for precise loop-point setting. For YouTube uploads, I kept the large video player because musicians are so used to that interface that removing it would feel foreign.</p>
+    <p><strong>Speed-relative seeking:</strong> At 0.5× speed, skipping 5 seconds forward feels like 10 real seconds of music, which felt too far. I made skip distance proportional to playback speed, so at half speed you move half as far.</p>
+    <p><strong>Built-in metronome with BPM sync:</strong> Once I saw the app-switching happening, the fix was obvious. Tap or detect the tempo, and the metronome syncs to it. When you slow the playback down, the metronome slows with it. You can practice a phrase at full speed, drop it to half, and practice again without ever reentering the tempo.</p>
+    <p><strong>Keyboard shortcuts:</strong> Think-aloud sessions made clear I needed more than YouTube's defaults. I added up/down arrows for speed and a key to drop a marker mid-phrase without breaking flow.</p>
+    <p><strong>A-to-B looping:</strong> Set two points in the audio and loop between them indefinitely while you work out a phrase.</p>
+
+    <span class="cs-section-header">The Result</span>
+    <p>A single-page tool that consolidates the full transcription workflow:</p>
+    <div class="cs-result-flow">
+      <span class="cs-flow-step">Load YouTube or MP3</span>
+      <span class="cs-flow-arrow">→</span>
+      <span class="cs-flow-step">Slow down</span>
+      <span class="cs-flow-arrow">→</span>
+      <span class="cs-flow-step">Loop</span>
+      <span class="cs-flow-arrow">→</span>
+      <span class="cs-flow-step">Mark &amp; annotate</span>
+      <span class="cs-flow-arrow">→</span>
+      <span class="cs-flow-step">Practice with synced metronome</span>
+    </div>
+    <p style="margin-top:20px;">All without ever leaving the browser.</p>
+
+    <p style="margin-top:20px;">An unexpected use case emerged after launch: composition arrangers using the tool, working through a recording phrase by phrase to transcribe a piece before arranging it for a new ensemble!</p>
+
+    <a href="https://www.meghai.com/jazz" target="_blank" class="view-link" style="margin-top:32px;">Try it out yourself</a>
+
+  </div>
+</div>
+
+<!-- CASE STUDY OVERLAY: EMPOWERHEALTH -->
+<div id="empower-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);cursor:pointer;" onclick="closeEmpowerCaseStudy(event)">
+  <div id="empower-panel" style="position:absolute;top:0;right:0;width:66.67vw;height:100vh;background:var(--white);overflow-y:auto;cursor:default;padding:64px 56px 80px;" onclick="event.stopPropagation()">
+    <button class="cs-close" onclick="closeEmpowerCaseStudy()">&#x2715;</button>
+
+    <span class="cs-label">Case Study &mdash; 03 / 04</span>
+    <h1>EmpowerHealth</h1>
+
+    <div class="cs-collaborators">
+      <span>With</span>
+      <a href="https://www.linkedin.com/in/ishita-srivastava27/" target="_blank">Ishita Srivastava</a>
+      <span>&middot;</span>
+      <a href="https://www.linkedin.com/in/jonanne-talebloo-6483781a7/" target="_blank">Jonanne Talebloo</a>
+      <span>&middot;</span>
+      <a href="https://www.linkedin.com/in/ashley-huerta/" target="_blank">Ashley Huerta</a>
+      <span>&middot;</span>
+      <a href="https://www.linkedin.com/in/nessiadambal/" target="_blank">Nessia Dambal</a>
+    </div>
+
+    <span class="cs-section-header">My Role</span>
+    <p>This project started within the <a href="https://funginstitute.berkeley.edu/fung-fellows/" target="_blank" style="color:var(--black);border-bottom:1px solid var(--border);text-decoration:none;">Fung Fellowship at UC Berkeley</a>, where I worked alongside Ishita Srivastava, Ashley Huerta, and Nessia Dambal. After the fellowship concluded, I continued developing the project with a team (Ishita Srivastava and Jonanne Talebloo), with me as the design lead.</p>
+
+    <span class="cs-section-header">The Problem</span>
+    <p>Chronic illness is invisible, non-linear, and hard to explain in fifteen minutes. Yet fifteen minutes is often all a patient gets. By the time someone with a chronic condition sits down with a doctor, they're carrying years of context — misdiagnoses, symptoms that fluctuate, mental and physical pain that are deeply entangled — and almost none of it makes it into the room. Doctors either don't have access to the history, don't have time to absorb it, or don't believe it.</p>
+    <p>The result is a system where patients feel unseen, and providers aren't able to do better.</p>
+
+    <span class="cs-section-header">Research</span>
+    <p>We conducted several interviews with users living with chronic illness and with providers. The users we spoke with had between them: years of misdiagnosis, $17,000 paid out of pocket, 50+ specialist appointments for a single condition, and a job lost mid-treatment.</p>
+    <div class="empower-interview-row" style="display:flex;gap:6px;align-items:flex-start;margin-bottom:20px;height:clamp(140px, 18vw, 220px);">
+      <img src="portfolio_media/empowerhealth/interview.png" alt="Interview" onclick="openImgLightbox(this.src)" style="height:100%;width:auto;cursor:zoom-in;display:block;">
+      <img src="portfolio_media/empowerhealth/interview2.png" alt="Interview 2" onclick="openImgLightbox(this.src)" style="height:100%;width:auto;cursor:zoom-in;display:block;">
+      <img src="portfolio_media/empowerhealth/interview3.png" alt="Interview 3" onclick="openImgLightbox(this.src)" style="height:100%;width:auto;cursor:zoom-in;display:block;">
+    </div>
+    <div>
+        <p style="margin-top:0;">
+        <p><strong>Being dismissed or not believed:</strong> Every patient named this in some form. The clearest example: a patient had been living with widespread chronic pain for years, and doctors privately believed he had fibromyalgia — a condition where the nervous system amplifies pain signals throughout the body. However, they refused to put it on his record, saying that the diagnosis would follow him, causing future providers to dismiss any new symptom as "just your fibromyalgia." Without it, he couldn't access treatment. With it, he'd lose credibility. The doctors were essentially protecting their own system's dysfunction at the expense of his care.</p>
+        <p><strong>The proof burden:</strong> Invisible illness means constantly justifying pain to doctors, employers, family, and friends. One patient had scratched their arm during an appointment just to show a doctor they were really suffering.</p>
+        <p><strong>Exhaustion from re-explaining:</strong> Starting over at every new appointment, with every new specialist. No record of what came before. "I want a central place where everything is in one place for all doctors, irrespective of the hospital."</p>
+        <p><strong>The mind-body connection, discovered alone:</strong> Almost every patient had figured out on their own that stress triggered flares, that emotional and physical pain were entangled. Almost none had a doctor who named this to them. Dr. Bennett reframed it clearly: stress is a bodily stressor that literally fires pain receptors. The system wasn't tracking it.</p>
+        <p><strong>Isolation:</strong> One patient said they sometimes made up an excuse rather than explain their illness. Another said "I never felt sick enough" — real symptoms, but excluded from the chronic illness community because their condition wasn't visibly debilitating enough.</p>
+    </div>
+    <p>The provider side was just as constrained. Dr. Bennett described watching patients' lives get "smaller and smaller and smaller, and the focus on the pain get larger and larger" — a compounding spiral he wanted to interrupt but had no infrastructure to address in a standard appointment.</p>
+
+    <span class="cs-section-header">Defining the Problem</span>
+    <p>How might we facilitate provider-patient relationships toward a supportive environment where those with chronic illness feel understood and valued?</p>
+    <p>A key tension we kept returning to: patients don't just want their data tracked; they want to own their narrative going into an appointment. Feeling seen by a doctor is different from feeling surveilled by an app. The design needed to hold that distinction.</p>
+
+    <span class="cs-section-header">The Design</span>
+    <p>We designed two linked portals: a patient-facing mobile app and a provider dashboard.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;margin-bottom:16px;">
+      <div>
+        <div style="display:flex;gap:0;margin-bottom:8px;">
+          <img src="portfolio_media/empowerhealth/symptomscreen.png" alt="Symptom screen" onclick="openImgLightbox(this.src)" style="width:50%;display:block;cursor:zoom-in;">
+          <img src="portfolio_media/empowerhealth/diaryscreen.png" alt="Diary screen" onclick="openImgLightbox(this.src)" style="width:50%;display:block;cursor:zoom-in;">
+        </div>
+        <div style="font-size:11px;color:var(--mid);letter-spacing:0.04em;">The patient app centered on a daily diary card — a design that holds space for whatever a user was carrying that day without making the process feel clinical or burdensome.</div>
+      </div>
+      <div>
+        <img src="portfolio_media/empowerhealth/providerscreen.png" alt="Provider screen" onclick="openImgLightbox(this.src)" style="width:100%;display:block;cursor:zoom-in;margin-bottom:8px;">
+        <div style="font-size:11px;color:var(--mid);letter-spacing:0.04em;">The provider dashboard used AI-summarized data from patient diary cards before appointments, flagging new symptoms, mood trends, and key concerns the patient had noted, so the fifteen minutes could be spent on care rather than catch-up.</div>
+      </div>
+    </div>
+
+    <span class="cs-section-header">What We'd Do Differently</span>
+    <p>This was primarily a research project. The design we produced was early-stage and untested with real patients or providers. The research is the strongest part of the work — the product is a first sketch of where that research pointed. A real next step would be usability testing, particularly around the diary card interaction and how doctors actually want to receive and scan summarized data under time pressure.</p>
+    <p>The fibromyalgia catch-22 alone points to a harder question the design doesn't yet answer: how do you build trust into a system when the system itself has already broken it?</p>
+
+  </div>
+</div>
+
+<!-- CASE STUDY OVERLAY: PATHRISE -->
+<div id="pathrise-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);cursor:pointer;" onclick="closePathriseCaseStudy(event)">
+  <div id="pathrise-panel" style="position:absolute;top:0;right:0;width:66.67vw;height:100vh;background:var(--white);overflow-y:auto;cursor:default;padding:64px 56px 80px;" onclick="event.stopPropagation()">
+    <button class="cs-close" onclick="closePathriseCaseStudy()">&#x2715;</button>
+
+    <span class="cs-label">Case Study &mdash; 04 / 04</span>
+    <h1>Pathrise Education</h1>
+
+    <span class="cs-section-header">Overview</span>
+    <p>Pathrise is a platform for college consultants to manage and support their students through the admissions process. My team designed the consultant-facing dashboard, giving consultants a centralized view of each student's tasks, deadlines, and application progress across their full caseload.</p>
+
+    <span class="cs-section-header">The Problem</span>
+    <p>After sitting in on consultant interviews, I noticed a recurring gap: students arrived at writing sessions with no organized material. They were managing essays manually across notes, docs, and spreadsheets, reusing content across schools without a system, and tracking deadlines separately from their writing progress. This forced consultants to spend time on logistics instead of guidance.</p>
+    <p>To find the underlying structure, I mapped my own college application materials from senior year — stories, brainstorming docs, spreadsheets — until a repeatable phase-by-phase formula emerged. I proposed and designed a student-facing brainstorm portal independently based on this.</p>
+
+    <div class="cs-img-row cols-2" style="margin-bottom:8px;">
+      <img src="portfolio_media/pathrise/brainstorm.png" alt="Brainstorm" onclick="openImgLightbox(this.src)" style="cursor:zoom-in;width:100%;display:block;">
+      <img src="portfolio_media/pathrise/formula.png" alt="Formula" onclick="openImgLightbox(this.src)" style="cursor:zoom-in;width:100%;display:block;">
+    </div>
+
+    <span class="cs-section-header">The Portal</span>
+    <p>The portal walks students through five phases: building a story bank, grouping experiences into themes, matching themes to essay types, drafting outlines, and generating a college-specific timeline. Instead of managing ten separate essays for ten schools, students build one narrative system that maps across all their applications.</p>
+
+    <div class="pathrise-video-wrap" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin-bottom:20px;">
+      <iframe src="https://drive.google.com/file/d/1Mj7LBMW1OLlAxz1MiZXRv9l0QhjLabZk/preview" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allow="autoplay" allowfullscreen></iframe>
+    </div>
+
+    <span class="cs-section-header">Reception</span>
+    <p>After presenting, the team noted this workflow is most relevant for high-achieving students applying to many schools, which aligns well with Pathrise's existing consultant clientele.</p>
+
+  </div>
+</div>
+
+<div id="email-toast">copied to clipboard</div>
+
+<script>
+// Cover image
+
+// Nav appears after cover
+(function() {
+  const nav = document.querySelector('nav');
+  const cover = document.getElementById('cover');
+  function checkNav() {
+    const coverBottom = cover.getBoundingClientRect().bottom;
+    if (coverBottom <= 0) {
+      nav.classList.add('visible');
+    } else {
+      nav.classList.remove('visible');
+    }
+  }
+  window.addEventListener('scroll', checkNav, { passive: true });
+  checkNav();
+})();
+
+
+// Draggable carousels
+document.querySelectorAll('.carousel-track').forEach(track => {
+  let down = false, startX, scrollLeft;
+  track.addEventListener('mousedown', e => { down = true; startX = e.pageX - track.offsetLeft; scrollLeft = track.scrollLeft; });
+  track.addEventListener('mouseleave', () => down = false);
+  track.addEventListener('mouseup', () => down = false);
+  track.addEventListener('mousemove', e => {
+    if (!down) return;
+    e.preventDefault();
+    track.scrollLeft = scrollLeft - (e.pageX - track.offsetLeft - startX) * 1.5;
+  });
+});
+// Art series horizontal pan — each series-pan-wrap is independent
+(function() {
+  document.querySelectorAll('.series-pan-wrap').forEach(function(wrap) {
+    var track = wrap.querySelector('.series-pan-track');
+    var maxShift = 0;
+
+    function setup() {
+      track.style.transform = 'translateX(0)';
+      track.style.paddingRight = '0px';
+      wrap.style.height = 'auto';
+      void track.offsetWidth;
+      var viewW = window.innerWidth;
+      var sticky = wrap.querySelector('.series-pan-sticky');
+      var intro = wrap.closest('.art-series').querySelector('.series-intro');
+      var introH = intro ? intro.offsetHeight : 0;
+      sticky.style.top = introH + 'px';
+      var imgs = track.querySelectorAll('.series-pan-img');
+      var lastImg = imgs[imgs.length - 1];
+      var lastImgW = lastImg.offsetWidth;
+      // right padding so last image lands with 80px margin from right edge
+      var rightPad = viewW - lastImgW;
+      track.style.paddingRight = rightPad + 'px';
+      void track.offsetWidth;
+      var stickyH = sticky.offsetHeight;
+      maxShift = Math.max(0, track.scrollWidth - rightPad);
+      wrap.style.height = (introH + stickyH + maxShift + introH) + 'px';
+    }
+
+    window.addEventListener('load', function() { setup(); });
+    window.addEventListener('resize', function() { setup(); });
+
+    window.addEventListener('scroll', function() {
+      var rect = wrap.getBoundingClientRect();
+      var scrolled = -rect.top;
+      if (scrolled < 0) { track.style.transform = 'translateX(0)'; return; }
+      if (scrolled > maxShift) { track.style.transform = 'translateX(-' + maxShift + 'px)'; return; }
+      track.style.transform = 'translateX(-' + scrolled + 'px)';
+    }, { passive: true });
+  });
+})();
+
+// Poster lightbox
+(function() {
+  var lb = document.createElement('div');
+  lb.id = 'lightbox';
+  var img = document.createElement('img');
+  var meta = document.createElement('div');
+  meta.id = 'lightbox-meta';
+  meta.innerHTML = '<div class="lb-year"></div><div class="lb-desc"></div>';
+  lb.appendChild(img);
+  lb.appendChild(meta);
+  document.body.appendChild(lb);
+
+  document.querySelectorAll('.poster-cell').forEach(function(cell) {
+    cell.addEventListener('click', function(e) {
+      // allow tweet link clicks to pass through
+      if (e.target.closest('a') || e.target.closest('.tweet-wrap')) return;
+      var src = cell.querySelector('img').src;
+      var year = cell.querySelector('.poster-year') ? cell.querySelector('.poster-year').textContent : '';
+      var desc = cell.querySelector('.poster-desc') ? cell.querySelector('.poster-desc').textContent : '';
+      img.src = src;
+      meta.querySelector('.lb-year').textContent = year;
+      meta.querySelector('.lb-desc').textContent = desc;
+      lb.classList.add('active');
+    });
+  });
+
+  lb.addEventListener('click', function() {
+    lb.classList.remove('active');
+  });
+})();
+
+/* ── Case study image zoom ── */
+function openImgLightbox(src) {
+  var lb = document.getElementById('lightbox');
+  lb.querySelector('img').src = src;
+  lb.querySelector('.lb-year').textContent = '';
+  lb.querySelector('.lb-desc').textContent = '';
+  lb.classList.add('active');
+}
+
+/* ── Case study overlay ── */
+function buildSavvlyIframes() {
+  var panel = document.getElementById('savvly-panel');
+  var panelPad = window.innerWidth <= 600 ? 64 : 112;
+  var panelW = panel ? panel.clientWidth - panelPad : 600;
+  document.querySelectorAll('#savvly-panel .savvly-iframe-wrap').forEach(function(wrap) {
+    if (wrap.dataset.built) return;
+    wrap.dataset.built = '1';
+    var src = wrap.dataset.src;
+    var displayH = parseInt(wrap.dataset.height, 10);
+    var scrollable = wrap.dataset.scroll === '1';
+    var srcW = 1200;
+    // Check if inside a 2-col grid (cols-2 parent or grid parent with two children)
+    var isHalf = wrap.dataset.half === '1' && window.innerWidth > 600;
+    var containerW = isHalf ? Math.floor((panelW - 16) / 2) : panelW;
+    containerW = containerW || 600;
+    var scale = containerW / srcW;
+    var iframe = document.createElement('iframe');
+    iframe.src = src;
+    wrap.style.width = containerW + 'px';
+    if (scrollable) {
+      // Fixed display height, iframe scales down in width, scrolls internally
+      var iframeH = Math.round(displayH / scale);
+      wrap.style.height = displayH + 'px';
+      iframe.scrolling = 'yes';
+      iframe.style.cssText = [
+        'width:' + srcW + 'px',
+        'height:' + iframeH + 'px',
+        'border:none',
+        'display:block',
+        'transform:scale(' + scale + ')',
+        'transform-origin:top left',
+        'pointer-events:auto'
+      ].join(';');
+    } else {
+      var iframeH2 = parseInt(wrap.dataset.height, 10);
+      var displayH2 = Math.round(iframeH2 * scale);
+      wrap.style.height = displayH2 + 'px';
+      iframe.scrolling = 'no';
+      iframe.style.cssText = [
+        'width:' + srcW + 'px',
+        'height:' + iframeH2 + 'px',
+        'border:none',
+        'display:block',
+        'transform:scale(' + scale + ')',
+        'transform-origin:top left',
+        'pointer-events:auto'
+      ].join(';');
+    }
+    wrap.appendChild(iframe);
+  });
+}
+
+function openSavvlyCaseStudy() {
+  document.getElementById('savvly-overlay').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  setTimeout(buildSavvlyIframes, 50);
+}
+function closeSavvlyCaseStudy(e) {
+  if (e && e.target !== document.getElementById('savvly-overlay')) return;
+  document.getElementById('savvly-overlay').style.display = 'none';
+  document.body.style.overflow = '';
+  document.querySelectorAll('#savvly-panel .savvly-iframe-wrap').forEach(function(wrap) {
+    wrap.dataset.built = '';
+    var iframe = wrap.querySelector('iframe');
+    if (iframe) { wrap.removeChild(iframe); }
+  });
+}
+
+function openPathriseCaseStudy() {
+  document.getElementById('pathrise-overlay').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+function closePathriseCaseStudy(e) {
+  if (e && e.target !== document.getElementById('pathrise-overlay')) return;
+  document.getElementById('pathrise-overlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function openEmpowerCaseStudy() {
+  document.getElementById('empower-overlay').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+function closeEmpowerCaseStudy(e) {
+  if (e && e.target !== document.getElementById('empower-overlay')) return;
+  document.getElementById('empower-overlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function openCaseStudy() {
+  document.getElementById('case-study-overlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeCaseStudy(e) {
+  if (e && e.target !== document.getElementById('case-study-overlay') && e.type !== 'click') return;
+  document.getElementById('case-study-overlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+/* ── Freelance inline expand ── */
+function toggleFreelance(item) {
+  if (item.classList.contains('ph')) return;
+  var isOpen = item.classList.contains('open');
+  item.closest('.freelance-grid').querySelectorAll('.freelance-item.open').forEach(function(el) {
+    el.classList.remove('open');
+    el.style.gridColumn = '';
+    el.style.gridRow = '';
+  });
+  if (!isOpen) {
+    if (window.innerWidth > 600) {
+      var grid = item.closest('.freelance-grid');
+      var items = Array.from(grid.querySelectorAll('.freelance-item'));
+      var idx = items.indexOf(item);
+      var col = (idx % 3) + 1;
+      var row = Math.floor(idx / 3) + 1;
+      var colStart = col === 3 ? 2 : col;
+      item.style.gridColumn = colStart + ' / span 2';
+      item.style.gridRow = row + ' / span 2';
+    } else {
+      document.body.style.overflow = 'hidden';
+    }
+    item.classList.add('open');
+  }
+}
+
+function closeFreelance(e, btn) {
+  e.stopPropagation();
+  var item = btn.closest('.freelance-item');
+  item.classList.remove('open');
+  item.style.gridColumn = '';
+  item.style.gridRow = '';
+  if (window.innerWidth <= 600) {
+    document.body.style.overflow = '';
+  }
+}
+
+function copyEmail(e) {
+  e.preventDefault();
+  navigator.clipboard.writeText('meghai@berkeley.edu').then(function() {
+    var toast = document.getElementById('email-toast');
+    toast.classList.add('show');
+    setTimeout(function() { toast.classList.remove('show'); }, 2000);
+  });
+}
+
+// Prevent clicks inside the content panel from toggling the item closed
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.fi-content').forEach(function(el) {
+    el.addEventListener('click', function(e) { e.stopPropagation(); });
+  });
+});
+
+</script>
 </body>
 </html>

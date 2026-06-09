@@ -247,6 +247,13 @@ nav.visible {
   width: 100%;
   display: block;
   image-rendering: -webkit-optimize-contrast;
+  transition: transform 0.4s ease;
+}
+.scroll-panel-container .sticky-photo:hover img {
+  transform: scale(1.04);
+}
+.scroll-panel-container .sticky-photo {
+  overflow: hidden;
 }
 
 /* Static text panel */
@@ -723,6 +730,15 @@ nav.visible {
   line-height: 1.6;
 }
 
+.merch-year {
+  display: inline-block;
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 4px;
+}
+
 /* Art projects */
 .art-project-item {
   display: grid;
@@ -1140,6 +1156,7 @@ nav.visible {
 #black .merch-card h4 { color: #f0ede8; }
 #black .merch-card p { color: #888; }
 #black .merch-card .thumb { background: #1a1a1a; color: #444; }
+#black .merch-year { color: #666; }
 #black .art-series .series-intro h4 { color: #f0ede8; }
 #black .art-series .series-intro p { color: #888; }
 #black .art-series .series-num { color: #555; }
@@ -1893,17 +1910,20 @@ nav.visible {
   <div class="merch-grid" style="padding:0 80px;">
     <div class="merch-card">
       <div class="thumb"><img src="../portfolio_media/merch/laya.png" style="width:100%;height:100%;object-fit:cover;"></div>
-      <h4>Laya (2023)</h4>
+      <h4>Laya</h4>
+      <span class="merch-year">2023</span>
       <p>Sweatshirt, sticker, and tote bag designs for a South Asian music group at UC Berkeley: a mix of graphic design and original illustration drawing on traditional desi art.</p>
     </div>
     <div class="merch-card">
       <div class="thumb"><video src="../portfolio_media/merch/flintmerch.mov" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;"></video><img class="hover-img" src="../portfolio_media/merch/flintwearing.jpg" alt="Flint wearing"></div>
-      <h4>Flint (2024)</h4>
+      <h4>Flint</h4>
+      <span class="merch-year">2024</span>
       <p>Merch for an edtech startup: a stylized Flint logo built from bright, primary-colored geometry blocks that make learning feel like fun.</p>
     </div>
     <div class="merch-card">
       <div class="thumb"><video src="../portfolio_media/merch/ucjazz.mov" autoplay loop muted playsinline style="width:100%;height:101%;object-fit:cover;object-position:center top;"></video><img class="hover-img" src="../portfolio_media/merch/ucjazzwearing.jpg" alt="UC Jazz wearing"></div>
-      <h4>UC Jazz (2026)</h4>
+      <h4>UC Jazz</h4>
+      <span class="merch-year">2026</span>
       <p>T-shirt and sticker designs for UC Berkeley's jazz organization, illustrated around the jazz slang "cat," the word musicians use for someone who really plays.</p>
     </div>
   </div>
