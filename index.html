@@ -262,6 +262,28 @@ nav.visible {
 .scroll-panel-container .sticky-photo {
   overflow: hidden;
 }
+.sticky-photo .tap-hint { display: none; }
+
+@media (hover: none) {
+  .sticky-photo { position: relative; }
+  .sticky-photo .tap-hint {
+    display: block;
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: white;
+    background: rgba(0,0,0,0.38);
+    padding: 5px 12px;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 2;
+  }
+}
 
 /* Static text panel */
 .lifting-panel {
@@ -1657,6 +1679,7 @@ nav.visible {
   <div class="scroll-panel-container">
     <div class="sticky-photo" style="cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="openSavvlyCaseStudy()">
       <img src="portfolio_media/savvly/savvlymockup.png" alt="Savvly" style="width:95%;display:block;border-radius:12px;">
+      <span class="tap-hint">Tap to open</span>
     </div>
     <div class="lifting-panel" id="panel-savvly">
       <div class="inner">
@@ -1679,6 +1702,7 @@ nav.visible {
   <div class="scroll-panel-container">
     <div class="sticky-photo">
       <img src="portfolio_media/shed/shed.png" alt="The Shed" style="width:100%;display:block;cursor:pointer;" onclick="openCaseStudy()">
+      <span class="tap-hint">Tap to open</span>
     </div>
     <div class="lifting-panel right" id="panel-jazz">
       <div class="inner">
@@ -1704,6 +1728,7 @@ nav.visible {
         <img src="portfolio_media/empowerhealth/diaryscreen.png" alt="Diary screen" style="width:30%;display:block;object-fit:contain;">
         <img src="portfolio_media/empowerhealth/providerscreen.png" alt="Provider screen" style="width:70%;display:block;object-fit:contain;">
       </div>
+      <span class="tap-hint">Tap to open</span>
     </div>
     <div class="lifting-panel" id="panel-empower">
       <div class="inner">
@@ -1726,6 +1751,7 @@ nav.visible {
   <div class="scroll-panel-container">
     <div class="sticky-photo" style="cursor:pointer;" onclick="openPathriseCaseStudy()">
       <img src="portfolio_media/pathrise/pathrise.png" alt="Pathrise" style="width:100%;display:block;">
+      <span class="tap-hint">Tap to open</span>
     </div>
     <div class="lifting-panel right" id="panel-pathrise">
       <div class="inner">
