@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Savvly — The Longevity Benefit</title>
+<meta name="description" content="Savvly pays you structured cash at ages 80, 85, 90, and 95 — the years when traditional savings run out. Assets held by Vanguard, Fidelity, US Bank. SEC-registered.">
+
+<!-- AI/GEO Optimization -->
+<meta name="robots" content="index, follow">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FinancialProduct",
+  "name": "Savvly Longevity Benefit",
+  "description": "A capital markets structure (mutualized investment fund) that pools contributions into S&P 500 ETFs and distributes structured cash payouts at ages 80, 85, 90, and 95. Assets held at US Bank, managed by Vanguard and Fidelity. SEC-registered investment adviser.",
+  "provider": {
+    "@type": "Organization",
+    "name": "Savvly",
+    "description": "SEC-registered investment adviser offering longevity benefits. Not an insurance company, not an annuity provider. A capital markets solution for late-life financial protection.",
+    "address": { "@type": "PostalAddress", "addressLocality": "Boulder", "addressRegion": "CO" }
+  },
+  "feesAndCommissionsSpecification": "Low-cost ETF-based structure. No surrender charges. Taxed as long-term capital gains.",
+  "category": "Longevity Benefit / Mutualized Investment Fund"
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --void: #FFFFFF;
+    --deep: #F5F7FA;
+    --surface: #FFFFFF;
+    --border: rgba(15,23,42,0.08);
+    --border-bright: rgba(15,23,42,0.14);
+    --electric: #1D4ED8;
+    --electric-bright: #2563EB;
+    --electric-glow: rgba(37,99,235,0.08);
+    --warm: #B45309;
+    --warm-faint: rgba(180,83,9,0.08);
+    --text: #0F172A;
+    --text-2: #475569;
+    --text-3: #94A3B8;
+    --green: #059669;
+    --green-faint: rgba(5,150,105,0.08);
+    --r: 6px;
+    --r-lg: 12px;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #FFFFFF;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ─── NOISE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ─── SECTIONS ─── */
+  section { width: 100%; }
+  .container { max-width: 1160px; margin: 0 auto; padding: 0 48px; }
+
+  /* ─── SECTION LABELS ─── */
+  .section-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--electric-bright);
+    margin-bottom: 20px;
+  }
+
+  /* ─── HOW IT WORKS ─── */
+  .how-section {
+    padding: 120px 0;
+  }
+  .how-header {
+    max-width: 640px;
+    margin-bottom: 72px;
+  }
+  .how-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 4vw, 54px);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  .how-header p {
+    font-size: 17px; color: var(--text-2); line-height: 1.7;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    box-shadow: 0 2px 16px rgba(15,23,42,0.05);
+  }
+  .step {
+    background: #FFFFFF;
+    padding: 40px 36px;
+    position: relative;
+    transition: background .2s;
+  }
+  .step:hover { background: #F8FAFF; }
+  .step-num {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--electric-bright);
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .step-num::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: var(--electric-glow);
+  }
+  .step h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 400;
+    margin-bottom: 12px;
+    line-height: 1.25;
+  }
+  .step p {
+    font-size: 14px; line-height: 1.7;
+    color: var(--text-2);
+  }
+  .step-footnote {
+    margin-top: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px; letter-spacing: 0.06em;
+    color: var(--text-3);
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ─── NOT AN ANNUITY ─── */
+  .category-section {
+    padding: 120px 0;
+    background: #F5F7FA;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .category-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .category-left h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 4vw, 52px);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  .category-left h2 em { font-style: italic; }
+  .category-left .lead {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 17px; line-height: 1.7;
+    color: var(--text-2);
+    margin-bottom: 32px;
+  }
+  .category-left .lead strong { color: var(--text); font-weight: 600; }
+
+  .versus-list { display: flex; flex-direction: column; gap: 12px; }
+  .versus-item {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 16px 20px;
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    box-shadow: 0 1px 4px rgba(15,23,42,0.04);
+  }
+  .versus-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .versus-text { font-family: 'DM Sans', sans-serif; font-size: 14px; line-height: 1.55; color: var(--text-2); }
+  .versus-text strong { font-family: 'DM Sans', sans-serif; color: var(--text); font-weight: 600; }
+
+  /* comparison table */
+  .comp-table {
+    background: #FFFFFF;
+    border: 1px solid var(--border-bright);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    box-shadow: 0 2px 16px rgba(15,23,42,0.06);
+  }
+  .comp-table table {
+    width: 100%; border-collapse: collapse;
+  }
+  .comp-table thead tr {
+    border-bottom: 1px solid var(--border-bright);
+    background: #F8FAFF;
+  }
+  .comp-table th {
+    padding: 16px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-3);
+    text-align: left;
+  }
+  .comp-table th:not(:first-child) { text-align: center; }
+  .comp-table th.savvly-col {
+    color: var(--electric-bright);
+    background: rgba(37,99,235,0.06);
+  }
+  .comp-table td {
+    padding: 14px 20px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-2);
+    border-bottom: 1px solid var(--border);
+  }
+  .comp-table td:not(:first-child) { text-align: center; }
+  .comp-table td.savvly-col { background: rgba(37,99,235,0.03); }
+  .comp-table tbody tr:last-child td { border-bottom: none; }
+  .comp-table .check { color: var(--green); font-weight: 500; font-size: 13px; font-family: 'DM Sans', sans-serif; }
+  .comp-table .cross { color: var(--text-3); font-size: 13px; font-family: 'DM Sans', sans-serif; }
+  .comp-table .savvly-val { color: var(--electric-bright); font-weight: 500; font-size: 13px; font-family: 'DM Sans', sans-serif; }
+
+  /* ─── CALCULATOR ─── */
+  .calc-section {
+    padding: 120px 0;
+    background: #F5F7FA;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .calc-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .calc-left h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(34px, 3.5vw, 50px);
+    font-weight: 400; line-height: 1.1;
+    letter-spacing: -0.02em; margin-bottom: 16px;
+  }
+  .calc-left p {
+    font-size: 16px; color: var(--text-2); line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  .calc-widget {
+    background: #FFFFFF;
+    border: 1px solid var(--border-bright);
+    border-radius: var(--r-lg);
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(15,23,42,0.07);
+  }
+  .calc-widget::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--electric-bright), transparent);
+    opacity: 0.5;
+  }
+
+  .calc-row { margin-bottom: 28px; }
+  .calc-row label {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; font-weight: 500;
+    color: var(--text-2);
+    margin-bottom: 12px;
+  }
+  .calc-row label .value {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; color: var(--text);
+  }
+  .calc-slider {
+    -webkit-appearance: none;
+    width: 100%; height: 3px;
+    background: var(--border-bright);
+    border-radius: 2px;
+    outline: none;
+  }
+  .calc-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--electric-bright);
+    cursor: pointer;
+    border: 3px solid #FFFFFF;
+    box-shadow: 0 0 0 2px var(--electric-bright);
+    transition: box-shadow .2s;
+  }
+  .calc-slider::-webkit-slider-thumb:hover {
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.3);
+  }
+
+  .calc-results {
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+  }
+  .result-total-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-3); margin-bottom: 8px;
+  }
+  .result-total {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px; font-weight: 400;
+    color: var(--text); line-height: 1;
+    margin-bottom: 24px;
+  }
+  .result-payouts {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .result-payout {
+    background: #F8FAFF;
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 14px;
+  }
+  .rp-age {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px; letter-spacing: 0.08em;
+    color: var(--text-3); margin-bottom: 4px;
+  }
+  .rp-amount {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px; font-weight: 500;
+    color: var(--electric-bright);
+  }
+  .calc-disclaimer {
+    margin-top: 20px;
+    font-size: 10px; color: var(--text-3); line-height: 1.5;
+  }
+  .calc-cta-wrap { margin-top: 32px; }
+
+  .btn-primary {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: #FFFFFF; background: var(--electric-bright);
+    padding: 14px 28px; border-radius: var(--r);
+    text-decoration: none;
+    transition: background .2s, transform .15s, box-shadow .2s;
+  }
+  .btn-primary:hover {
+    background: var(--electric);
+    box-shadow: 0 4px 24px rgba(37,99,235,0.3);
+    transform: translateY(-1px);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .container { padding: 0 24px; }
+    .category-inner, .calc-inner { grid-template-columns: 1fr; gap: 48px; }
+    .steps { grid-template-columns: 1fr; }
+  }
+
+  /* ─── FADE IN ─── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- CALCULATOR -->
+<section class="calc-section" id="individuals">
+  <div class="container">
+    <div class="calc-inner">
+      <div class="calc-left fade-in">
+        <h2>For the first time ever, a long life isn't a risk.<br><span style="color:var(--electric-bright)">It's the reward.</span></h2>
+        <p>Whether you're an employer building a modern benefits package, an advisor completing your retirement strategy, or an individual planning your 100-year life — Savvly is built for you.</p>
+      </div>
+
+      <div class="calc-right fade-in" style="transition-delay:0.12s">
+        <div class="calc-widget">
+          <div class="calc-row">
+            <label>
+              Monthly contribution
+              <span class="value" id="contrib-display">$500 / month</span>
+            </label>
+            <input type="range" class="calc-slider" id="contrib-slider" min="10" max="2000" value="500" step="10">
+          </div>
+          <div class="calc-row">
+            <label>
+              Starting age
+              <span class="value" id="age-display">Age 40</span>
+            </label>
+            <input type="range" class="calc-slider" id="age-slider" min="25" max="65" value="40" step="1">
+          </div>
+
+          <div class="calc-results">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">
+              <div class="result-total-label">Total projected payouts</div>
+              <div class="result-total" id="total-display" style="font-size:32px;margin-bottom:0">$847,000</div>
+            </div>
+
+            <!-- Stacked bar chart -->
+            <svg id="stack-chart" viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;margin:20px 0;overflow:visible">
+              <!-- Bar will be drawn by JS -->
+
+              <!-- Stacked bar segments (x=80, width=80) -->
+              <rect id="bar-95" x="80" y="8"   width="80" height="0"  fill="#2563EB" rx="3"/>
+              <rect id="bar-90" x="80" y="8"   width="80" height="0"  fill="#3B82F6"/>
+              <rect id="bar-85" x="80" y="8"   width="80" height="0"  fill="#60A5FA"/>
+              <rect id="bar-80" x="80" y="8"   width="80" height="0"  fill="#93C5FD" rx="0"/>
+              <!-- Amount labels inside bars -->
+              <text id="lbl-95" x="120" y="0" font-family="'DM Sans',sans-serif" font-size="10" fill="white" text-anchor="middle" dominant-baseline="middle" opacity="0"></text>
+              <text id="lbl-90" x="120" y="0" font-family="'DM Sans',sans-serif" font-size="10" fill="white" text-anchor="middle" dominant-baseline="middle" opacity="0"></text>
+              <text id="lbl-85" x="120" y="0" font-family="'DM Sans',sans-serif" font-size="10" fill="white" text-anchor="middle" dominant-baseline="middle" opacity="0"></text>
+              <text id="lbl-80" x="120" y="0" font-family="'DM Sans',sans-serif" font-size="10" fill="white" text-anchor="middle" dominant-baseline="middle" opacity="0"></text>
+              <!-- Age labels on x axis -->
+              <text x="120" y="162" font-family="'DM Sans',sans-serif" font-size="10" fill="#94A3B8" text-anchor="middle">Savvly payouts</text>
+              <!-- Legend on right side -->
+              <rect x="196" y="20"  width="10" height="10" fill="#2563EB" rx="2"/>
+              <text x="211" y="29" font-family="'DM Sans',sans-serif" font-size="10" fill="#64748B">Age 95 — <tspan id="leg-95" fill="#0F172A">$274K</tspan></text>
+              <rect x="196" y="38"  width="10" height="10" fill="#3B82F6" rx="2"/>
+              <text x="211" y="47" font-family="'DM Sans',sans-serif" font-size="10" fill="#64748B">Age 90 — <tspan id="leg-90" fill="#0F172A">$248K</tspan></text>
+              <rect x="196" y="56"  width="10" height="10" fill="#60A5FA" rx="2"/>
+              <text x="211" y="65" font-family="'DM Sans',sans-serif" font-size="10" fill="#64748B">Age 85 — <tspan id="leg-85" fill="#0F172A">$198K</tspan></text>
+              <rect x="196" y="74"  width="10" height="10" fill="#93C5FD" rx="2"/>
+              <text x="211" y="83" font-family="'DM Sans',sans-serif" font-size="10" fill="#64748B">Age 80 — <tspan id="leg-80" fill="#0F172A">$127K</tspan></text>
+            </svg>
+
+            <div class="calc-disclaimer">Hypothetical illustration only. Assumes 7% annualized S&P 500 returns + longevity pool redistribution. Not a guarantee of future results. Investment involves risk including possible loss of principal.</div>
+          </div>
+
+          <div class="calc-cta-wrap">
+            <a href="#demo" class="btn-primary" style="display:inline-block">Get Started — As Little As $10/Month</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="container">
+    <div class="how-header fade-in">
+      <h2>How it works</h2>
+    </div>
+
+    </div>
+
+    <div class="fade-in" style="display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:0 2px 16px rgba(15,23,42,0.05);max-width:900px;margin:0 auto">
+
+      <!-- Left: 01 + 02 stacked -->
+      <div style="display:flex;flex-direction:column;border-right:1px solid var(--border)">
+        <div class="step" style="border-bottom:1px solid var(--border)">
+          <svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg" style="width:100px;display:block;margin-bottom:16px">
+            <!-- Single coin falling -->
+            <circle cx="60" cy="15" r="10" fill="none" stroke="#2563EB" stroke-width="2"/>
+            <circle cx="60" cy="15" r="5" fill="#2563EB" opacity="0.2"/>
+            <!-- drop arrow -->
+            <line x1="60" y1="27" x2="60" y2="38" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="3,2"/>
+            <polygon points="56,37 60,44 64,37" fill="#94A3B8"/>
+            <!-- pool ellipse -->
+            <ellipse cx="60" cy="52" rx="28" ry="6" fill="none" stroke="#93C5FD" stroke-width="1.5"/>
+            <ellipse cx="60" cy="52" rx="28" ry="6" fill="#EFF6FF"/>
+          </svg>
+          <div class="step-num">01 / Contribute</div>
+          <h3>Small monthly deposits into a pool</h3>
+          <p>Contribute as little as $10/month alongside your existing savings. Funds pool with other participants and invest in low-cost S&P 500 ETFs.</p>
+          <div class="step-footnote" style="background:var(--electric-glow);border:1px solid rgba(37,99,235,0.15);border-radius:6px;padding:10px 14px;font-size:12px;color:var(--electric-bright);font-weight:500">Assets held by Vanguard, Fidelity, US Bank</div>
+        </div>
+        <div class="step">
+          <svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg" style="width:100px;display:block;margin-bottom:16px">
+            <!-- Rising line -->
+            <polyline points="10,50 30,38 55,42 85,18 105,10" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="105" cy="10" r="4" fill="#2563EB"/>
+            <!-- Reallocation loop -->
+            <path d="M70,30 Q85,18 100,30 Q85,42 70,30" fill="none" stroke="#93C5FD" stroke-width="1.5"/>
+            <polygon points="100,25 105,30 100,35" fill="#93C5FD"/>
+          </svg>
+          <div class="step-num">02 / Grow + Rebalance</div>
+          <h3>Market growth plus a longevity bonus</h3>
+          <p>Your assets grow with the market. When participants exit early, their uncollected returns are redistributed to those who stay — amplifying payouts the longer you live.</p>
+          <div class="step-footnote" style="background:var(--electric-glow);border:1px solid rgba(37,99,235,0.15);border-radius:6px;padding:10px 14px;font-size:12px;color:var(--electric-bright);font-weight:500">Life insurance in reverse — you are rewarded for living longer, not penalized</div>
+        </div>
+      </div>
+
+      <!-- Right: 03 result, taller, visually different -->
+      <div class="step" style="background:#EFF6FF;display:flex;flex-direction:column;justify-content:center;position:relative">
+        <div>
+          <svg viewBox="0 0 120 68" xmlns="http://www.w3.org/2000/svg" style="width:100px;display:block;margin-bottom:16px">
+            <line x1="8" y1="54" x2="112" y2="54" stroke="#CBD5E1" stroke-width="1"/>
+            <rect x="16" y="42" width="16" height="12" rx="2" fill="#93C5FD"/>
+            <rect x="38" y="32" width="16" height="22" rx="2" fill="#60A5FA"/>
+            <rect x="60" y="20" width="16" height="34" rx="2" fill="#3B82F6"/>
+            <rect x="82" y="8"  width="16" height="46" rx="2" fill="#2563EB"/>
+            <text x="24" y="65" font-family="'DM Sans',sans-serif" font-size="8" fill="#94A3B8" text-anchor="middle">80</text>
+            <text x="46" y="65" font-family="'DM Sans',sans-serif" font-size="8" fill="#94A3B8" text-anchor="middle">85</text>
+            <text x="68" y="65" font-family="'DM Sans',sans-serif" font-size="8" fill="#94A3B8" text-anchor="middle">90</text>
+            <text x="90" y="65" font-family="'DM Sans',sans-serif" font-size="8" fill="#94A3B8" text-anchor="middle">95</text>
+          </svg>
+          <div class="step-num" style="color:var(--electric-bright)">03 / The Result</div>
+          <h3>Cash payouts at 80, 85, 90, and 95</h3>
+          <p>Starting at age 80, structured cash payouts go directly to you at each milestone. Taxed as long-term capital gains.</p>
+          <div class="step-footnote" style="background:rgba(37,99,235,0.12);border:1px solid rgba(37,99,235,0.2);border-radius:6px;padding:10px 14px;font-size:12px;color:var(--electric);font-weight:500">Fair Exit Rule — withdraw anytime. Most contributions returned. You are never trapped.</div>
+        </div>
+      </div>
+
+    </div>  </div>
+</section>
+
+<!-- NOT AN ANNUITY -->
+<section class="category-section" id="category">
+  <div class="container">
+    <div class="category-inner">
+      <div class="category-left fade-in">
+        <h2>Not an annuity.<br>Not a fund.<br><span style="color:var(--electric-bright);font-style:normal">An entirely new category.</span></h2>
+        <p class="lead">
+          <strong>Savvly is a capital markets structure — a mutualized investment fund. Not an insurance product.</strong>
+        </p>
+        <p class="lead" style="margin-bottom:0">
+          Every other financial product treats your long life as a liability to manage. Savvly treats it as the source of value itself.
+        </p>
+
+
+      </div>
+
+      <div class="category-right fade-in" style="transition-delay:0.12s">
+        <div class="comp-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th class="savvly-col">Savvly</th>
+                <th>Annuity</th>
+                <th>401(k)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Pays out at 80–95</td>
+                <td class="savvly-col"><span class="savvly-val">Core feature</span></td>
+                <td><span class="cross">Partial</span></td>
+                <td><span class="cross">✕</span></td>
+              </tr>
+              <tr>
+                <td>S&P 500 market growth</td>
+                <td class="savvly-col"><span class="check">✓</span></td>
+                <td><span class="cross">Fixed/low</span></td>
+                <td><span class="check">✓</span></td>
+              </tr>
+              <tr>
+                <td>Longevity pool bonus</td>
+                <td class="savvly-col"><span class="savvly-val">Unique</span></td>
+                <td><span class="cross">✕</span></td>
+                <td><span class="cross">✕</span></td>
+              </tr>
+              <tr>
+                <td>No health screening</td>
+                <td class="savvly-col"><span class="check">✓</span></td>
+                <td><span class="cross">Often required</span></td>
+                <td><span class="check">✓</span></td>
+              </tr>
+              <tr>
+                <td>Fair exit / withdraw</td>
+                <td class="savvly-col"><span class="check">✓ Always</span></td>
+                <td><span class="cross">Surrender fees</span></td>
+                <td><span class="check">✓</span></td>
+              </tr>
+              <tr>
+                <td>Employer benefit</td>
+                <td class="savvly-col"><span class="savvly-val">Live &lt;1 week</span></td>
+                <td><span class="cross">Rarely</span></td>
+                <td><span class="check">Standard</span></td>
+              </tr>
+              <tr>
+                <td>Fees</td>
+                <td class="savvly-col"><span class="savvly-val">ETF-based, low</span></td>
+                <td><span class="cross">1–3%+</span></td>
+                <td><span class="check">Low</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // ─── Scroll fade-in ───
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // ─── Calculator ───
+  function formatK(n) {
+    if (n >= 1000000) return '$' + (n/1000000).toFixed(2) + 'M';
+    return '$' + Math.round(n/1000) + 'K';
+  }
+  function formatTotal(n) {
+    if (n >= 1000000) return '$' + (n/1000000).toFixed(2) + 'M';
+    return '$' + n.toLocaleString();
+  }
+
+  function calcPayouts(monthly, startAge) {
+    const years = 80 - startAge;
+    const r = 0.07 / 12;
+    const n = years * 12;
+    const fv80 = monthly * ((Math.pow(1 + r, n) - 1) / r);
+    const pool80  = fv80 * 0.18;
+    const pool85  = fv80 * 0.18 * Math.pow(1.07, 5) * 1.25;
+    const pool90  = fv80 * 0.18 * Math.pow(1.07, 10) * 1.55;
+    const pool95  = fv80 * 0.18 * Math.pow(1.07, 15) * 1.90;
+    return {
+      p80: Math.round(pool80),
+      p85: Math.round(pool85),
+      p90: Math.round(pool90),
+      p95: Math.round(pool95),
+      total: Math.round(pool80 + pool85 + pool90 + pool95)
+    };
+  }
+
+  function updateCalc() {
+    const monthly = parseInt(document.getElementById('contrib-slider').value);
+    const age = parseInt(document.getElementById('age-slider').value);
+    document.getElementById('contrib-display').textContent = '$' + monthly.toLocaleString() + ' / month';
+    document.getElementById('age-display').textContent = 'Age ' + age;
+
+    const p = calcPayouts(monthly, age);
+    document.getElementById('total-display').textContent = formatTotal(p.total);
+
+    document.getElementById('leg-80').textContent = formatK(p.p80);
+    document.getElementById('leg-85').textContent = formatK(p.p85);
+    document.getElementById('leg-90').textContent = formatK(p.p90);
+    document.getElementById('leg-95').textContent = formatK(p.p95);
+
+    const chartH = 140;
+    const total = p.p80 + p.p85 + p.p90 + p.p95;
+    const h80 = Math.round((p.p80 / total) * chartH);
+    const h85 = Math.round((p.p85 / total) * chartH);
+    const h90 = Math.round((p.p90 / total) * chartH);
+    const h95 = chartH - h80 - h85 - h90;
+
+    const y80 = 148 - h80;
+    const y85 = y80 - h85;
+    const y90 = y85 - h90;
+    const y95 = y90 - h95;
+
+    const setBar = (id, y, h) => {
+      const el = document.getElementById(id);
+      el.setAttribute('y', y);
+      el.setAttribute('height', Math.max(h, 0));
+    };
+
+    setBar('bar-80', y80, h80);
+    setBar('bar-85', y85, h85);
+    setBar('bar-90', y90, h90);
+    setBar('bar-95', y95, h95);
+
+    document.getElementById('bar-80').setAttribute('rx', 0);
+    document.getElementById('bar-95').setAttribute('rx', 3);
+
+    const MIN_H = 0;
+    const setLbl = (id, y, h, text) => {
+      const el = document.getElementById(id);
+      el.setAttribute('y', y + h / 2);
+      el.textContent = text;
+      el.setAttribute('opacity', h >= MIN_H ? 1 : 0);
+    };
+    setLbl('lbl-80', y80, h80, formatK(p.p80));
+    setLbl('lbl-85', y85, h85, formatK(p.p85));
+    setLbl('lbl-90', y90, h90, formatK(p.p90));
+    setLbl('lbl-95', y95, h95, formatK(p.p95));
+  }
+
+  document.getElementById('contrib-slider').addEventListener('input', updateCalc);
+  document.getElementById('age-slider').addEventListener('input', updateCalc);
+  updateCalc();
+</script>
+</body>
+</html>
