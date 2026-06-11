@@ -2391,6 +2391,7 @@ function openSavvlyCaseStudy() {
   document.getElementById('savvly-overlay').style.display = 'block';
   document.body.style.overflow = 'hidden';
   setTimeout(buildSavvlyIframes, 50);
+  history.pushState(null, '', '#savvly');
 }
 function closeSavvlyCaseStudy(e) {
   if (e && e.target !== document.getElementById('savvly-overlay')) return;
@@ -2401,37 +2402,64 @@ function closeSavvlyCaseStudy(e) {
     var iframe = wrap.querySelector('iframe');
     if (iframe) { wrap.removeChild(iframe); }
   });
+  if (location.hash === '#savvly') history.pushState(null, '', ' ');
 }
 
 function openPathriseCaseStudy() {
   document.getElementById('pathrise-overlay').style.display = 'block';
   document.body.style.overflow = 'hidden';
+  history.pushState(null, '', '#pathrise');
 }
 function closePathriseCaseStudy(e) {
   if (e && e.target !== document.getElementById('pathrise-overlay')) return;
   document.getElementById('pathrise-overlay').style.display = 'none';
   document.body.style.overflow = '';
+  if (location.hash === '#pathrise') history.pushState(null, '', ' ');
 }
 
 function openEmpowerCaseStudy() {
   document.getElementById('empower-overlay').style.display = 'block';
   document.body.style.overflow = 'hidden';
+  history.pushState(null, '', '#empowerhealth');
 }
 function closeEmpowerCaseStudy(e) {
   if (e && e.target !== document.getElementById('empower-overlay')) return;
   document.getElementById('empower-overlay').style.display = 'none';
   document.body.style.overflow = '';
+  if (location.hash === '#empowerhealth') history.pushState(null, '', ' ');
 }
 
 function openCaseStudy() {
   document.getElementById('case-study-overlay').classList.add('active');
   document.body.style.overflow = 'hidden';
+  history.pushState(null, '', '#shed');
 }
 function closeCaseStudy(e) {
   if (e && e.target !== document.getElementById('case-study-overlay') && e.type !== 'click') return;
   document.getElementById('case-study-overlay').classList.remove('active');
   document.body.style.overflow = '';
+  if (location.hash === '#shed') history.pushState(null, '', ' ');
 }
+
+// Open case study from URL hash on load or back/forward navigation
+function openFromHash(hash) {
+  if (hash === '#savvly') openSavvlyCaseStudy();
+  else if (hash === '#shed') openCaseStudy();
+  else if (hash === '#empowerhealth') openEmpowerCaseStudy();
+  else if (hash === '#pathrise') openPathriseCaseStudy();
+}
+document.addEventListener('DOMContentLoaded', function() {
+  if (location.hash) openFromHash(location.hash);
+});
+window.addEventListener('popstate', function() {
+  // Close all panels first
+  document.getElementById('savvly-overlay').style.display = 'none';
+  document.getElementById('pathrise-overlay').style.display = 'none';
+  document.getElementById('empower-overlay').style.display = 'none';
+  document.getElementById('case-study-overlay').classList.remove('active');
+  document.body.style.overflow = '';
+  if (location.hash) openFromHash(location.hash);
+});
 
 /* ── Freelance inline expand ── */
 function toggleFreelance(item) {
