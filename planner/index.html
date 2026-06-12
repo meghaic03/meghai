@@ -160,7 +160,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1
     <div class="goals-row">
       <div class="goal-chip"><i class="ti ti-music"></i><strong>Learn jazz</strong><span>violin · piano · theory · history</span></div>
       <div class="goal-chip"><i class="ti ti-briefcase"></i><strong>Get a job</strong><span>reach out · portfolio · research</span></div>
-      <div class="goal-chip"><i class="ti ti-heart"></i><strong>Health</strong><span>workout · posture · skin · invisalign</span></div>
+      <div class="goal-chip"><i class="ti ti-heart"></i><strong>Health</strong><span>workout · posture · skin</span></div>
     </div>
     <div class="nav-row">
       <div style="display:flex;align-items:center;gap:7px">
@@ -420,7 +420,6 @@ function computeFixedTasks(date) {
     { id: 'h0', cat: 'health', icon: 'ti-run',             color: SEC_COLOR.health, label: 'Posture exercises', sub: '', time: '—' },
     { id: 'h1', cat: 'health', icon: 'ti-barbell',        color: SEC_COLOR.health, label: 'Workout', sub: '', time: '—' },
     { id: 'h2', cat: 'health', icon: 'ti-masks-theater',  color: SEC_COLOR.health, label: 'Skincare routine', sub: '', time: '—' },
-    { id: 'h3', cat: 'health', icon: 'ti-tooth',          color: SEC_COLOR.health, label: 'Invisalign', sub: 'All day', time: '—' },
   ];
   let dk = dayKey(date);
   return {
@@ -443,7 +442,7 @@ function renderTodos() {
     { label: 'Violin', ids: ['v2', 'v4', 'v3'].filter(id => !_ex.includes(id) && fixedIds.has(id)) },
     { label: 'Music',  ids: ['m2', 'm3', 'm4', 'm1'].filter(id => !_ex.includes(id) && fixedIds.has(id)) },
     { label: 'Jobs',   ids: ['j1b', 'j2', 'j1', 'j2b'].filter(id => !_ex.includes(id) && fixedIds.has(id)) },
-    { label: 'Health', ids: ['h0', 'h1', 'h2', 'h3'].filter(id => !_ex.includes(id) && fixedIds.has(id)) },
+    { label: 'Health', ids: ['h0', 'h1', 'h2'].filter(id => !_ex.includes(id) && fixedIds.has(id)) },
   ].filter(sec => sec.ids.length > 0);
 
   let html = '';
@@ -698,7 +697,7 @@ function renderSchedule() {
       let durStr = dur >= 60 ? Math.floor(dur/60)+'h'+(dur%60?dur%60+'m':'') : dur+'m';
       let inner = `<div style="display:flex;justify-content:space-between;align-items:baseline;gap:4px"><div class="tl-task-time" style="color:var(--text-secondary)">${ts}</div><div style="font-size:9px;font-weight:700;opacity:0.55;color:var(--text-secondary);white-space:nowrap;flex-shrink:0">${durStr}</div></div>`;
       inner += `<div class="tl-fixed-lbl">${fb.label}</div>`;
-      if (fb.windDown) inner += `<div class="tl-fixed-sub">${taskIcon('ti-masks-theater', SEC_COLOR.health, 11)}<span>Skincare</span>${taskIcon('ti-tooth', SEC_COLOR.health, 11)}<span>Invisalign</span></div>`;
+      if (fb.windDown) inner += `<div class="tl-fixed-sub">${taskIcon('ti-masks-theater', SEC_COLOR.health, 11)}<span>Skincare</span></div>`;
       else if (fb.icon) inner += `<div class="tl-fixed-sub">${taskIcon(fb.icon, fb.iconColor, 11)}${fb.sub ? `<span>${fb.sub}</span>` : ''}</div>`;
       return `<div class="tl-fixed" style="top:${top}px;height:${ht}px">${inner}</div>`;
     } else {
