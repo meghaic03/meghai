@@ -413,10 +413,10 @@ function computeFixedTasks(date) {
     { id: 'm2', cat: 'music',  icon: 'ti-headphones',     color: SEC_COLOR.music,  label: 'Ear training app', sub: 'During breakfast', time: '20m' },
     { id: 'm3', cat: 'music',  icon: 'ti-piano',          color: SEC_COLOR.music,  label: 'Jazz piano — lesson book', sub: '30 min', time: '30m' },
     { id: 'm4', cat: 'music',  icon: 'ti-book-2',         color: SEC_COLOR.music,  label: 'Jazz piano — Real Book sight-read', sub: 'Pick a random song, chords only', time: '15m' },
-    { id: 'j1', cat: 'job',    icon: 'ti-message-circle', color: SEC_COLOR.job,    label: 'Reach out to 8 people', sub: 'Networking outreach', time: '45m' },
+    { id: 'j1', cat: 'job',    icon: 'ti-message-circle', color: SEC_COLOR.job,    label: 'Reach out to 8 people', sub: 'Networking outreach', time: '60m' },
     { id: 'j1b', cat: 'job',   icon: 'ti-tools',          color: SEC_COLOR.job,    label: 'Work on portfolio', sub: 'Build & polish portfolio', time: '45m', endDate: '2026-06-11' },
-    { id: 'j2', cat: 'job',    icon: 'ti-search',         color: SEC_COLOR.job,    label: 'Job positions research', sub: 'Browse postings, find roles', time: '45m' },
-    { id: 'j2b', cat: 'job',   icon: 'ti-cpu',            color: SEC_COLOR.job,    label: 'Technology research', sub: 'podcasts, readings', time: '45m' },
+    { id: 'j2', cat: 'job',    icon: 'ti-search',         color: SEC_COLOR.job,    label: 'Job positions research', sub: 'Browse postings, find roles', time: '60m' },
+    { id: 'j2b', cat: 'job',   icon: 'ti-cpu',            color: SEC_COLOR.job,    label: 'Technology research', sub: 'podcasts, readings', time: '60m' },
     { id: 'h0', cat: 'health', icon: 'ti-run',             color: SEC_COLOR.health, label: 'Posture exercises', sub: '', time: '—' },
     { id: 'h1', cat: 'health', icon: 'ti-barbell',        color: SEC_COLOR.health, label: 'Workout', sub: '', time: '—' },
     { id: 'h2', cat: 'health', icon: 'ti-masks-theater',  color: SEC_COLOR.health, label: 'Skincare routine', sub: '', time: '—' },
@@ -626,9 +626,9 @@ function renderSchedule() {
       schedule.push({ type: 'break', startMin: curMin, durMin: gap, label: `${gap} min break` });
       curMin = fb.s;
     }
-    lastCat = null;
     schedule.push({ type: 'fixed', data: fb, startMin: fb.s, durMin: fb.e - fb.s });
     curMin = fb.e;
+    lastCat = '__fixed__'; // triggers a 10-min break before the next task
   }
   while (taskQueue.length > 0) {
     let t = taskQueue.shift();
