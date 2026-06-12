@@ -240,7 +240,23 @@ const MONTHS_FULL = ['January','February','March','April','May','June','July','A
 const DAYS_SHORT  = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
 // Sebastian weeks run Thu–Wed, starting May 28 2026
-const SEB_WEEK_START = new Date(2026, 4, 28);
+// Sebastian week boundaries (week number → [start, end] as [year,month-1,day])
+const SEB_WEEKS = [
+  null,                                          // 0-indexed padding
+  [[2026,4,28],[2026,5, 3]],  // week 1: May 28 – Jun  3
+  [[2026,5, 4],[2026,5,14]],  // week 2: Jun  4 – Jun 14
+  [[2026,5,15],[2026,5,21]],  // week 3: Jun 15 – Jun 21
+  [[2026,5,22],[2026,5,28]],  // week 4: Jun 22 – Jun 28
+  [[2026,5,29],[2026,6, 5]],  // week 5: Jun 29 – Jul  5
+  [[2026,6, 6],[2026,6,12]],  // week 6: Jul  6 – Jul 12
+  [[2026,6,13],[2026,6,19]],  // week 7: Jul 13 – Jul 19
+  [[2026,6,20],[2026,6,26]],  // week 8: Jul 20 – Jul 26
+  [[2026,6,27],[2026,7, 2]],  // week 9: Jul 27 – Aug  2
+  [[2026,7, 3],[2026,7, 9]],  // week 10: Aug  3 – Aug  9
+  [[2026,7,10],[2026,7,16]],  // week 11: Aug 10 – Aug 16
+  [[2026,7,17],[2026,7,23]],  // week 12: Aug 17 – Aug 23
+  [[2026,7,24],[2026,7,28]],  // week 13: Aug 24 – Aug 28
+];
 
 let sebastianNotes = { '1': 'Charlie Parker — Anthropology solo + altered scale licks' };
 let sebastianTimes = { '1': '45m' };
@@ -254,8 +270,13 @@ function weekNum(date) {
 
 function sebWeekNum(date) {
   let d = new Date(date); d.setHours(0,0,0,0);
-  let s = new Date(SEB_WEEK_START); s.setHours(0,0,0,0);
-  return Math.floor((d - s) / (7 * 86400000));
+  for (let wn = 1; wn < SEB_WEEKS.length; wn++) {
+    let [s, e] = SEB_WEEKS[wn];
+    let start = new Date(...s); start.setHours(0,0,0,0);
+    let end   = new Date(...e); end.setHours(0,0,0,0);
+    if (d >= start && d <= end) return wn - 1; // 0-based to match old usage
+  }
+  return -1;
 }
 
 function getKeysForWeek(wn) {
@@ -393,7 +414,7 @@ function computeFixedTasks(date) {
     { id: 'm3', cat: 'music',  icon: 'ti-piano',          color: SEC_COLOR.music,  label: 'Jazz piano — lesson book', sub: '30 min', time: '30m' },
     { id: 'm4', cat: 'music',  icon: 'ti-book-2',         color: SEC_COLOR.music,  label: 'Jazz piano — Real Book sight-read', sub: 'Pick a random song, chords only', time: '15m' },
     { id: 'j1', cat: 'job',    icon: 'ti-message-circle', color: SEC_COLOR.job,    label: 'Reach out to 8 people', sub: 'Networking outreach', time: '45m' },
-    { id: 'j1b', cat: 'job',   icon: 'ti-tools',          color: SEC_COLOR.job,    label: 'Work on portfolio', sub: 'Build & polish portfolio', time: '45m' },
+    { id: 'j1b', cat: 'job',   icon: 'ti-tools',          color: SEC_COLOR.job,    label: 'Work on portfolio', sub: 'Build & polish portfolio', time: '45m', endDate: '2026-06-11' },
     { id: 'j2', cat: 'job',    icon: 'ti-search',         color: SEC_COLOR.job,    label: 'Job positions research', sub: 'Browse postings, find roles', time: '45m' },
     { id: 'j2b', cat: 'job',   icon: 'ti-cpu',            color: SEC_COLOR.job,    label: 'Technology research', sub: 'podcasts, readings', time: '45m' },
     { id: 'h0', cat: 'health', icon: 'ti-run',             color: SEC_COLOR.health, label: 'Posture exercises', sub: '', time: '—' },
@@ -401,8 +422,9 @@ function computeFixedTasks(date) {
     { id: 'h2', cat: 'health', icon: 'ti-masks-theater',  color: SEC_COLOR.health, label: 'Skincare routine', sub: '', time: '—' },
     { id: 'h3', cat: 'health', icon: 'ti-tooth',          color: SEC_COLOR.health, label: 'Invisalign', sub: 'All day', time: '—' },
   ];
+  let dk = dayKey(date);
   return {
-    tasks: allTasks.filter(t => !exclude.includes(t.id)),
+    tasks: allTasks.filter(t => !exclude.includes(t.id) && (!t.endDate || dk <= t.endDate)),
     progress,
     pageStart,
   };
@@ -416,11 +438,12 @@ function renderTodos() {
 
   let _ov = DAY_OVERRIDES[k] || {};
   let _ex = _ov.excludeTasks || [];
+  const fixedIds = new Set(fixedTasks.map(t => t.id));
   const sections = [
-    { label: 'Violin', ids: ['v2', 'v4', 'v3'].filter(id => !_ex.includes(id)) },
-    { label: 'Music',  ids: ['m2', 'm3', 'm4', 'm1'].filter(id => !_ex.includes(id)) },
-    { label: 'Jobs',   ids: ['j1b', 'j2', 'j1', 'j2b'].filter(id => !_ex.includes(id)) },
-    { label: 'Health', ids: ['h0', 'h1', 'h2', 'h3'].filter(id => !_ex.includes(id)) },
+    { label: 'Violin', ids: ['v2', 'v4', 'v3'].filter(id => !_ex.includes(id) && fixedIds.has(id)) },
+    { label: 'Music',  ids: ['m2', 'm3', 'm4', 'm1'].filter(id => !_ex.includes(id) && fixedIds.has(id)) },
+    { label: 'Jobs',   ids: ['j1b', 'j2', 'j1', 'j2b'].filter(id => !_ex.includes(id) && fixedIds.has(id)) },
+    { label: 'Health', ids: ['h0', 'h1', 'h2', 'h3'].filter(id => !_ex.includes(id) && fixedIds.has(id)) },
   ].filter(sec => sec.ids.length > 0);
 
   let html = '';
@@ -841,9 +864,10 @@ function renderSeb() {
   let currentSwn = sebWeekNum(current);
   let html = '';
   for (let wn = 0; wn < TOTAL_WEEKS; wn++) {
-    let weekStart = new Date(SEB_WEEK_START); weekStart.setDate(weekStart.getDate() + wn * 7);
-    let weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate() + 6);
-    if (weekEnd > END) weekEnd = new Date(END);
+    let entry = SEB_WEEKS[wn + 1];
+    if (!entry) continue;
+    let weekStart = new Date(...entry[0]);
+    let weekEnd   = new Date(...entry[1]);
     let keys = getKeysForWeek(wn);
     let keyLabel = keys.length ? 'Key: ' + keys[keys.length - 1] : '';
     let isCurrent = wn === currentSwn;
