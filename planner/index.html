@@ -234,7 +234,7 @@ const START = new Date(2026, 5, 1);  // June 1 2026
 const END   = new Date(2026, 7, 28); // Aug 28 2026
 const TOTAL_WEEKS = 13;
 
-const KEYS_ORDER = ['C','F','B♭','E♭','G','D','A♭','A','D♭','E','B','G♭/F♯'];
+const KEYS_ORDER = [null,'C','F','B♭','E♭','A♭','D♭','G','D','A','E','B','G♭/F♯'];
 const SEC_COLOR = { violin:'#5A8A5A', music:'#C2185B', job:'#2563EB', health:'#E8920A' };
 const MONTHS_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAYS_SHORT  = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -260,7 +260,7 @@ function sebWeekNum(date) {
 
 function getKeysForWeek(wn) {
   let keys = [];
-  for (let i = 0; i <= wn && i < KEYS_ORDER.length; i++) keys.push(KEYS_ORDER[i]);
+  for (let i = 0; i <= wn && i < KEYS_ORDER.length; i++) { if (KEYS_ORDER[i]) keys.push(KEYS_ORDER[i]); }
   return keys;
 }
 
@@ -280,9 +280,9 @@ function dayKey(d) {
 function inSummer(d) { return d >= START && d <= END; }
 
 function getBookPage(d) {
-  let today0 = new Date(2026, 5, 5);
+  let base = new Date(2026, 5, 12); base.setHours(0,0,0,0); // June 12 = page 11
   let target = new Date(d); target.setHours(0,0,0,0);
-  let cur = new Date(today0);
+  let cur = new Date(base);
   let workDays = 0;
   while (cur < target) {
     let dow = cur.getDay();
