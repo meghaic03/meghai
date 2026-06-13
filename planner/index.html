@@ -380,16 +380,63 @@ function saveSebTime(wn, val) { sebastianTimes[String(wn)] = val; saveState(); r
 
 // ─── Fixed tasks ──────────────────────────────────────────────────────────────
 // Date-specific overrides: keyed by 'YYYY-MM-DD'
-const DAY_OVERRIDES = {
+const DAY_OVERRIDES_STATIC = {
   '2026-06-02': {
-    wakeUp: 10*60,          // 10:00am
-    breakfastEnd: 11*60,    // 10:00–11:00am breakfast + ear training
+    wakeUp: 10*60,
+    breakfastEnd: 11*60,
     excludeTasks: ['m1','m3','m4'],
     extraFixed: [
       { s: 13*60, e: 14*60+30, label: 'Meetings', icon: 'ti-users', iconColor: SEC_COLOR.job },
     ],
   },
 };
+
+// Therapy Tuesdays: every other Tuesday starting June 23
+const THERAPY_TUESDAYS = (() => {
+  let dates = new Set();
+  let d = new Date(2026, 5, 23); // June 23
+  while (d <= END) { dates.add(dayKey(d)); d.setDate(d.getDate() + 14); }
+  return dates;
+})();
+
+function getDayOverride(date) {
+  let k = dayKey(date);
+  let dow = date.getDay(); // 0=Sun,1=Mon,2=Tue
+  let base = DAY_OVERRIDES_STATIC[k] ? JSON.parse(JSON.stringify(DAY_OVERRIDES_STATIC[k])) : {};
+  if (!base.extraFixed) base.extraFixed = [];
+  if (!base.excludeTasks) base.excludeTasks = [];
+
+  if (dow === 1) { // Monday
+    base.extraFixed.push(
+      { s: 15*60, e: 16*60, label: 'Sebastian lesson', icon: 'ti-music', iconColor: SEC_COLOR.violin },
+      { s: 19*60, e: 20*60, label: 'Work meeting', icon: 'ti-users', iconColor: SEC_COLOR.job }
+    );
+    if (!base.excludeTasks.includes('v3')) base.excludeTasks.push('v3'); // no Naima on Mondays
+    if (!base.excludeTasks.includes('m3')) base.excludeTasks.push('m3');
+    if (!base.excludeTasks.includes('m4')) base.excludeTasks.push('m4');
+    if (!base.excludeTasks.includes('j2b')) base.excludeTasks.push('j2b');
+  }
+
+  if (dow === 2) { // Tuesday
+    // Shorten lunch to 1:30–2pm, insert work meeting 2–2:30pm
+    base.lunchEnd = 14*60;
+    base.extraFixed.push(
+      { s: 14*60, e: 14*60+30, label: 'Work meeting', icon: 'ti-users', iconColor: SEC_COLOR.job }
+    );
+  }
+
+  if (THERAPY_TUESDAYS.has(k)) { // Therapy Tuesday
+    base.extraFixed.push(
+      { s: 12*60, e: 13*60, label: 'Therapy', icon: 'ti-heart', iconColor: SEC_COLOR.health }
+    );
+    base.noWorkout = true;
+  }
+
+  // Only return an override if something was actually set
+  let hasExtra = base.extraFixed.length > 0 || base.excludeTasks.length > 0 ||
+                 base.wakeUp != null || base.lunchEnd != null || base.noWorkout;
+  return hasExtra ? base : null;
+}
 
 function computeFixedTasks(date) {
   let wn = weekNum(date);
@@ -403,7 +450,7 @@ function computeFixedTasks(date) {
   let pageStart = getBookPage(date);
   let pageEnd = Math.min(524, pageStart + 9);
   let progress = Math.round((pageStart / 524) * 100);
-  let ov = DAY_OVERRIDES[dayKey(date)] || {};
+  let ov = getDayOverride(date) || {};
   let exclude = ov.excludeTasks || [];
   let allTasks = [
     { id: 'v2', cat: 'violin', icon: 'ti-notes',          color: SEC_COLOR.violin, label: `Scales & chords: ${keyStr}`, sub: `Week ${wn + 1} · ${getKeysForWeek(wn).slice(-1)[0]} major`, time: scaleTime },
@@ -435,7 +482,7 @@ function renderTodos() {
   if (!d.fixed) d.fixed = {};
   let { tasks: fixedTasks, progress, pageStart } = computeFixedTasks(current);
 
-  let _ov = DAY_OVERRIDES[k] || {};
+  let _ov = getDayOverride(current) || {};
   let _ex = _ov.excludeTasks || [];
   const fixedIds = new Set(fixedTasks.map(t => t.id));
   const sections = [
@@ -505,24 +552,25 @@ const SCHED_FIXED_DEFAULT = [
 ];
 
 function getSchedFixed(date) {
-  let ov = DAY_OVERRIDES[dayKey(date)];
+  let ov = getDayOverride(date);
   if (!ov) return SCHED_FIXED_DEFAULT;
   let wake = ov.wakeUp != null ? ov.wakeUp : 8*60;
-  let bfEnd = ov.breakfastEnd != null ? ov.breakfastEnd : wake + 55;
+  let bfEnd = ov.breakfastEnd != null ? ov.breakfastEnd : 9*60+25;
+  let lunchEnd = ov.lunchEnd != null ? ov.lunchEnd : 14*60+30;
   let fixed = [
     { s: wake,    e: wake+30,  label: 'Wake up', icon: 'ti-run', iconColor: SEC_COLOR.health, sub: 'Posture exercises' },
     { s: wake+30, e: bfEnd,    label: 'Breakfast + ear training', icon: 'ti-headphones', iconColor: SEC_COLOR.music },
-    { s: 12*60,    e: 13*60+30, label: 'Workout & Shower', icon: 'ti-barbell', iconColor: SEC_COLOR.health },
-    { s: 13*60+30, e: 14*60+30, label: 'Lunch' },
+    ...(ov.noWorkout ? [] : [{ s: 12*60, e: 13*60+30, label: 'Workout & Shower', icon: 'ti-barbell', iconColor: SEC_COLOR.health }]),
+    { s: 13*60+30, e: lunchEnd, label: 'Lunch' },
     ...(ov.extraFixed || []),
     { s: 20*60+30, e: 21*60+30, label: 'Dinner', icon: 'ti-bowl-chopsticks', iconColor: SEC_COLOR.health },
-    { s: 21*60+30,e: 22*60,    label: 'Wind down & sleep', windDown: true },
+    { s: 21*60+30, e: 22*60,   label: 'Wind down & sleep', windDown: true },
   ].sort((a, b) => a.s - b.s);
   return fixed;
 }
 
 function getSchedOrder(date) {
-  let ov = DAY_OVERRIDES[dayKey(date)];
+  let ov = getDayOverride(date);
   if (!ov) return SCHED_DEFAULT_ORDER;
   let exclude = ov.excludeTasks || [];
   return SCHED_DEFAULT_ORDER.filter(id => !exclude.includes(id));
