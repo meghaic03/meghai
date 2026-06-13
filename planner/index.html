@@ -440,7 +440,7 @@ function renderTodos() {
   const fixedIds = new Set(fixedTasks.map(t => t.id));
   const sections = [
     { label: 'Violin', ids: ['v2', 'v4', 'v3'].filter(id => !_ex.includes(id) && fixedIds.has(id)) },
-    { label: 'Music',  ids: ['m2', 'm3', 'm4', 'm1'].filter(id => !_ex.includes(id) && fixedIds.has(id)) },
+    { label: 'Music',  ids: ['m2', 'm1', 'm3', 'm4'].filter(id => !_ex.includes(id) && fixedIds.has(id)) },
     { label: 'Jobs',   ids: ['j1b', 'j2', 'j1', 'j2b'].filter(id => !_ex.includes(id) && fixedIds.has(id)) },
     { label: 'Health', ids: ['h0', 'h1', 'h2'].filter(id => !_ex.includes(id) && fixedIds.has(id)) },
   ].filter(sec => sec.ids.length > 0);
@@ -498,7 +498,7 @@ const SCHED_ZONES = [
 const SCHED_FIXED_DEFAULT = [
   { s: 8*60,     e: 8*60+30,  label: 'Wake up', icon: 'ti-run', iconColor: SEC_COLOR.health, sub: 'Posture exercises' },
   { s: 8*60+30,  e: 9*60+25,  label: 'Breakfast + ear training', icon: 'ti-headphones', iconColor: SEC_COLOR.music },
-  { s: 11*60+45, e: 13*60+30, label: 'Gym', icon: 'ti-barbell', iconColor: SEC_COLOR.health },
+  { s: 12*60,    e: 13*60+30, label: 'Workout & Shower', icon: 'ti-barbell', iconColor: SEC_COLOR.health },
   { s: 13*60+30, e: 14*60+30, label: 'Lunch' },
   { s: 20*60+30, e: 21*60+30, label: 'Dinner', icon: 'ti-bowl-chopsticks', iconColor: SEC_COLOR.health },
   { s: 21*60+30, e: 22*60,    label: 'Wind down & sleep', windDown: true },
@@ -512,7 +512,7 @@ function getSchedFixed(date) {
   let fixed = [
     { s: wake,    e: wake+30,  label: 'Wake up', icon: 'ti-run', iconColor: SEC_COLOR.health, sub: 'Posture exercises' },
     { s: wake+30, e: bfEnd,    label: 'Breakfast + ear training', icon: 'ti-headphones', iconColor: SEC_COLOR.music },
-    { s: 11*60+45, e: 13*60+30, label: 'Gym', icon: 'ti-barbell', iconColor: SEC_COLOR.health },
+    { s: 12*60,    e: 13*60+30, label: 'Workout & Shower', icon: 'ti-barbell', iconColor: SEC_COLOR.health },
     { s: 13*60+30, e: 14*60+30, label: 'Lunch' },
     ...(ov.extraFixed || []),
     { s: 20*60+30, e: 21*60+30, label: 'Dinner', icon: 'ti-bowl-chopsticks', iconColor: SEC_COLOR.health },
@@ -539,7 +539,7 @@ function hexRgba(hex, a) {
 }
 
 // morning: v2,v4,m3,m4,j2,v1 · afternoon (after 3pm): m1,j1,v3
-const SCHED_DEFAULT_ORDER = ['v2','v4','j1b','j2','m3','m4','m1','j1','j2b','v3'];
+const SCHED_DEFAULT_ORDER = ['v2','v4','j1b','j2','m1','m3','m4','j1','j2b','v3'];
 const TL_PX = 1.2;       // px per minute → 72px/hour
 const TL_START = 8*60;   // 8am
 const TL_END   = 22*60;  // 10pm
@@ -843,7 +843,7 @@ function saveState() {
   localStorage.setItem('planner-seb-notes', JSON.stringify(sebastianNotes));
   localStorage.setItem('planner-seb-times', JSON.stringify(sebastianTimes));
 }
-const SCHED_ORDER_VERSION = '11';
+const SCHED_ORDER_VERSION = '12';
 function loadState() {
   let s = localStorage.getItem('planner-state');
   if (s) try { state = JSON.parse(s); } catch(e) {}
