@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Haven Alerts · Meghai Choudhury</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: #1a1a1a;
+      background: #ffffff;
+      line-height: 1.7;
+      padding: 3rem 1.5rem;
+    }
+
+    .page {
+      max-width: 620px;
+      margin: 0 auto;
+    }
+
+    /* Typography */
+    .intro p { margin-bottom: 1.25rem; font-size: 15px; color: #1a1a1a; }
+    .intro p:last-child { margin-bottom: 2.5rem; }
+
+    .section { border-top: 1px solid #e5e5e5; padding-top: 2.5rem; margin-bottom: 2.5rem; }
+    .section-label { font-size: 11px; font-weight: 500; color: #888; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+    .section h2 { font-size: 22px; font-weight: 500; color: #1a1a1a; margin-bottom: 1rem; }
+    .section p { font-size: 15px; color: #555; margin-bottom: 1rem; }
+    .section p:last-of-type { margin-bottom: 1.5rem; }
+
+    /* Email shell */
+    .email {
+      border-radius: 12px;
+      border: 1px solid #e0e0e0;
+      overflow: hidden;
+      background: #fff;
+      margin-bottom: 0;
+    }
+
+    .email-header {
+      background: #1D9E75;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .email-header-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .email-header-icon svg { width: 20px; height: 20px; stroke: white; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+
+    .email-header-text { flex: 1; }
+    .email-header-text .title { font-size: 15px; font-weight: 500; color: white; }
+    .email-header-text .sub { font-size: 12px; color: rgba(255,255,255,0.8); margin-top: 1px; }
+
+    .urgent-badge {
+      background: #e03030;
+      color: white;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .email-body { padding: 1.5rem; }
+
+    .email-meta { font-size: 13px; color: #888; margin-bottom: 1rem; }
+
+    .urgent-reason {
+      background: #fff0f0;
+      border-left: 3px solid #e24b4a;
+      border-radius: 0 8px 8px 0;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    .urgent-reason .label { font-size: 13px; font-weight: 500; color: #a32d2d; margin-bottom: 4px; }
+    .urgent-reason .text { font-size: 14px; color: #791f1f; }
+
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.25rem; }
+    .info-cell { background: #f5f5f5; border-radius: 8px; padding: 12px; }
+    .info-cell .label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
+    .info-cell .value { font-size: 14px; font-weight: 500; color: #1a1a1a; }
+
+    .btn-primary {
+      display: block;
+      background: #1D9E75;
+      color: white;
+      text-align: center;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      margin-bottom: 1.25rem;
+    }
+
+    .sms-box {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+    }
+    .sms-box .sms-title { font-size: 13px; font-weight: 500; color: #1a1a1a; margin-bottom: 6px; }
+    .sms-box .sms-sub { font-size: 13px; color: #666; margin-bottom: 10px; }
+    .sms-box .sms-btn {
+      display: inline-block;
+      border: 1px solid #1D9E75;
+      color: #0f6e56;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    .email-footer {
+      border-top: 1px solid #e5e5e5;
+      padding: 1rem 1.5rem;
+    }
+    .email-footer p { font-size: 12px; color: #aaa; margin: 0; }
+    .email-footer a { color: #aaa; text-decoration: none; }
+
+    /* Digest stats */
+    .digest-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+    .stat { border-radius: 8px; padding: 12px; text-align: center; }
+    .stat.urgent { background: #fff0f0; }
+    .stat.review { background: #fff8ec; }
+    .stat.total { background: #f0f8e8; }
+    .stat .num { font-size: 24px; font-weight: 500; margin-bottom: 3px; }
+    .stat.urgent .num { color: #a32d2d; }
+    .stat.review .num { color: #854f0b; }
+    .stat.total .num { color: #3b6d11; }
+    .stat .label { font-size: 11px; }
+    .stat.urgent .label { color: #791f1f; }
+    .stat.review .label { color: #633806; }
+    .stat.total .label { color: #27500a; }
+
+    .case-section-label { font-size: 11px; font-weight: 500; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+
+    .case-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.25rem; }
+    .case-row {
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .case-row.urgent-row { border-color: #f09595; }
+    .case-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .dot-red { background: #e24b4a; }
+    .dot-amber { background: #ef9f27; }
+    .case-info { flex: 1; }
+    .case-info .name { font-size: 14px; font-weight: 500; color: #1a1a1a; margin-bottom: 2px; }
+    .case-info .sub { font-size: 12px; color: #888; }
+    .case-link { font-size: 12px; color: #1D9E75; text-decoration: none; white-space: nowrap; }
+    .case-more { font-size: 13px; color: #888; }
+
+    /* Inbox guide */
+    .guide-box {
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 1.5rem;
+      background: #fff;
+    }
+    .guide-box .guide-title { font-size: 15px; font-weight: 500; color: #1a1a1a; margin-bottom: 1.5rem; }
+    .guide-step-label { font-size: 11px; font-weight: 500; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+    .steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem; }
+    .step { display: flex; gap: 12px; align-items: flex-start; }
+    .step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .step-num.active { background: #1D9E75; color: white; }
+    .step-num.inactive { background: #f0f0f0; color: #888; border: 1px solid #ddd; }
+    .step p { font-size: 14px; color: #1a1a1a; line-height: 1.6; margin: 0; }
+    .step p strong { font-weight: 500; }
+    code {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      background: #f5f5f5;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .guide-footer {
+      border-top: 1px solid #e5e5e5;
+      padding-top: 1.25rem;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .check-icon { color: #1D9E75; font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .guide-footer p { font-size: 13px; color: #666; line-height: 1.6; margin: 0; }
+
+    .sign-off { border-top: 1px solid #e5e5e5; padding-top: 2.5rem; }
+    .sign-off p { font-size: 15px; color: #1a1a1a; }
+
+    @media (max-width: 480px) {
+      body { padding: 2rem 1rem; }
+      .info-grid { grid-template-columns: 1fr; }
+      .digest-stats { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="intro">
+    <p>Hi Sunwoo,</p>
+    <p>After our conversation I kept thinking about the bug you mentioned that your team encountered, where legal aid staff weren't checking Haven's dashboard at all, and instead living in the LegalServer CRM. It stuck with me because it was an interesting problem — how can you perfect a dashboard people aren't even using?</p>
+    <p>You had mentioned that legal aid staff are non-technical, resource-constrained, and already overwhelmed. Asking them to adopt a new platform on top of their existing CRM sounds like a behavior change problem, not a problem that can get solved by creating better UI.</p>
+    <p>I tried building something — instead of asking staff to come to Haven, what if Haven came to them in a format they are comfortable engaging with, like in their inbox, where they already are?</p>
+    <p>Here's what I designed:</p>
+  </div>
+
+  <!-- 01 Urgent Alert -->
+  <div class="section">
+    <p class="section-label">01 · Urgent alert</p>
+    <h2>High-risk cases, delivered instantly</h2>
+    <p>When Haven flags a high-risk case, like domestic violence, stalking, or an imminent court date, staff get an email immediately, with no login required. The urgency reason, caller info, callback window, and a one-tap link to the full transcript are all highlighted. In these urgent cases, there is an option for the staff to enable text messages specific to the case.</p>
+
+    <div class="email">
+      <div class="email-header">
+        <div class="email-header-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4M12 16h.01"/></svg>
+        </div>
+        <div class="email-header-text">
+          <div class="title">Urgent case flagged</div>
+          <div class="sub">Haven · alerts@safehavenai.org</div>
+        </div>
+        <div class="urgent-badge">URGENT</div>
+      </div>
+      <div class="email-body">
+        <p class="email-meta">Today at 2:43 PM · Family law line</p>
+        <div class="urgent-reason">
+          <div class="label">Why this is urgent</div>
+          <div class="text">Caller described ongoing stalking and fear of retaliation from partner. High-risk domestic violence situation.</div>
+        </div>
+        <div class="info-grid">
+          <div class="info-cell">
+            <div class="label">Caller</div>
+            <div class="value">Maria R.</div>
+          </div>
+          <div class="info-cell">
+            <div class="label">Callback window</div>
+            <div class="value">Today before 6 PM</div>
+          </div>
+          <div class="info-cell">
+            <div class="label">Case type</div>
+            <div class="value">Domestic violence / custody</div>
+          </div>
+          <div class="info-cell">
+            <div class="label">Call time</div>
+            <div class="value">2:43 PM today</div>
+          </div>
+        </div>
+        <a href="#" class="btn-primary">View full transcript in Haven</a>
+        <div class="sms-box">
+          <div class="sms-title">Want alerts like this via SMS?</div>
+          <div class="sms-sub">Get urgent cases sent directly to your phone so nothing falls through the cracks.</div>
+          <a href="#" class="sms-btn">Enable SMS alerts</a>
+        </div>
+      </div>
+      <div class="email-footer">
+        <p>Sent by Haven · <a href="#">manage preferences</a> · <a href="#">unsubscribe</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 Daily Digest -->
+  <div class="section">
+    <p class="section-label">02 · Daily digest</p>
+    <h2>Every morning, an overview of the previous day</h2>
+    <p>A prioritized overview of all cases from the previous day: urgent first, then needs review, then total volume. Staff can scan in seconds and know exactly what needs attention before they open anything else.</p>
+
+    <div class="email">
+      <div class="email-header">
+        <div class="email-header-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div class="email-header-text">
+          <div class="title">Your Haven digest · Tuesday, July 1</div>
+          <div class="sub">Haven · alerts@safehavenai.org</div>
+        </div>
+      </div>
+      <div class="email-body">
+        <div class="digest-stats">
+          <div class="stat urgent"><div class="num">3</div><div class="label">Urgent cases</div></div>
+          <div class="stat review"><div class="num">8</div><div class="label">Need review</div></div>
+          <div class="stat total"><div class="num">21</div><div class="label">Total calls</div></div>
+        </div>
+
+        <p class="case-section-label">Urgent</p>
+        <div class="case-list">
+          <div class="case-row urgent-row">
+            <div class="case-dot dot-red"></div>
+            <div class="case-info">
+              <div class="name">Maria R. · Domestic violence / stalking</div>
+              <div class="sub">Callback before 6 PM · 2:43 PM call</div>
+            </div>
+            <a href="#" class="case-link">View →</a>
+          </div>
+          <div class="case-row urgent-row">
+            <div class="case-dot dot-red"></div>
+            <div class="case-info">
+              <div class="name">James T. · Eviction · Court date this Friday</div>
+              <div class="sub">Callback anytime today · 10:12 AM call</div>
+            </div>
+            <a href="#" class="case-link">View →</a>
+          </div>
+          <div class="case-row urgent-row">
+            <div class="case-dot dot-red"></div>
+            <div class="case-info">
+              <div class="name">Anon · Domestic violence / retaliation risk</div>
+              <div class="sub">Caller preferred anonymity · 9:05 AM call</div>
+            </div>
+            <a href="#" class="case-link">View →</a>
+          </div>
+        </div>
+
+        <p class="case-section-label">Needs review</p>
+        <div class="case-list">
+          <div class="case-row">
+            <div class="case-dot dot-amber"></div>
+            <div class="case-info">
+              <div class="name">Sandra L. · Housing / lease dispute</div>
+              <div class="sub">Eligible · 11:30 AM call</div>
+            </div>
+            <a href="#" class="case-link">View →</a>
+          </div>
+          <div class="case-row">
+            <div class="case-dot dot-amber"></div>
+            <div class="case-info">
+              <div class="name">Rosa K. · Family law / custody</div>
+              <div class="sub">Eligible · 3:50 PM call</div>
+            </div>
+            <a href="#" class="case-link">View →</a>
+          </div>
+          <div class="case-row">
+            <p class="case-more">+ 7 more cases · <a href="#" class="case-link">View all →</a></p>
+          </div>
+        </div>
+
+        <a href="#" class="btn-primary">Open Haven dashboard</a>
+      </div>
+      <div class="email-footer">
+        <p>Sent by Haven · <a href="#">manage preferences</a> · <a href="#">unsubscribe</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 Insight -->
+  <div class="section">
+    <p class="section-label">03 · An important insight</p>
+    <h2>Overwhelming notifications become background noise</h2>
+    <p>After building the first version, I shared the concept with a friend who works as a paralegal at an immigration law firm. She pointed out that if Haven sends an email for every case, the inbox risks becoming easy to ignore.</p>
+    <p>That resonated with me — at a marketing job I had, every new lead triggered an email notification. Because every lead triggered one, the inbox became noise, and the habit became auto-delete. Signals disappear with volume.</p>
+    <p>So, I added one more piece: an inbox setup guide sent during onboarding, which allows staff to set up two filters channeling urgent emails and daily digests into two dedicated folders.</p>
+
+    <div class="guide-box">
+      <p class="guide-title">Keep Haven alerts organized in Gmail</p>
+
+      <p class="guide-step-label">Step 1 — Filter for urgent alerts</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num active">1</div>
+          <p>Open Gmail and click the <strong>search bar</strong>. Click the <strong>filter icon</strong> on the right.</p>
+        </div>
+        <div class="step">
+          <div class="step-num active">2</div>
+          <p><strong>From:</strong> <code>alerts@safehavenai.org</code> · <strong>Subject:</strong> <code>URGENT</code>. Click <strong>Create filter</strong>.</p>
+        </div>
+        <div class="step">
+          <div class="step-num active">3</div>
+          <p>Check <strong>Apply the label</strong> → <strong>New label</strong> → name it <code>Haven — Urgent</code>. Also check <strong>Always mark as important</strong>. Click <strong>Create filter</strong>.</p>
+        </div>
+      </div>
+
+      <p class="guide-step-label">Step 2 — Filter for daily digests</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num inactive">1</div>
+          <p>Repeat the same steps, but set <strong>Subject</strong> to <code>Your Haven digest</code>.</p>
+        </div>
+        <div class="step">
+          <div class="step-num inactive">2</div>
+          <p>Name the label <code>Haven — Digest</code>. No need to mark as important. Click <strong>Create filter</strong>.</p>
+        </div>
+      </div>
+
+      <div class="guide-footer">
+        <span class="check-icon">✓</span>
+        <p>Urgent alerts land in <strong>Haven — Urgent</strong> and are marked as important. Digests go to <strong>Haven — Digest</strong>. Your main inbox stays clean.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sign-off">
+    <p>— Meghai</p>
+  </div>
+
+</div>
+</body>
+</html>
