@@ -1962,7 +1962,7 @@ nav.visible {
   </div>
 
   <!-- POSTERS -->
-  <div class="section-divider"><span class="label">Poster Designs</span><div class="line"></div></div>
+  <div class="section-divider" id="posters"><span class="label">Poster Designs</span><div class="line"></div></div>
   <div class="poster-grid" style="padding:0 80px;">
     <div class="poster-cell"><img src="portfolio_media/posters/raveena.png" alt="Raveena"><div class="poster-overlay"><div class="poster-year">2022</div><div class="poster-title">Raveena — Asha's Awakening</div><div class="poster-desc">Album poster design. Raveena retweeted this!<div class="tweet-wrap"><blockquote class="twitter-tweet" data-theme="dark"><p lang="qme" dir="ltr">😍😍😍</p>&mdash; Raveena (@raveena_aurora) <a href="https://x.com/raveena_aurora/status/1573880845047189504?ref_src=twsrc%5Etfw">September 25, 2022</a></blockquote><script async src="https://platform.x.com/widgets.js" charset="utf-8"></script></div></div></div></div>
     <div class="poster-cell"><img src="portfolio_media/posters/sailorrp.png" alt="Sailorr"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">Sailorr</div><div class="poster-desc">An album poster for Sailorr's From Florida's Finest.</div></div></div>
@@ -2460,6 +2460,22 @@ window.addEventListener('popstate', function() {
   document.body.style.overflow = '';
   if (location.hash) openFromHash(location.hash);
 });
+
+// Update URL hash when scrolling into the Posters section
+(function() {
+  var postersEl = document.getElementById('posters');
+  if (!postersEl || !('IntersectionObserver' in window)) return;
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        if (location.hash !== '#posters') history.replaceState(null, '', '#posters');
+      } else if (location.hash === '#posters') {
+        history.replaceState(null, '', ' ');
+      }
+    });
+  }, { rootMargin: '0px 0px -80% 0px' });
+  observer.observe(postersEl);
+})();
 
 /* ── Freelance inline expand ── */
 function toggleFreelance(item) {
