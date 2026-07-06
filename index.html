@@ -1515,6 +1515,18 @@ nav.visible {
   .wide-only { display: none; }
   .narrow-only { display: inline; }
 
+  .illus-row {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  .illus-row img {
+    width: 60% !important;
+    max-width: 240px;
+  }
+  .illus-grid-3 {
+    grid-template-columns: 1fr !important;
+  }
+
   .scroll-panel-container {
     grid-template-columns: 1fr;
     gap: 32px;
@@ -2022,14 +2034,14 @@ nav.visible {
       </div>
       <div>
         <p style="margin-top:0;">The estimator led with projections: how much could you get, under which scenarios, compared to what. It framed Savvly as an investment product competing on returns. But the deeper issue was that most people didn't know longevity benefits exist or why they'd need one. The status quo wasn't even a competing product — there was no existing product at all.</p>
-        <div style="display:flex;gap:16px;align-items:center;">
+        <div class="illus-row" style="display:flex;gap:16px;align-items:center;">
           <p style="flex:1;min-width:0;margin:0;">User research confirmed this: thinking about retirement made people uncomfortable. Most had never named "outliving your savings" as a specific risk they needed to plan for. That was the key design signal: the experience couldn't open with a calculator.</p>
           <img src="portfolio_media/savvly/savvly_uncomfortable.png" alt="Figure anxiously thinking about an hourglass" style="width:190px;flex-shrink:0;">
         </div>
         <p style="padding-left:16px;border-left:2px solid var(--border);font-style:italic;color:#555;margin-bottom:0;">Calculators are for people who've already decided to engage. The experience needed to meet people at the point of avoidance, make the problem feel real without triggering anxiety, and then present Savvly as the natural response.</p>
       </div>
     </div>
-    <div style="display:flex;gap:24px;align-items:center;">
+    <div class="illus-row" style="display:flex;gap:24px;align-items:center;">
       <img src="portfolio_media/savvly/savvly_fire.png" alt="House on fire, illustrating the insurance analogy" style="width:226px;flex-shrink:0;">
       <p style="flex:1;min-width:0;">An analogy that shaped the framing: nobody buys home insurance because it offers the best financial return — they buy it because of the specific fear that their house may burn down. The value is psychological before it's numerical. Savvly addresses the same emotional structure. The disaster isn't a house burning down; it's outliving your money. That reframes Savvly entirely: not an investment product competing on returns, but a risk management product offering protection against a specific, underacknowledged fear.</p>
     </div>
@@ -2080,7 +2092,7 @@ nav.visible {
 
     <span class="cs-section-header">The Problem</span>
     <p>A transcription is learning a recorded solo by ear, note by note. One of the foundational ways jazz musicians learn is by copying the way the greats played. The process requires slowing audio down, looping short phrases, and marking moments to return to.</p>
-    <div style="display:flex;gap:24px;align-items:center;">
+    <div class="illus-row" style="display:flex;gap:24px;align-items:center;">
       <div style="flex:1;min-width:0;">
         <p>Most musicians have their own cobbled-together process: YouTube and a separate metronome, Chrome extensions, an MP3 download into whatever playback software they have. But across all methods, the workflow is fragmented and constantly pulls you out of the music.</p>
         <p>I built this because my own process was fragmented — and I realized that only part of my slowness was my ear. The rest was the clumsy process itself.</p>
@@ -2090,7 +2102,7 @@ nav.visible {
 
     <span class="cs-section-header">Research</span>
     <p>I observed three jazz musicians transcribing in their natural workflow before designing anything.</p>
-    <ul style="list-style:none;padding-left:0;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+    <ul class="illus-grid-3" style="list-style:none;padding-left:0;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
       <li style="display:flex;flex-direction:column;align-items:center;text-align:center;"><div style="height:212px;display:flex;align-items:flex-end;margin-bottom:12px;"><img src="portfolio_media/shed/shed_research1.png" alt="Figure viewing a waveform" style="width:212px;"></div><span>One had opened a professional audio editing suite — not to edit anything, but purely to see the waveform so he could set loop points with precision. He was using a tool built for audio engineers just for that one visual.</span></li>
       <li style="display:flex;flex-direction:column;align-items:center;text-align:center;"><div style="height:212px;display:flex;align-items:flex-end;margin-bottom:12px;"><img src="portfolio_media/shed/shed_research2.png" alt="Figure double-tapping on a phone" style="width:111px;"></div><span>Another was using his phone's YouTube app, double-tapping to skip forward and back. The 10-second jumps were too imprecise for phrase-level work, and he'd overshoot every time.</span></li>
       <li style="display:flex;flex-direction:column;align-items:center;text-align:center;"><div style="height:212px;display:flex;align-items:flex-end;margin-bottom:12px;"><img src="portfolio_media/shed/shed_research3.png" alt="Figure switching between a video and a metronome" style="width:195px;"></div><span>A third kept switching apps mid-session to use a separate metronome.</span></li>
@@ -2119,7 +2131,7 @@ nav.visible {
     </div>
     <p style="margin-top:20px;">All without ever leaving the browser.</p>
 
-    <div style="display:flex;gap:24px;align-items:center;margin-top:20px;">
+    <div class="illus-row" style="display:flex;gap:24px;align-items:center;margin-top:20px;">
       <img src="portfolio_media/shed/shed_arranger.png" alt="Figure conducting with sheet music" style="width:229px;flex-shrink:0;">
       <p style="flex:1;min-width:0;margin:0;">An unexpected use case emerged after launch: composition arrangers using the tool, working through a recording phrase by phrase to transcribe a piece before arranging it for a new ensemble!</p>
     </div>
@@ -2152,7 +2164,7 @@ nav.visible {
     <p>This project started within the <a href="https://funginstitute.berkeley.edu/fung-fellows/" target="_blank" style="color:var(--black);border-bottom:1px solid var(--border);text-decoration:none;">Fung Fellowship at UC Berkeley</a>, where I worked alongside Ishita Srivastava, Ashley Huerta, and Nessia Dambal. After the fellowship concluded, I continued developing the project as design lead with Ishita Srivastava and Jonanne Talebloo.</p>
 
     <span class="cs-section-header">The Problem</span>
-    <div style="display:flex;gap:24px;align-items:center;">
+    <div class="illus-row" style="display:flex;gap:24px;align-items:center;">
       <div style="flex:1;min-width:0;">
         <p>Chronic illness is invisible, non-linear, and hard to explain in fifteen minutes. Yet fifteen minutes is often all a patient gets. By the time someone with a chronic condition sits down with a doctor, they're carrying years of context — misdiagnoses, symptoms that fluctuate, mental and physical pain that are deeply entangled — and almost none of it makes it into the room. Doctors either don't have access to the history, don't have time to absorb it, or don't believe it.</p>
         <p>The result is a system where patients feel unseen, and providers aren't able to do better.</p>
@@ -2170,14 +2182,14 @@ nav.visible {
     <div>
         <p style="margin-top:0;">
         <p><strong>Being dismissed or not believed:</strong> Every patient named this in some form. The clearest example: a patient had been living with widespread chronic pain for years, and doctors privately believed he had fibromyalgia — a condition where the nervous system amplifies pain signals throughout the body. However, they refused to put it on his record, saying that the diagnosis would follow him, causing future providers to dismiss any new symptom as "just your fibromyalgia." Without it, he couldn't access treatment. With it, he'd lose credibility. The doctors were essentially protecting their own system's dysfunction at the expense of his care.</p>
-        <div style="display:flex;gap:16px;align-items:center;">
+        <div class="illus-row" style="display:flex;gap:16px;align-items:center;">
           <img src="portfolio_media/empowerhealth/empower_reexplain.png" alt="Figure repeating the same explanation in speech bubbles" style="width:151px;flex-shrink:0;">
           <div style="flex:1;min-width:0;">
             <p style="margin:0 0 8px 0;"><strong>The proof burden:</strong> Invisible illness means constantly justifying pain to doctors, employers, family, and friends. One patient had scratched their arm during an appointment just to show a doctor they were really suffering.</p>
             <p style="margin:0;"><strong>Exhaustion from re-explaining:</strong> Starting over at every new appointment, with every new specialist. No record of what came before. "I want a central place where everything is in one place for all doctors, irrespective of the hospital."</p>
           </div>
         </div>
-        <div style="display:flex;gap:16px;align-items:center;">
+        <div class="illus-row" style="display:flex;gap:16px;align-items:center;">
           <div style="flex:1;min-width:0;">
             <p style="margin:0 0 8px 0;"><strong>The mind-body connection, discovered alone:</strong> Almost every patient had figured out on their own that stress triggered flares, that emotional and physical pain were entangled. Almost none had a doctor who named this to them. Dr. Bennett reframed it clearly: stress is a bodily stressor that literally fires pain receptors. The system wasn't tracking it.</p>
             <p style="margin:0;"><strong>Isolation:</strong> One patient said they sometimes made up an excuse rather than explain their illness. Another said "I never felt sick enough" — real symptoms, but excluded from the chronic illness community because their condition wasn't visibly debilitating enough.</p>
@@ -2210,7 +2222,7 @@ nav.visible {
 
     <span class="cs-section-header">What We'd Do Differently</span>
     <p>This was primarily a research project. The design we produced was early-stage and untested with real patients or providers. The research is the strongest part of the work — the product is a first sketch of where that research pointed. A real next step would be usability testing, particularly around the diary card interaction and how doctors actually want to receive and scan summarized data under time pressure.</p>
-    <div style="display:flex;gap:24px;align-items:center;">
+    <div class="illus-row" style="display:flex;gap:24px;align-items:center;">
       <p style="flex:1;min-width:0;margin:0;">The fibromyalgia catch-22 alone points to a harder question the design doesn't yet answer: how do you build trust into a system when the system itself has already broken it?</p>
       <img src="portfolio_media/empowerhealth/empower_catch22.png" alt="Scale balancing a medical record against medication" style="width:233px;flex-shrink:0;">
     </div>
@@ -2230,7 +2242,7 @@ nav.visible {
     <p>Pathrise is a platform for college consultants to manage and support their students through the admissions process. My team designed the consultant-facing dashboard, giving consultants a centralized view of each student's tasks, deadlines, and application progress across their full caseload.</p>
 
     <span class="cs-section-header">The Problem</span>
-    <div style="display:flex;gap:24px;align-items:center;">
+    <div class="illus-row" style="display:flex;gap:24px;align-items:center;">
       <p style="flex:1;min-width:0;">After sitting in on consultant interviews, I noticed a recurring gap: students arrived at writing sessions with no organized material. They were managing essays manually across notes, docs, and spreadsheets, reusing content across schools without a system, and tracking deadlines separately from their writing progress. This forced consultants to spend time on logistics instead of guidance.</p>
       <img src="portfolio_media/pathrise/pathrise_gap.png" alt="Figure surrounded by scattered notes, docs, and a calendar" style="width:293px;flex-shrink:0;">
     </div>
