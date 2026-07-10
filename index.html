@@ -37,6 +37,38 @@ body {
   font-size: 14px;
   line-height: 1.7;
   overflow-x: hidden;
+  cursor: none;
+}
+
+a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
+  cursor: none;
+}
+
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  margin-top: -7px;
+  border-radius: 50%;
+  background: transparent;
+  backdrop-filter: invert(1) grayscale(1);
+  -webkit-backdrop-filter: invert(1) grayscale(1);
+  pointer-events: none;
+  z-index: 10000;
+  opacity: 0;
+  transform: scale(1);
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.cursor-dot.is-visible {
+  opacity: 1;
+}
+
+.cursor-dot.is-hover {
+  transform: scale(3.2);
 }
 
 /* ── NAV ── */
@@ -195,6 +227,29 @@ nav.visible {
 }
 #cover .corner a:hover { border-color: rgba(255,255,255,0.9); }
 
+#cover .scroll-cue {
+  position: absolute;
+  bottom: 44px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  color: var(--white);
+  opacity: 0.75;
+  pointer-events: none;
+  animation: scroll-cue-bounce 2s ease-in-out infinite;
+}
+
+#cover .scroll-cue svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+}
+
+@keyframes scroll-cue-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
 .narrow-only { display: none; }
 .wide-only { display: revert; }
 .credits-break { display: none; }
@@ -237,9 +292,8 @@ nav.visible {
   position: relative;
   display: block;
   overflow: hidden;
-  cursor: pointer;
+  cursor: none;
   background: #ede9e3;
-  border-radius: 4px;
 }
 
 .bento-tile video,
@@ -265,6 +319,8 @@ nav.visible {
 .bento-tile--empower img.bento-cover {
   object-fit: contain;
   background: transparent;
+  padding: 16px;
+  box-sizing: border-box;
 }
 
 .bento-tile--empower .bento-cover--symptom {
@@ -305,10 +361,10 @@ nav.visible {
   opacity: 0.85;
 }
 
-.bento-tile--shed { grid-column: 1 / 3; grid-row: 1 / 3; }
-.bento-tile--empower { grid-column: 3 / 4; grid-row: 1 / 3; }
-.bento-tile--pathrise { grid-column: 1 / 2; grid-row: 3 / 4; }
-.bento-tile--savvly { grid-column: 2 / 4; grid-row: 3 / 4; }
+.bento-tile--shed { grid-column: 1 / 3; grid-row: 1 / 3; border: 4px solid #000; }
+.bento-tile--empower { grid-column: 3 / 4; grid-row: 1 / 3; border: 4px solid #000; }
+.bento-tile--pathrise { grid-column: 1 / 2; grid-row: 3 / 4; border: 4px solid #000; }
+.bento-tile--savvly { grid-column: 2 / 4; grid-row: 3 / 4; border: 4px solid #000; }
 
 @media (max-width: 900px) {
   .bento-grid {
@@ -600,18 +656,18 @@ nav.visible {
 
 .freelance-item {
   position: relative;
-  cursor: pointer;
+  cursor: none;
   overflow: hidden;
   background: #ede9e3;
 }
 
 .freelance-item:not(.ph):not(.open) {
-  cursor: pointer;
+  cursor: none;
 }
 
 /* Open: fills exactly its 2×2 grid area, content scrolls inside */
 .freelance-item.open {
-  cursor: default;
+  cursor: none;
   background: var(--white);
   overflow: hidden;
   height: 100%;
@@ -1133,7 +1189,7 @@ nav.visible {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  cursor: pointer;
+  cursor: none;
   position: relative;
 }
 .poster-cell.letter { aspect-ratio: 8.5/11; }
@@ -1942,6 +1998,8 @@ nav.visible {
 </head>
 <body>
 
+<div class="cursor-dot"></div>
+
 <!-- NAV -->
 <nav>
   <a href="#cover" class="name">Meghai Choudhury</a>
@@ -1978,6 +2036,12 @@ nav.visible {
 
   <div class="corner corner--br">
     UI/UX Design &middot; User Research
+  </div>
+
+  <div class="scroll-cue">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 4v16M5 13l7 7 7-7"/>
+    </svg>
   </div>
 </section>
 <div id="cover-spacer"></div>
@@ -2513,6 +2577,23 @@ nav.visible {
 <div id="email-toast">copied to clipboard</div>
 
 <script>
+// Custom cursor dot, site-wide
+(function() {
+  const dot = document.querySelector('.cursor-dot');
+  if (!dot) return;
+  const hoverSelector = 'a, button, [onclick], .bento-tile, .poster-cell, .freelance-item';
+
+  document.addEventListener('mousemove', (e) => {
+    dot.style.left = e.clientX + 'px';
+    dot.style.top = e.clientY + 'px';
+    dot.classList.add('is-visible');
+    dot.classList.toggle('is-hover', !!e.target.closest(hoverSelector));
+  });
+  document.addEventListener('mouseleave', () => {
+    dot.classList.remove('is-visible');
+  });
+})();
+
 // Cover image
 
 // Nav appears after cover
