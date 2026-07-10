@@ -729,7 +729,7 @@ nav.visible {
   float: right;
   background: none; border: none;
   font-size: 14px; color: var(--mid);
-  cursor: pointer; padding: 0;
+  cursor: none; padding: 0;
   line-height: 1;
   z-index: 1;
 }
@@ -785,7 +785,7 @@ nav.visible {
   height: 140px;
   object-fit: contain;
   object-position: left center;
-  cursor: zoom-in;
+  cursor: none;
 }
 .fi-d-img-row .fi-d-asset-ph {
   flex: 1;
@@ -1246,7 +1246,7 @@ nav.visible {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  cursor: none;
   gap: 20px;
 }
 #lightbox.active { display: flex; }
@@ -1458,7 +1458,7 @@ nav.visible {
   inset: 0;
   z-index: 9999;
   background: rgba(0,0,0,0.75);
-  cursor: pointer;
+  cursor: none;
 }
 #case-study-overlay.active { display: block; }
 
@@ -1470,7 +1470,7 @@ nav.visible {
   max-height: 92vh;
   background: var(--white);
   overflow-y: auto;
-  cursor: default;
+  cursor: none;
   padding: 64px 56px 80px;
   border-radius: 12px 12px 0 0;
   transition: max-height 0.25s ease, border-radius 0.25s ease, top 0.25s ease, bottom 0.25s ease;
@@ -1482,7 +1482,7 @@ nav.visible {
   top: 60px; right: 28px;
   background: none; border: none;
   font-size: 18px; color: var(--mid);
-  cursor: pointer; padding: 4px 8px;
+  cursor: none; padding: 4px 8px;
   line-height: 1;
 }
 #case-study-panel .cs-close:hover, #empower-panel .cs-close:hover, #savvly-panel .cs-close:hover, #pathrise-panel .cs-close:hover { color: var(--black); }
@@ -1555,7 +1555,7 @@ nav.visible {
   width: 100%;
   display: block;
   border-radius: 6px;
-  cursor: zoom-in;
+  cursor: none;
 }
 
 #savvly-panel .cs-figcaption {
@@ -1613,7 +1613,7 @@ nav.visible {
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: var(--cs-space-md);
-  cursor: pointer;
+  cursor: none;
   background: #ede9e3;
 }
 
@@ -1778,13 +1778,13 @@ nav.visible {
 .cs-img-full {
   width: 100%;
   margin-bottom: 20px;
-  cursor: zoom-in;
+  cursor: none;
 }
 .cs-img-full img, .cs-img-full .cs-img-placeholder {
   width: 100%;
   display: block;
 }
-.cs-img-full img { cursor: zoom-in; }
+.cs-img-full img { cursor: none; }
 
 .cs-img-row {
   display: grid;
@@ -1798,7 +1798,7 @@ nav.visible {
   width: 100%;
   display: block;
 }
-.cs-img-row img { cursor: zoom-in; }
+.cs-img-row img { cursor: none; }
 
 .cs-pullquote {
   font-family: var(--serif);
@@ -2329,8 +2329,8 @@ nav.visible {
 </div>
 
 <!-- CASE STUDY OVERLAY: SAVVLY -->
-<div id="savvly-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);cursor:pointer;" onclick="closeSavvlyCaseStudy(event)">
-  <div id="savvly-panel" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:75vw;max-height:92vh;background:var(--white);overflow-y:auto;cursor:default;padding:64px 56px 80px;border-radius:12px 12px 0 0;transition:max-height 0.25s ease, border-radius 0.25s ease, top 0.25s ease, bottom 0.25s ease;" onclick="event.stopPropagation()">
+<div id="savvly-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);cursor:none;" onclick="closeSavvlyCaseStudy(event)">
+  <div id="savvly-panel" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:75vw;max-height:92vh;background:var(--white);overflow-y:auto;cursor:none;padding:64px 56px 80px;border-radius:12px 12px 0 0;transition:max-height 0.25s ease, border-radius 0.25s ease, top 0.25s ease, bottom 0.25s ease;" onclick="event.stopPropagation()">
     <button class="cs-close" onclick="closeSavvlyCaseStudy()">&#x2715;</button>
 
     <span class="cs-label">Case Study</span>
@@ -2450,8 +2450,8 @@ nav.visible {
 </div>
 
 <!-- CASE STUDY OVERLAY: EMPOWERHEALTH -->
-<div id="empower-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);cursor:pointer;" onclick="closeEmpowerCaseStudy(event)">
-  <div id="empower-panel" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:75vw;max-height:92vh;background:var(--white);overflow-y:auto;cursor:default;padding:64px 56px 80px;border-radius:12px 12px 0 0;transition:max-height 0.25s ease, border-radius 0.25s ease, top 0.25s ease, bottom 0.25s ease;" onclick="event.stopPropagation()">
+<div id="empower-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);cursor:none;" onclick="closeEmpowerCaseStudy(event)">
+  <div id="empower-panel" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:75vw;max-height:92vh;background:var(--white);overflow-y:auto;cursor:none;padding:64px 56px 80px;border-radius:12px 12px 0 0;transition:max-height 0.25s ease, border-radius 0.25s ease, top 0.25s ease, bottom 0.25s ease;" onclick="event.stopPropagation()">
     <button class="cs-close" onclick="closeEmpowerCaseStudy()">&#x2715;</button>
 
     <span class="cs-label">Case Study</span>
@@ -2483,9 +2483,9 @@ nav.visible {
     <span class="cs-section-header">Research</span>
     <p>We interviewed users with chronic illness, and providers. Between them: years of misdiagnosis, $17,000 out of pocket, 50+ specialist appointments for one condition, a job lost mid-treatment.</p>
     <div class="empower-interview-row" style="display:flex;gap:6px;align-items:flex-start;margin-bottom:32px;height:clamp(140px, 18vw, 220px);">
-      <img src="portfolio_media/empowerhealth/interview.png" alt="Interview" onclick="openImgLightbox(this.src)" style="height:100%;width:auto;cursor:zoom-in;display:block;">
-      <img src="portfolio_media/empowerhealth/interview2.png" alt="Interview 2" onclick="openImgLightbox(this.src)" style="height:100%;width:auto;cursor:zoom-in;display:block;">
-      <img src="portfolio_media/empowerhealth/interview3.png" alt="Interview 3" onclick="openImgLightbox(this.src)" style="height:100%;width:auto;cursor:zoom-in;display:block;">
+      <img src="portfolio_media/empowerhealth/interview.png" alt="Interview" onclick="openImgLightbox(this.src)" style="height:100%;width:auto;cursor:none;display:block;">
+      <img src="portfolio_media/empowerhealth/interview2.png" alt="Interview 2" onclick="openImgLightbox(this.src)" style="height:100%;width:auto;cursor:none;display:block;">
+      <img src="portfolio_media/empowerhealth/interview3.png" alt="Interview 3" onclick="openImgLightbox(this.src)" style="height:100%;width:auto;cursor:none;display:block;">
     </div>
     <div>
         <p style="margin-top:0;">
@@ -2516,13 +2516,13 @@ nav.visible {
     <div class="empower-design-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;margin-bottom:16px;">
       <div>
         <div style="display:flex;gap:0;margin-bottom:8px;">
-          <img src="portfolio_media/empowerhealth/symptomscreen.png" alt="Symptom screen" onclick="openImgLightbox(this.src)" style="width:50%;display:block;cursor:zoom-in;">
-          <img src="portfolio_media/empowerhealth/diaryscreen.png" alt="Diary screen" onclick="openImgLightbox(this.src)" style="width:50%;display:block;cursor:zoom-in;">
+          <img src="portfolio_media/empowerhealth/symptomscreen.png" alt="Symptom screen" onclick="openImgLightbox(this.src)" style="width:50%;display:block;cursor:none;">
+          <img src="portfolio_media/empowerhealth/diaryscreen.png" alt="Diary screen" onclick="openImgLightbox(this.src)" style="width:50%;display:block;cursor:none;">
         </div>
         <div style="font-size:11px;color:var(--mid);letter-spacing:0.04em;">The patient app centered on a daily diary card — a design that holds space for whatever a user was carrying that day without making the process feel clinical or burdensome.</div>
       </div>
       <div>
-        <img src="portfolio_media/empowerhealth/providerscreen.png" alt="Provider screen" onclick="openImgLightbox(this.src)" style="width:100%;display:block;cursor:zoom-in;margin-bottom:8px;">
+        <img src="portfolio_media/empowerhealth/providerscreen.png" alt="Provider screen" onclick="openImgLightbox(this.src)" style="width:100%;display:block;cursor:none;margin-bottom:8px;">
         <div style="font-size:11px;color:var(--mid);letter-spacing:0.04em;">The provider dashboard used AI-summarized data from patient diary cards before appointments, flagging new symptoms, mood trends, and key concerns the patient had noted, so the fifteen minutes could be spent on care rather than catch-up.</div>
       </div>
     </div>
@@ -2538,8 +2538,8 @@ nav.visible {
 </div>
 
 <!-- CASE STUDY OVERLAY: PATHRISE -->
-<div id="pathrise-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);cursor:pointer;" onclick="closePathriseCaseStudy(event)">
-  <div id="pathrise-panel" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:75vw;max-height:92vh;background:var(--white);overflow-y:auto;cursor:default;padding:64px 56px 80px;border-radius:12px 12px 0 0;transition:max-height 0.25s ease, border-radius 0.25s ease, top 0.25s ease, bottom 0.25s ease;" onclick="event.stopPropagation()">
+<div id="pathrise-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);cursor:none;" onclick="closePathriseCaseStudy(event)">
+  <div id="pathrise-panel" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:75vw;max-height:92vh;background:var(--white);overflow-y:auto;cursor:none;padding:64px 56px 80px;border-radius:12px 12px 0 0;transition:max-height 0.25s ease, border-radius 0.25s ease, top 0.25s ease, bottom 0.25s ease;" onclick="event.stopPropagation()">
     <button class="cs-close" onclick="closePathriseCaseStudy()">&#x2715;</button>
 
     <span class="cs-label">Case Study</span>
@@ -2556,8 +2556,8 @@ nav.visible {
     <p>To find the underlying structure, I mapped my own senior-year application materials — stories, brainstorming docs, spreadsheets — until a repeatable, phase-by-phase formula emerged. From that, I proposed and designed a student-facing brainstorm portal.</p>
 
     <div class="cs-img-row cols-2" style="margin-bottom:8px;">
-      <img src="portfolio_media/pathrise/brainstorm.png" alt="Brainstorm" onclick="openImgLightbox(this.src)" style="cursor:zoom-in;width:100%;display:block;">
-      <img src="portfolio_media/pathrise/formula.png" alt="Formula" onclick="openImgLightbox(this.src)" style="cursor:zoom-in;width:100%;display:block;">
+      <img src="portfolio_media/pathrise/brainstorm.png" alt="Brainstorm" onclick="openImgLightbox(this.src)" style="cursor:none;width:100%;display:block;">
+      <img src="portfolio_media/pathrise/formula.png" alt="Formula" onclick="openImgLightbox(this.src)" style="cursor:none;width:100%;display:block;">
     </div>
 
     <span class="cs-section-header">The Portal</span>
