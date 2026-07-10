@@ -2581,17 +2581,30 @@ nav.visible {
 (function() {
   const dot = document.querySelector('.cursor-dot');
   if (!dot) return;
-  const hoverSelector = 'a, button, [onclick], .bento-tile, .poster-cell, .freelance-item';
+  const hoverSelector = 'a, button, .bento-tile, .poster-cell, .freelance-item';
+
+  let lastX = -9999, lastY = -9999;
+
+  function updateHover(x, y) {
+    const el = document.elementFromPoint(x, y);
+    dot.classList.toggle('is-hover', !!(el && el.closest(hoverSelector)));
+  }
 
   document.addEventListener('mousemove', (e) => {
-    dot.style.left = e.clientX + 'px';
-    dot.style.top = e.clientY + 'px';
+    lastX = e.clientX;
+    lastY = e.clientY;
+    dot.style.left = lastX + 'px';
+    dot.style.top = lastY + 'px';
     dot.classList.add('is-visible');
-    dot.classList.toggle('is-hover', !!e.target.closest(hoverSelector));
+    updateHover(lastX, lastY);
   });
   document.addEventListener('mouseleave', () => {
     dot.classList.remove('is-visible');
   });
+  document.addEventListener('scroll', () => {
+    if (lastX === -9999) return;
+    updateHover(lastX, lastY);
+  }, true);
 })();
 
 // Cover image
