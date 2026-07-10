@@ -7,11 +7,11 @@
 <title>Meghai Choudhury</title>
 <meta property="og:title" content="Meghai Choudhury">
 <meta property="og:description" content="Design Portfolio">
-<meta property="og:image" content="https://meghai.com/yes.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/rsckwt4u/image/upload/f_auto,q_auto/yes.jpg">
 <meta property="og:url" content="https://meghai.com">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://meghai.com/yes.jpg">
+<meta name="twitter:image" content="https://res.cloudinary.com/rsckwt4u/image/upload/f_auto,q_auto/yes.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&family=EB+Garamond:ital,wght@0,400;1,400&family=Karla:wght@300;400&display=swap" rel="stylesheet">
@@ -221,7 +221,129 @@ nav.visible {
   background: var(--border);
 }
 
-/* ── SCROLL PANEL CONTAINERS ── */
+/* ── SELECTED WORK: BENTO GRID ── */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 0.85fr 0.85fr 1.4fr;
+  gap: 14px;
+  width: 100%;
+  aspect-ratio: 12/11;
+  padding: 0 80px 60px;
+  box-sizing: border-box;
+}
+
+.bento-tile {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  background: #ede9e3;
+  border-radius: 4px;
+}
+
+.bento-tile video,
+.bento-tile img.bento-cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.5s ease;
+}
+
+.bento-tile:hover video,
+.bento-tile:hover img.bento-cover {
+  transform: scale(1.03);
+}
+
+.bento-tile--empower {
+  background: transparent;
+}
+
+.bento-tile--empower img.bento-cover {
+  object-fit: contain;
+  background: transparent;
+}
+
+.bento-tile--empower .bento-cover--symptom {
+  display: none;
+}
+
+.bento-cover--pathrise {
+  transform: scale(1.12);
+}
+.bento-tile:hover .bento-cover--pathrise {
+  transform: scale(1.16);
+}
+
+.bento-tile .bento-label {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  z-index: 2;
+  color: var(--white);
+  background: var(--black);
+  padding: 14px 20px 16px;
+  max-width: calc(100% - 56px);
+}
+
+.bento-tile .bento-label h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 1.1;
+  margin: 0 0 4px;
+}
+
+.bento-tile .bento-label .bento-caption {
+  display: block;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.bento-tile--shed { grid-column: 1 / 3; grid-row: 1 / 3; }
+.bento-tile--empower { grid-column: 3 / 4; grid-row: 1 / 3; }
+.bento-tile--pathrise { grid-column: 1 / 2; grid-row: 3 / 4; }
+.bento-tile--savvly { grid-column: 2 / 4; grid-row: 3 / 4; }
+
+@media (max-width: 900px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    aspect-ratio: auto;
+    padding: 0 40px 60px;
+  }
+  .bento-tile--shed { order: 1; }
+  .bento-tile--savvly { order: 2; }
+  .bento-tile--empower { order: 3; }
+  .bento-tile--pathrise { order: 4; }
+
+  .bento-tile--shed,
+  .bento-tile--empower,
+  .bento-tile--pathrise,
+  .bento-tile--savvly {
+    grid-column: 1 / 2;
+    grid-row: auto;
+    aspect-ratio: 4/3;
+  }
+
+  .bento-tile--empower .bento-cover--diary,
+  .bento-tile--empower .bento-cover--symptom {
+    display: block;
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+  }
+  .bento-tile--empower .bento-cover--diary { left: 0; }
+  .bento-tile--empower .bento-cover--symptom { left: 50%; }
+}
+
+/* ── SCROLL PANEL CONTAINERS (legacy, unused by Selected Work) ── */
 .scroll-panel-container {
   position: relative;
   padding: 60px 80px 60px;
@@ -744,7 +866,7 @@ nav.visible {
   transition: opacity 0.3s ease;
 }
 .merch-card .thumb { position: relative; }
-.merch-card:hover .thumb .hover-img { opacity: 1; }
+.merch-card .thumb:hover .hover-img { opacity: 1; }
 
 .merch-card h4 {
   font-family: var(--serif);
@@ -1286,14 +1408,18 @@ nav.visible {
 
 #case-study-panel {
   position: absolute;
-  top: 0; right: 0;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
   width: 75vw;
-  height: 100vh;
+  max-height: 92vh;
   background: var(--white);
   overflow-y: auto;
   cursor: default;
   padding: 64px 56px 80px;
+  border-radius: 12px 12px 0 0;
+  transition: max-height 0.25s ease, border-radius 0.25s ease, top 0.25s ease, bottom 0.25s ease;
 }
+
 
 #case-study-panel .cs-close, #empower-panel .cs-close, #savvly-panel .cs-close, #pathrise-panel .cs-close {
   position: absolute;
@@ -1350,6 +1476,171 @@ nav.visible {
   margin-top: 40px;
   margin-bottom: 14px;
   display: block;
+}
+
+/* ── SAVVLY: figure component + layout grid (scoped to #savvly-panel) ── */
+#savvly-panel {
+  --cs-space-sm: 16px;
+  --cs-space-md: 32px;
+  --cs-space-lg: 56px;
+}
+
+#savvly-panel .cs-section-header {
+  margin-top: var(--cs-space-lg);
+  margin-bottom: var(--cs-space-sm);
+}
+
+#savvly-panel .cs-figure {
+  margin: 0;
+  display: block;
+}
+
+#savvly-panel .cs-figure img {
+  width: 100%;
+  display: block;
+  border-radius: 6px;
+  cursor: zoom-in;
+}
+
+#savvly-panel .cs-figcaption {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--mid);
+  font-style: italic;
+  margin-top: var(--cs-space-sm);
+  max-width: 100%;
+}
+
+/* Pattern (a): stacked, centered figure with paragraph below, full width */
+#savvly-panel .cs-stack {
+  margin-bottom: var(--cs-space-md);
+}
+
+#savvly-panel .cs-stack .cs-figure {
+  max-width: 700px;
+  margin: 0 auto var(--cs-space-md);
+}
+
+#savvly-panel .cs-stack p {
+  margin-bottom: 0;
+}
+
+/* Pattern (b): side-by-side grid, 40% figure / 1fr text */
+#savvly-panel .cs-side-grid {
+  display: grid;
+  grid-template-columns: 40% 1fr;
+  gap: 40px;
+  align-items: start;
+  margin-bottom: var(--cs-space-md);
+}
+
+#savvly-panel .cs-side-grid .cs-figure {
+  align-self: start;
+  max-height: 320px;
+  overflow: hidden;
+}
+
+#savvly-panel .cs-side-grid .cs-figure img {
+  height: 100%;
+  object-fit: contain;
+  object-position: top left;
+}
+
+#savvly-panel .cs-side-grid p {
+  margin: 0;
+}
+
+/* Click-to-reveal embed: iframe hidden behind a poster until clicked */
+#savvly-panel .cs-embed-reveal {
+  position: relative;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: var(--cs-space-md);
+  cursor: pointer;
+  background: #ede9e3;
+}
+
+#savvly-panel .cs-embed-reveal img {
+  width: 100%;
+  display: block;
+}
+
+#savvly-panel .cs-embed-reveal iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+#savvly-panel .cs-embed-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(1px);
+  transition: background 0.2s ease;
+}
+
+#savvly-panel .cs-embed-reveal:hover .cs-embed-overlay {
+  background: rgba(255,255,255,0.4);
+}
+
+#savvly-panel .cs-embed-overlay span {
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--black);
+  background: var(--white);
+  border: 1px solid var(--black);
+  padding: 12px 24px;
+  border-radius: 40px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+
+/* Spot illustrations: small, inline with a paragraph, not their own tier */
+#savvly-panel .cs-spot-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  width: 100%;
+  margin: 0 0 var(--cs-space-md);
+}
+
+#savvly-panel .cs-spot-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+#savvly-panel .cs-spot-row p {
+  margin: 0;
+  text-align: center;
+}
+
+#savvly-panel .cs-spot-illustration {
+  max-width: 140px !important;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+#savvly-panel .cs-spot-illustration--fire {
+  max-width: 190px !important;
+}
+
+@media (min-width: 700px) {
+  #savvly-panel .cs-spot-illustration {
+    max-width: 180px !important;
+  }
+  #savvly-panel .cs-spot-illustration--fire {
+    max-width: 245px !important;
+  }
 }
 
 #case-study-panel p, #empower-panel p, #savvly-panel p, #pathrise-panel p {
@@ -1557,7 +1848,14 @@ nav.visible {
   #savvly-panel,
   #empower-panel,
   #pathrise-panel {
+    top: 0 !important;
+    bottom: auto !important;
+    left: 0 !important;
+    transform: none !important;
     width: 100vw !important;
+    max-height: none !important;
+    height: 100vh !important;
+    border-radius: 0 !important;
     padding: 72px 32px 80px !important;
   }
 
@@ -1570,14 +1868,15 @@ nav.visible {
     right: 20px !important;
   }
 
-  /* Savvly: stack image above text */
-  .savvly-problem-grid {
+  /* Savvly: side-by-side figure/text collapses to stacked on mobile */
+  #savvly-panel .cs-side-grid {
     grid-template-columns: 1fr !important;
-    gap: 20px !important;
   }
-  /* Savvly: estimator full width, shorter */
-  .savvly-estimator-wrap {
-    height: 340px !important;
+  #savvly-panel .cs-side-grid .cs-figure {
+    max-height: none !important;
+  }
+  #savvly-panel .cs-spot-cols {
+    grid-template-columns: 1fr;
   }
   /* Savvly: problem/solution iframes stacked */
   .savvly-landing-grid {
@@ -1587,6 +1886,12 @@ nav.visible {
   /* EmpowerHealth: smaller interview images */
   .empower-interview-row {
     height: clamp(80px, 22vw, 130px) !important;
+  }
+
+  /* EmpowerHealth: patient app stacked above provider dashboard */
+  .empower-design-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
   }
 
   /* Pathrise: taller video to show full height */
@@ -1651,7 +1956,7 @@ nav.visible {
 <!-- COVER: full image, panels lift off it -->
 <section id="cover">
   <div class="bg">
-    <img id="coverImg" src="yes.jpg" alt="Meghai Choudhury">
+    <img id="coverImg" src="https://res.cloudinary.com/rsckwt4u/image/upload/f_auto,q_auto/yes.jpg" alt="Meghai Choudhury">
   </div>
   <div class="overlay"></div>
 
@@ -1687,99 +1992,45 @@ nav.visible {
 
   </div>
 
-  <!-- 01: SAVVLY -->
-  <div class="scroll-panel-container" id="savvly">
-    <div class="sticky-photo" style="cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="openSavvlyCaseStudy()">
-      <img src="portfolio_media/savvly/savvlymockup.png" alt="Savvly" style="width:95%;display:block;border-radius:12px;">
-      <span class="tap-hint">Tap to open</span>
-    </div>
-    <div class="lifting-panel" id="panel-savvly">
-      <div class="inner" onclick="openSavvlyCaseStudy()" style="cursor:pointer;">
-        <span class="project-num">01 / 04</span>
-        <h2>Savvly</h2>
-        <span class="role">Design Intern &middot; Jan–May 2026</span>
-        <p>A longevity benefit that pays out structured cash at ages 80–95. As the sole designer, part of my work included redesigning the client dashboard and landing page, where I worked on translating a complex financial product into a narrative people could resonate with.</p>
-        <div class="proj-thumb"><div class="proj-thumb-img"><img src="portfolio_media/savvly/savvlymockup.png" alt="Savvly"></div></div>
-        <div class="tags">
-          <span class="tag">User Research</span>
-          <span class="tag">Product Design</span>
-          <span class="tag">Storytelling</span>
-          <span class="tag">Financial User Experience</span>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="bento-grid">
 
-  <!-- 02: THE SHED -->
-  <div class="scroll-panel-container" id="shed">
-    <div class="sticky-photo">
-      <img src="portfolio_media/shed/shed.png" alt="The Shed" style="width:100%;display:block;cursor:pointer;" onclick="openCaseStudy()">
-      <span class="tap-hint">Tap to open</span>
-    </div>
-    <div class="lifting-panel right" id="panel-jazz">
-      <div class="inner" onclick="openCaseStudy()" style="cursor:pointer;">
-        <span class="project-num">02 / 04</span>
+    <!-- THE SHED -->
+    <div class="bento-tile bento-tile--shed" onclick="openCaseStudy()">
+      <video class="bento-cover" src="portfolio_media/shed/shed_overview.mp4" autoplay muted loop playsinline></video>
+      <div class="bento-label">
         <h2>The Shed</h2>
-        <span class="role">Personal Project &middot; 2026</span>
-        <p>A practice tool for jazz musicians learning solos by ear, built after watching real musicians transcribe.</p>
-        <div class="proj-thumb"><div class="proj-thumb-img"><img src="portfolio_media/shed/shed.png" alt="The Shed"></div></div>
-        <div class="tags">
-          <span class="tag">UX Research</span>
-          <span class="tag">Interaction Design</span>
-          <span class="tag">Development</span>
-          <span class="tag">Music</span>
-        </div>
+        <span class="bento-caption">Loved by 200+ musicians</span>
       </div>
     </div>
-  </div>
 
-  <!-- 03: EMPOWERHEALTH -->
-  <div class="scroll-panel-container" id="empowerhealth">
-    <div class="sticky-photo" style="cursor:pointer;" onclick="openEmpowerCaseStudy()">
-      <div style="display:flex;gap:16px;align-items:center;justify-content:center;width:100%;overflow:hidden;">
-        <img src="portfolio_media/empowerhealth/diaryscreen.png" alt="Diary screen" style="flex:3;min-width:0;display:block;object-fit:contain;">
-        <img src="portfolio_media/empowerhealth/providerscreen.png" alt="Provider screen" style="flex:7;min-width:0;display:block;object-fit:contain;">
-      </div>
-      <span class="tap-hint">Tap to open</span>
-    </div>
-    <div class="lifting-panel" id="panel-empower">
-      <div class="inner" onclick="openEmpowerCaseStudy()" style="cursor:pointer;">
-        <span class="project-num">03 / 04</span>
+    <!-- EMPOWERHEALTH -->
+    <div class="bento-tile bento-tile--empower" onclick="openEmpowerCaseStudy()">
+      <img class="bento-cover bento-cover--diary" src="portfolio_media/empowerhealth/diaryscreen.png" alt="EmpowerHealth diary screen">
+      <img class="bento-cover bento-cover--symptom" src="portfolio_media/empowerhealth/symptomscreen.png" alt="EmpowerHealth symptom screen">
+      <div class="bento-label">
         <h2>EmpowerHealth</h2>
-        <span class="role">Fung Fellowship &middot; 2023–2024</span>
-        <p>An alternative patient portal for youth with chronic illnesses — designed to increase visibility and emotional connection within a healthcare system that often makes young patients feel invisible.</p>
-        <div class="proj-thumb"><div class="proj-thumb-img"><img src="portfolio_media/empowerhealth/providerscreen.png" alt="EmpowerHealth"></div></div>
-        <div class="tags">
-          <span class="tag">User Research</span>
-          <span class="tag">Journey Mapping</span>
-          <span class="tag">Wireframing</span>
-          <span class="tag">Healthcare Design</span>
-        </div>
+        <span class="bento-caption">A patient portal for chronic illness</span>
       </div>
     </div>
-  </div>
 
-  <!-- 04: PATHRISE -->
-  <div class="scroll-panel-container" id="pathrise">
-    <div class="sticky-photo" style="cursor:pointer;" onclick="openPathriseCaseStudy()">
-      <img src="portfolio_media/pathrise/pathrise.png" alt="Pathrise" style="width:100%;display:block;">
-      <span class="tap-hint">Tap to open</span>
-    </div>
-    <div class="lifting-panel right" id="panel-pathrise">
-      <div class="inner" onclick="openPathriseCaseStudy()" style="cursor:pointer;">
-        <span class="project-num">04 / 04</span>
-        <h2>Pathrise<br>Education</h2>
-        <span class="role">Design Intern &middot; February – May 2025</span>
-        <p>A platform for college consultants to manage students through admissions. I noticed a gap in how students prepared for writing sessions and independently designed a five-phase brainstorm portal to address it.</p>
-        <div class="proj-thumb"><div class="proj-thumb-img" style="cursor:pointer;overflow:hidden;" onclick="openPathriseCaseStudy()"><img src="portfolio_media/pathrise/pathrise.png" alt="Pathrise" style="width:100%;height:100%;object-fit:cover;"></div></div>
-        <div class="tags">
-          <span class="tag">Product Design</span>
-          <span class="tag">Prototyping</span>
-          <span class="tag">Systems Thinking</span>
-          <span class="tag">EdTech</span>
-        </div>
+    <!-- PATHRISE -->
+    <div class="bento-tile bento-tile--pathrise" onclick="openPathriseCaseStudy()">
+      <video class="bento-cover bento-cover--pathrise" src="portfolio_media/pathrise/pathrise_essay_brainstorming.mp4" autoplay muted loop playsinline onloadedmetadata="this.playbackRate=3"></video>
+      <div class="bento-label">
+        <h2>Pathrise</h2>
+        <span class="bento-caption">A college essay platform, built during my internship</span>
       </div>
     </div>
+
+    <!-- SAVVLY -->
+    <div class="bento-tile bento-tile--savvly" onclick="openSavvlyCaseStudy()">
+      <video class="bento-cover" src="portfolio_media/savvly/savvly_estimator.mp4" autoplay muted loop playsinline></video>
+      <div class="bento-label">
+        <h2>Savvly</h2>
+        <span class="bento-caption">Solo product designer</span>
+      </div>
+    </div>
+
   </div>
 
 </div><!-- /projects -->
@@ -1997,7 +2248,7 @@ nav.visible {
 
 <!-- BOTTOM COVER REVEAL -->
 <div id="cover-bottom">
-  <div class="bg"><img src="back.jpg" alt="Meghai Choudhury"></div>
+  <div class="bg"><img src="https://res.cloudinary.com/rsckwt4u/image/upload/f_auto,q_auto/back.jpg" alt="Meghai Choudhury"></div>
   <div class="overlay"></div>
   <div class="corner corner--tl narrow-only" style="top:48px;left:40px;">
     Meghai Choudhury<br>
@@ -2015,64 +2266,49 @@ nav.visible {
 
 <!-- CASE STUDY OVERLAY: SAVVLY -->
 <div id="savvly-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);cursor:pointer;" onclick="closeSavvlyCaseStudy(event)">
-  <div id="savvly-panel" style="position:absolute;top:0;right:0;width:75vw;height:100vh;background:var(--white);overflow-y:auto;cursor:default;padding:64px 56px 80px;" onclick="event.stopPropagation()">
+  <div id="savvly-panel" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:75vw;max-height:92vh;background:var(--white);overflow-y:auto;cursor:default;padding:64px 56px 80px;border-radius:12px 12px 0 0;transition:max-height 0.25s ease, border-radius 0.25s ease, top 0.25s ease, bottom 0.25s ease;" onclick="event.stopPropagation()">
     <button class="cs-close" onclick="closeSavvlyCaseStudy()">&#x2715;</button>
 
-    <span class="cs-label">Case Study &mdash; 01 / 04</span>
+    <span class="cs-label">Case Study</span>
     <h1>Savvly</h1>
 
     <span class="cs-section-header">My Role</span>
-    <p>As the sole designer, I worked directly with the marketing and engineering leads across many workstreams, from user research and visual design to pitch decks and marketing assets. This case study focuses on two: redesigning the client dashboard and restructuring the landing page for narrative clarity.</p>
+    <p>I was the sole designer at Savvly. This case study covers a project I led: redesigning the client dashboard.</p>
 
     <span class="cs-section-header">The Problem</span>
-    <p>Savvly is a longevity benefit: a financial product that pools contributions and pays out structured cash at ages 80, 85, 90, and 95. The core promise is protection against outliving your savings. But the existing product experience was telling the wrong story.</p>
+    <p>Savvly is a longevity benefit: a financial product that pools contributions and pays out structured cash at ages 80, 85, 90, and 95. The promise is protection against outliving your savings. The existing experience told the wrong story.</p>
 
-    <div class="savvly-problem-grid" style="display:grid;grid-template-columns:1fr 2fr;gap:60px;align-items:stretch;margin-bottom:28px;">
-      <div style="display:flex;flex-direction:column;">
-        <img src="portfolio_media/savvly/savvly_old_estimator.png" alt="Savvly estimator before redesign" onclick="openImgLightbox(this.src)" style="width:100%;height:100%;object-fit:contain;object-position:top left;display:block;cursor:zoom-in;border-radius:6px;">
-        <div style="font-size:11px;color:var(--mid);margin-top:8px;letter-spacing:0.04em;flex-shrink:0;">Savvly estimator, before redesign — leads with return percentage, no narrative context</div>
-      </div>
-      <div>
-        <p style="margin-top:0;">The estimator led with projections: how much could you get, under which scenarios, compared to what. It framed Savvly as an investment product competing on returns. But the deeper issue was that most people didn't know longevity benefits exist or why they'd need one. The status quo wasn't even a competing product — there was no existing product at all.</p>
-        <div class="illus-row" style="display:flex;gap:16px;align-items:center;">
-          <p style="flex:1;min-width:0;margin:0;">User research confirmed this: thinking about retirement made people uncomfortable. Most had never named "outliving your savings" as a specific risk they needed to plan for. That was the key design signal: the experience couldn't open with a calculator.</p>
-          <img src="portfolio_media/savvly/savvly_uncomfortable.png" alt="Figure anxiously thinking about an hourglass" style="width:190px;flex-shrink:0;">
-        </div>
-        <p style="padding-left:16px;border-left:2px solid var(--border);font-style:italic;color:#555;margin-bottom:0;">Calculators are for people who've already decided to engage. The experience needed to meet people at the point of avoidance, make the problem feel real without triggering anxiety, and then present Savvly as the natural response.</p>
-      </div>
+    <!-- Pattern (a): stacked — the annotated screenshot is dense evidence, gets its own full-width space -->
+    <div class="cs-stack">
+      <figure class="cs-figure">
+        <img src="portfolio_media/savvly/savvly_old_estimator_marked.png" alt="Savvly estimator before redesign" onclick="openImgLightbox(this.src)" style="max-width:420px;margin:0 auto;">
+        <figcaption class="cs-figcaption">Savvly estimator, before redesign — leads with return percentage, no narrative context</figcaption>
+      </figure>
+      <p>The estimator led with projections: how much you could get, under which scenarios, compared to what. It framed Savvly as an investment competing on returns. But most people didn't even know longevity benefits existed. There was no competing product — there was no existing product at all.</p>
     </div>
-    <div class="illus-row" style="display:flex;gap:24px;align-items:center;">
-      <img src="portfolio_media/savvly/savvly_fire.png" alt="House on fire, illustrating the insurance analogy" style="width:226px;flex-shrink:0;">
-      <p style="flex:1;min-width:0;">An analogy that shaped the framing: nobody buys home insurance because it offers the best financial return — they buy it because of the specific fear that their house may burn down. The value is psychological before it's numerical. Savvly addresses the same emotional structure. The disaster isn't a house burning down; it's outliving your money. That reframes Savvly entirely: not an investment product competing on returns, but a risk management product offering protection against a specific, underacknowledged fear.</p>
+
+    <!-- Spot illustrations: hourglass + fire, side by side, each inline with its own paragraph -->
+    <div class="cs-spot-cols">
+      <div class="cs-spot-row">
+        <img class="cs-spot-illustration" src="portfolio_media/savvly/savvly_uncomfortable.png" alt="Figure anxiously thinking about an hourglass">
+        <p>User research confirmed it: retirement planning made people uncomfortable, and few had ever named "outliving your savings" as a specific risk. So the experience couldn't open with a calculator — calculators are for people who've already decided to engage.</p>
+      </div>
+      <div class="cs-spot-row">
+        <img class="cs-spot-illustration cs-spot-illustration--fire" src="portfolio_media/savvly/savvly_fire.png" alt="House on fire, illustrating the insurance analogy">
+        <p>The framing: nobody buys home insurance for the returns — they buy it because their house might burn down. The value is psychological before it's numerical. Savvly needed the same shift: from investment product to protection against a specific fear.</p>
+      </div>
     </div>
 
     <span class="cs-section-header">The Estimator Redesign</span>
-    <p>The estimator lives inside the employee dashboard — the view a client sees after onboarding, designed to help them understand their benefit, play with their numbers, and stay engaged with Savvly over time.</p>
-    <p>The redesign focused on fewer inputs, progressive disclosure, and a narrative arc that established the problem before introducing the solution. Rather than opening on a calculator, the new flow established longevity risk first — what it is and why traditional retirement planning doesn't address it — and then introduced Savvly as the response.</p>
-    <p><em>I proposed a fuller narrative experience to the team, but the scope was focused on the estimator itself, so that's where I concentrated the work.</em></p>
+    <p>The estimator lives in the employee dashboard, where clients explore their benefit after onboarding. The redesign cut inputs, added progressive disclosure, and restructured the flow to establish the risk before the solution: what longevity risk is, why typical retirement planning misses it, then Savvly as the answer.</p>
 
-    <div style="margin-bottom:28px;">
-      <div style="width:100%;border-radius:8px;overflow:hidden;" class="savvly-iframe-wrap savvly-estimator-wrap" data-src="portfolio_media/savvly/savvly_estimator_condensed.html" data-height="500" data-scroll="1"></div>
-      <div style="font-size:11px;color:var(--mid);margin-top:8px;letter-spacing:0.04em;">The redesigned estimator — simplified inputs, payout milestones as gift cards, shark-fin protection curve, and simple answers to frequently asked questions</div>
+    <div class="cs-embed-reveal" onclick="this.querySelector('iframe').src='portfolio_media/savvly/savvly_estimator_condensed.html'; this.querySelector('.cs-embed-overlay').remove(); this.style.cursor='default'; this.onclick=null; this.style.height='560px';">
+      <iframe src="portfolio_media/savvly/savvly_estimator_condensed.html" style="height:560px;"></iframe>
+      <div class="cs-embed-overlay"><span>Try it yourself</span></div>
     </div>
 
-    <p>Through user testing, I found that people are broadly skeptical of financial projections. What resonated was specificity about the downside: not "here's what you might get" but "here's what happens if you live to 95 and your savings run out." I changed the key visual to a shark-fin curve that shows how Savvly's payouts grow larger at exactly the ages when savings tend to run out.</p>
-    <p>The payout cards used a gift-box visual treatment — each age milestone presented as something you'd receive rather than a line on a graph, animating in sequence to reinforce the idea of payouts arriving over time rather than a single lump-sum projection.</p>
-
-    <span class="cs-section-header">Landing Page Restructure</span>
-    <p>The existing page led with product mechanics. I restructured it around the same storytelling arc: establish the emotional problem, introduce longevity risk with supporting statistics, then present Savvly as the solution with the estimator as the call to action.</p>
-    <p style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);margin-bottom:12px;">Design exploration, January–May 2026</p>
-
-    <div class="savvly-landing-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:8px;">
-      <div>
-        <div style="border-radius:8px;overflow:hidden;" class="savvly-iframe-wrap" data-src="portfolio_media/savvly/savvly_meghaiproblem.html" data-height="280" data-scroll="1" data-half="1"></div>
-        <div style="font-size:11px;color:var(--mid);margin-top:6px;letter-spacing:0.04em;">Introducing the problem statement first</div>
-      </div>
-      <div>
-        <div style="border-radius:8px;overflow:hidden;" class="savvly-iframe-wrap" data-src="portfolio_media/savvly/savvly_meghaisolution.html" data-height="280" data-scroll="1" data-half="1"></div>
-        <div style="font-size:11px;color:var(--mid);margin-top:6px;letter-spacing:0.04em;">Presenting Savvly as the solution</div>
-      </div>
-    </div>
+    <p>User testing showed people distrust financial projections. What landed was not "here's what you might get," but "here's what happens if you live to 95 and run out." I redrew the key visual as a shark-fin curve, which emphasized that payouts grow largest exactly when savings tend to run out.</p>
+    <p>Payout milestones became gift cards instead of graph points, arriving over time rather than one lump-sum projection.</p>
 
   </div>
 </div>
@@ -2082,14 +2318,12 @@ nav.visible {
   <div id="case-study-panel" onclick="event.stopPropagation()">
     <button class="cs-close" onclick="closeCaseStudy()">&#x2715;</button>
 
-    <span class="cs-label">Case Study &mdash; 02 / 04</span>
+    <span class="cs-label">Case Study</span>
     <h1>The Shed</h1>
 
-    <div class="cs-images">
-      <img src="portfolio_media/shed/shed.png" alt="The Shed screenshot" style="cursor:zoom-in;" onclick="openImgLightbox(this.src)">
-      <img src="portfolio_media/shed/shed2.png" alt="The Shed screenshot 2" style="cursor:zoom-in;" onclick="openImgLightbox(this.src)">
-    </div>
+    <video src="portfolio_media/shed/shed_overview.mp4" controls style="width:100%;border-radius:8px;display:block;margin-bottom:24px;"></video>
 
+    <!-- FLAG: "The Problem" intro paragraph below now overlaps with what the overview video shows/explains — consider trimming to 1-2 sentences. -->
     <span class="cs-section-header">The Problem</span>
     <p>A transcription is learning a recorded solo by ear, note by note. One of the foundational ways jazz musicians learn is by copying the way the greats played. The process requires slowing audio down, looping short phrases, and marking moments to return to.</p>
     <div class="illus-row" style="display:flex;gap:24px;align-items:center;">
@@ -2110,7 +2344,11 @@ nav.visible {
     <p>I then ran think-aloud sessions with five musicians on an early version of the tool, and sent them iterations as I built.</p>
 
     <span class="cs-section-header">Design Decisions</span>
-    <p><strong>Waveform over video:</strong> Watching a musician pull up an audio engineer tool was the clearest signal — musicians need to see the audio, not the video. I added an MP3 upload tab with a full waveform view for precise loop-point setting. For YouTube uploads, I kept the large video player because musicians are so used to that interface that removing it would feel foreign.</p>
+    <video src="portfolio_media/shed/shed_metronome.mp4" controls style="width:100%;border-radius:8px;display:block;margin-bottom:20px;"></video>
+    <div class="illus-row" style="display:flex;gap:24px;align-items:center;">
+      <p style="flex:1;min-width:0;"><strong>Waveform over video:</strong> Watching a musician pull up an audio engineer tool was the clearest signal — musicians need to see the audio, not the video. I added an MP3 upload tab with a full waveform view for precise loop-point setting. For YouTube uploads, I kept the large video player because musicians are so used to that interface that removing it would feel foreign.</p>
+      <video src="portfolio_media/shed/shed_waveform.mp4" autoplay muted loop playsinline controls style="width:340px;flex-shrink:0;border-radius:6px;display:block;"></video>
+    </div>
     <p><strong>Speed-relative seeking:</strong> At 0.5× speed, skipping 5 seconds forward feels like 10 real seconds of music, which felt too far. I made skip distance proportional to playback speed, so at half speed you move half as far.</p>
     <p><strong>Built-in metronome with BPM sync:</strong> Once I saw the app-switching happening, the fix was obvious. Tap or detect the tempo, and the metronome syncs to it. When you slow the playback down, the metronome slows with it. You can practice a phrase at full speed, drop it to half, and practice again without ever reentering the tempo.</p>
     <p><strong>Keyboard shortcuts:</strong> Think-aloud sessions made clear I needed more than YouTube's defaults. I added up/down arrows for speed and a key to drop a marker mid-phrase without breaking flow.</p>
@@ -2136,6 +2374,12 @@ nav.visible {
       <p style="flex:1;min-width:0;margin:0;">An unexpected use case emerged after launch: composition arrangers using the tool, working through a recording phrase by phrase to transcribe a piece before arranging it for a new ensemble!</p>
     </div>
 
+    <span class="cs-section-header">Impact</span>
+    <p>200+ musicians have used The Shed so far. A few responses since launch:</p>
+    <p style="padding-left:16px;border-left:2px solid var(--border);font-style:italic;color:#555;">"The looping feature is probably the most visually interactive system I've dealt with. I finished my Sonny Stitt 16th note line really fast — I'll use this for every 16th note Bird line."</p>
+    <p style="padding-left:16px;border-left:2px solid var(--border);font-style:italic;color:#555;">"Much easier than what I used to do — download a YouTube video, open it in Audacity."</p>
+    <p style="padding-left:16px;border-left:2px solid var(--border);font-style:italic;color:#555;">"Just played around with it tonight and really dig it! Got some handy features I've been looking for."</p>
+
     <a href="https://www.meghai.com/jazz" target="_blank" class="view-link" style="margin-top:32px;font-size:14px;">Try it out yourself</a>
 
   </div>
@@ -2143,10 +2387,10 @@ nav.visible {
 
 <!-- CASE STUDY OVERLAY: EMPOWERHEALTH -->
 <div id="empower-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);cursor:pointer;" onclick="closeEmpowerCaseStudy(event)">
-  <div id="empower-panel" style="position:absolute;top:0;right:0;width:75vw;height:100vh;background:var(--white);overflow-y:auto;cursor:default;padding:64px 56px 80px;" onclick="event.stopPropagation()">
+  <div id="empower-panel" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:75vw;max-height:92vh;background:var(--white);overflow-y:auto;cursor:default;padding:64px 56px 80px;border-radius:12px 12px 0 0;transition:max-height 0.25s ease, border-radius 0.25s ease, top 0.25s ease, bottom 0.25s ease;" onclick="event.stopPropagation()">
     <button class="cs-close" onclick="closeEmpowerCaseStudy()">&#x2715;</button>
 
-    <span class="cs-label">Case Study &mdash; 03 / 04</span>
+    <span class="cs-label">Case Study</span>
     <h1>EmpowerHealth</h1>
 
     <div class="cs-collaborators">
@@ -2166,47 +2410,46 @@ nav.visible {
     <span class="cs-section-header">The Problem</span>
     <div class="illus-row" style="display:flex;gap:24px;align-items:center;">
       <div style="flex:1;min-width:0;">
-        <p>Chronic illness is invisible, non-linear, and hard to explain in fifteen minutes. Yet fifteen minutes is often all a patient gets. By the time someone with a chronic condition sits down with a doctor, they're carrying years of context — misdiagnoses, symptoms that fluctuate, mental and physical pain that are deeply entangled — and almost none of it makes it into the room. Doctors either don't have access to the history, don't have time to absorb it, or don't believe it.</p>
-        <p>The result is a system where patients feel unseen, and providers aren't able to do better.</p>
+        <p>Chronic illness is invisible, non-linear, and hard to explain in fifteen minutes, which is often all a patient gets. By the time someone with a chronic condition sits down with a doctor, they're carrying years of context: misdiagnoses, fluctuating symptoms, physical and mental pain that are deeply entangled. And yet almost none of it makes it into the room. Doctors don't have access to the history, don't have time to absorb it, or don't believe it.</p>
+        <p>The result: patients feel unseen, and providers can't do better.</p>
       </div>
       <img src="portfolio_media/empowerhealth/empower_problem.png" alt="Stack of medical records against a 15 minute clock" style="width:203px;flex-shrink:0;">
     </div>
 
     <span class="cs-section-header">Research</span>
-    <p>We conducted several interviews with users living with chronic illness and with providers. The users we spoke with had between them: years of misdiagnosis, $17,000 paid out of pocket, 50+ specialist appointments for a single condition, and a job lost mid-treatment.</p>
-    <div class="empower-interview-row" style="display:flex;gap:6px;align-items:flex-start;margin-bottom:20px;height:clamp(140px, 18vw, 220px);">
+    <p>We interviewed users with chronic illness, and providers. Between them: years of misdiagnosis, $17,000 out of pocket, 50+ specialist appointments for one condition, a job lost mid-treatment.</p>
+    <div class="empower-interview-row" style="display:flex;gap:6px;align-items:flex-start;margin-bottom:32px;height:clamp(140px, 18vw, 220px);">
       <img src="portfolio_media/empowerhealth/interview.png" alt="Interview" onclick="openImgLightbox(this.src)" style="height:100%;width:auto;cursor:zoom-in;display:block;">
       <img src="portfolio_media/empowerhealth/interview2.png" alt="Interview 2" onclick="openImgLightbox(this.src)" style="height:100%;width:auto;cursor:zoom-in;display:block;">
       <img src="portfolio_media/empowerhealth/interview3.png" alt="Interview 3" onclick="openImgLightbox(this.src)" style="height:100%;width:auto;cursor:zoom-in;display:block;">
     </div>
     <div>
         <p style="margin-top:0;">
-        <p><strong>Being dismissed or not believed:</strong> Every patient named this in some form. The clearest example: a patient had been living with widespread chronic pain for years, and doctors privately believed he had fibromyalgia — a condition where the nervous system amplifies pain signals throughout the body. However, they refused to put it on his record, saying that the diagnosis would follow him, causing future providers to dismiss any new symptom as "just your fibromyalgia." Without it, he couldn't access treatment. With it, he'd lose credibility. The doctors were essentially protecting their own system's dysfunction at the expense of his care.</p>
+        <p><strong>Being dismissed or not believed:</strong> every patient named this. One had lived with chronic pain for years; doctors suspected fibromyalgia but refused to record it, fearing the label would make future providers dismiss any new symptom as "just your fibromyalgia." Without the diagnosis, he couldn't get treatment. With it, he'd lose credibility. The system was protecting itself at his expense.</p>
         <div class="illus-row" style="display:flex;gap:16px;align-items:center;">
           <img src="portfolio_media/empowerhealth/empower_reexplain.png" alt="Figure repeating the same explanation in speech bubbles" style="width:151px;flex-shrink:0;">
           <div style="flex:1;min-width:0;">
-            <p style="margin:0 0 8px 0;"><strong>The proof burden:</strong> Invisible illness means constantly justifying pain to doctors, employers, family, and friends. One patient had scratched their arm during an appointment just to show a doctor they were really suffering.</p>
-            <p style="margin:0;"><strong>Exhaustion from re-explaining:</strong> Starting over at every new appointment, with every new specialist. No record of what came before. "I want a central place where everything is in one place for all doctors, irrespective of the hospital."</p>
+            <p style="margin:0 0 8px 0;"><strong>The proof burden.</strong> Invisible illness means constantly justifying pain — to doctors, employers, family, friends. One patient scratched their own arm mid-appointment just to be believed.</p>
+            <p style="margin:0;"><strong>Exhaustion from re-explaining.</strong> Starting over at every new appointment, every new specialist, with no record of what came before. "I want a central place where everything is in one place for all doctors, irrespective of the hospital."</p>
           </div>
         </div>
         <div class="illus-row" style="display:flex;gap:16px;align-items:center;">
           <div style="flex:1;min-width:0;">
-            <p style="margin:0 0 8px 0;"><strong>The mind-body connection, discovered alone:</strong> Almost every patient had figured out on their own that stress triggered flares, that emotional and physical pain were entangled. Almost none had a doctor who named this to them. Dr. Bennett reframed it clearly: stress is a bodily stressor that literally fires pain receptors. The system wasn't tracking it.</p>
-            <p style="margin:0;"><strong>Isolation:</strong> One patient said they sometimes made up an excuse rather than explain their illness. Another said "I never felt sick enough" — real symptoms, but excluded from the chronic illness community because their condition wasn't visibly debilitating enough.</p>
+            <p style="margin:0 0 8px 0;"><strong>The mind-body connection, discovered alone.</strong> Nearly every patient had privately figured out that stress triggered flares, that emotional and physical pain were entangled. Almost none had a doctor name it. Dr. Bennett put it plainly: stress is a bodily stressor that literally fires pain receptors. The system wasn't tracking it.</p>
+            <p style="margin:0;"><strong>Isolation.</strong> One patient said they sometimes made up excuses rather than explain their illness. Another said "I never felt sick enough" — real symptoms, but excluded from the chronic illness community because their condition wasn't visibly debilitating enough.</p>
           </div>
           <img src="portfolio_media/empowerhealth/empower_mind-body.png" alt="Brain and heart joined, illustrating the mind-body connection" style="width:147px;flex-shrink:0;">
         </div>
     </div>
-    <p>The provider side was just as constrained. Dr. Bennett described watching patients' lives get "smaller and smaller and smaller, and the focus on the pain get larger and larger" — a compounding spiral he wanted to interrupt but had no infrastructure to address in a standard appointment.</p>
+    <p>Providers were just as constrained. Dr. Bennett described watching patients' lives get "smaller and smaller and smaller, and the focus on the pain get larger and larger" — a spiral he wanted to interrupt but had no infrastructure to address in a standard appointment.</p>
 
     <span class="cs-section-header">Defining the Problem</span>
-    <p>How might we facilitate provider-patient relationships toward a supportive environment where those with chronic illness feel understood and valued?</p>
-    <p>A key tension we kept returning to: patients don't just want their data tracked; they want to own their narrative going into an appointment. Feeling seen by a doctor is different from feeling surveilled by an app. The design needed to hold that distinction.</p>
+    <p>How might we help patients and providers build a relationship where chronic illness is understood, not just managed?</p>
 
     <span class="cs-section-header">The Design</span>
     <p>We designed two linked portals: a patient-facing mobile app and a provider dashboard.</p>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;margin-bottom:16px;">
+    <div class="empower-design-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;margin-bottom:16px;">
       <div>
         <div style="display:flex;gap:0;margin-bottom:8px;">
           <img src="portfolio_media/empowerhealth/symptomscreen.png" alt="Symptom screen" onclick="openImgLightbox(this.src)" style="width:50%;display:block;cursor:zoom-in;">
@@ -2221,7 +2464,7 @@ nav.visible {
     </div>
 
     <span class="cs-section-header">What We'd Do Differently</span>
-    <p>This was primarily a research project. The design we produced was early-stage and untested with real patients or providers. The research is the strongest part of the work — the product is a first sketch of where that research pointed. A real next step would be usability testing, particularly around the diary card interaction and how doctors actually want to receive and scan summarized data under time pressure.</p>
+    <p>The design was a first sketch, early-stage and untested with real patients or providers. Next steps would be usability testing, especially on the diary card interaction and how doctors want to scan summarized data under time pressure.</p>
     <div class="illus-row" style="display:flex;gap:24px;align-items:center;">
       <p style="flex:1;min-width:0;margin:0;">The fibromyalgia catch-22 alone points to a harder question the design doesn't yet answer: how do you build trust into a system when the system itself has already broken it?</p>
       <img src="portfolio_media/empowerhealth/empower_catch22.png" alt="Scale balancing a medical record against medication" style="width:233px;flex-shrink:0;">
@@ -2232,10 +2475,10 @@ nav.visible {
 
 <!-- CASE STUDY OVERLAY: PATHRISE -->
 <div id="pathrise-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);cursor:pointer;" onclick="closePathriseCaseStudy(event)">
-  <div id="pathrise-panel" style="position:absolute;top:0;right:0;width:75vw;height:100vh;background:var(--white);overflow-y:auto;cursor:default;padding:64px 56px 80px;" onclick="event.stopPropagation()">
+  <div id="pathrise-panel" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:75vw;max-height:92vh;background:var(--white);overflow-y:auto;cursor:default;padding:64px 56px 80px;border-radius:12px 12px 0 0;transition:max-height 0.25s ease, border-radius 0.25s ease, top 0.25s ease, bottom 0.25s ease;" onclick="event.stopPropagation()">
     <button class="cs-close" onclick="closePathriseCaseStudy()">&#x2715;</button>
 
-    <span class="cs-label">Case Study &mdash; 04 / 04</span>
+    <span class="cs-label">Case Study</span>
     <h1>Pathrise Education</h1>
 
     <span class="cs-section-header">Overview</span>
@@ -2243,10 +2486,10 @@ nav.visible {
 
     <span class="cs-section-header">The Problem</span>
     <div class="illus-row" style="display:flex;gap:24px;align-items:center;">
-      <p style="flex:1;min-width:0;">After sitting in on consultant interviews, I noticed a recurring gap: students arrived at writing sessions with no organized material. They were managing essays manually across notes, docs, and spreadsheets, reusing content across schools without a system, and tracking deadlines separately from their writing progress. This forced consultants to spend time on logistics instead of guidance.</p>
+      <p style="flex:1;min-width:0;">After sitting in on consultant interviews, I noticed a recurring gap: students showed up to writing sessions with no organized material. They managed essays across notes, docs, and spreadsheets, reused content across schools with no system, and tracked deadlines separately from writing progress. Consultants ended up doing logistics instead of guidance.</p>
       <img src="portfolio_media/pathrise/pathrise_gap.png" alt="Figure surrounded by scattered notes, docs, and a calendar" style="width:293px;flex-shrink:0;">
     </div>
-    <p>To find the underlying structure, I mapped my own college application materials from senior year — stories, brainstorming docs, spreadsheets — until a repeatable phase-by-phase formula emerged. I proposed and designed a student-facing brainstorm portal independently based on this.</p>
+    <p>To find the underlying structure, I mapped my own senior-year application materials — stories, brainstorming docs, spreadsheets — until a repeatable, phase-by-phase formula emerged. From that, I proposed and designed a student-facing brainstorm portal.</p>
 
     <div class="cs-img-row cols-2" style="margin-bottom:8px;">
       <img src="portfolio_media/pathrise/brainstorm.png" alt="Brainstorm" onclick="openImgLightbox(this.src)" style="cursor:zoom-in;width:100%;display:block;">
@@ -2254,10 +2497,11 @@ nav.visible {
     </div>
 
     <span class="cs-section-header">The Portal</span>
-    <p>The portal walks students through five phases: building a story bank, grouping experiences into themes, matching themes to essay types, drafting outlines, and generating a college-specific timeline. Instead of managing ten separate essays for ten schools, students build one narrative system that maps across all their applications.</p>
+    <!-- FLAG: this paragraph now largely restates what the brainstorming video below demonstrates — consider trimming. -->
+    <p>The portal walks students through five phases: building a story bank, grouping experiences into themes, matching themes to essay types, drafting outlines, and generating a college-specific timeline. Instead of managing ten separate essays for ten schools, students build one narrative system that maps across every application.</p>
 
     <div class="pathrise-video-wrap" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin-bottom:20px;">
-      <iframe src="https://drive.google.com/file/d/1Mj7LBMW1OLlAxz1MiZXRv9l0QhjLabZk/preview" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allow="autoplay" allowfullscreen></iframe>
+      <video src="portfolio_media/pathrise/pathrise_essay_brainstorming.mp4" controls style="position:absolute;top:0;left:0;width:100%;height:100%;"></video>
     </div>
 
     <span class="cs-section-header">Reception</span>
@@ -2382,73 +2626,15 @@ function openImgLightbox(src) {
 }
 
 /* ── Case study overlay ── */
-function buildSavvlyIframes() {
-  var panel = document.getElementById('savvly-panel');
-  var panelPad = window.innerWidth <= 600 ? 64 : 112;
-  var panelW = panel ? panel.clientWidth - panelPad : 600;
-  document.querySelectorAll('#savvly-panel .savvly-iframe-wrap').forEach(function(wrap) {
-    if (wrap.dataset.built) return;
-    wrap.dataset.built = '1';
-    var src = wrap.dataset.src;
-    var displayH = parseInt(wrap.dataset.height, 10);
-    var scrollable = wrap.dataset.scroll === '1';
-    var srcW = 1200;
-    // Check if inside a 2-col grid (cols-2 parent or grid parent with two children)
-    var isHalf = wrap.dataset.half === '1' && window.innerWidth > 600;
-    var containerW = isHalf ? Math.floor((panelW - 16) / 2) : panelW;
-    containerW = containerW || 600;
-    var scale = containerW / srcW;
-    var iframe = document.createElement('iframe');
-    iframe.src = src;
-    wrap.style.width = containerW + 'px';
-    if (scrollable) {
-      // Fixed display height, iframe scales down in width, scrolls internally
-      var iframeH = Math.round(displayH / scale);
-      wrap.style.height = displayH + 'px';
-      iframe.scrolling = 'yes';
-      iframe.style.cssText = [
-        'width:' + srcW + 'px',
-        'height:' + iframeH + 'px',
-        'border:none',
-        'display:block',
-        'transform:scale(' + scale + ')',
-        'transform-origin:top left',
-        'pointer-events:auto'
-      ].join(';');
-    } else {
-      var iframeH2 = parseInt(wrap.dataset.height, 10);
-      var displayH2 = Math.round(iframeH2 * scale);
-      wrap.style.height = displayH2 + 'px';
-      iframe.scrolling = 'no';
-      iframe.style.cssText = [
-        'width:' + srcW + 'px',
-        'height:' + iframeH2 + 'px',
-        'border:none',
-        'display:block',
-        'transform:scale(' + scale + ')',
-        'transform-origin:top left',
-        'pointer-events:auto'
-      ].join(';');
-    }
-    wrap.appendChild(iframe);
-  });
-}
-
 function openSavvlyCaseStudy() {
   document.getElementById('savvly-overlay').style.display = 'block';
   document.body.style.overflow = 'hidden';
-  setTimeout(buildSavvlyIframes, 50);
   history.pushState(null, '', '#savvly');
 }
 function closeSavvlyCaseStudy(e) {
   if (e && e.target !== document.getElementById('savvly-overlay')) return;
   document.getElementById('savvly-overlay').style.display = 'none';
   document.body.style.overflow = '';
-  document.querySelectorAll('#savvly-panel .savvly-iframe-wrap').forEach(function(wrap) {
-    wrap.dataset.built = '';
-    var iframe = wrap.querySelector('iframe');
-    if (iframe) { wrap.removeChild(iframe); }
-  });
   if (location.hash === '#savvly') history.pushState(null, '', ' ');
 }
 
@@ -2487,6 +2673,27 @@ function closeCaseStudy(e) {
   document.body.style.overflow = '';
   if (location.hash === '#shed') history.pushState(null, '', ' ');
 }
+
+// Case study panels: expand to fill the screen once the user scrolls
+(function() {
+  ['case-study-panel', 'savvly-panel', 'empower-panel', 'pathrise-panel'].forEach(function(id) {
+    var panel = document.getElementById(id);
+    if (!panel) return;
+    panel.addEventListener('scroll', function() {
+      if (panel.scrollTop > 0) {
+        panel.style.top = '0';
+        panel.style.bottom = '0';
+        panel.style.maxHeight = '100vh';
+        panel.style.borderRadius = '0';
+      } else {
+        panel.style.top = '';
+        panel.style.bottom = '0';
+        panel.style.maxHeight = '92vh';
+        panel.style.borderRadius = '12px 12px 0 0';
+      }
+    }, { passive: true });
+  });
+})();
 
 // Open case study from URL hash on load or back/forward navigation
 function openFromHash(hash) {

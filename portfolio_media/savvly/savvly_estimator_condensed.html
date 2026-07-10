@@ -24,6 +24,11 @@
       justify-content: center;
     }
 
+    #tab-estimator {
+      width: 860px;
+      max-width: 100%;
+    }
+
     /* ── TWO-COLUMN LAYOUT ── */
     .main-layout {
       display: grid;
@@ -245,6 +250,7 @@
       border: 1px solid #e5e7eb;
       border-radius: 12px;
       overflow: hidden;
+      margin-top: 2rem;
     }
 
     .qa-item {
@@ -258,14 +264,32 @@
       font-size: 14px;
       font-weight: 600;
       color: #111;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
     }
+
+    .qa-q .qa-icon {
+      flex-shrink: 0;
+      font-size: 16px;
+      font-weight: 400;
+      color: #999;
+      transition: transform 0.2s ease;
+    }
+
+    .qa-item.open .qa-q .qa-icon { transform: rotate(45deg); }
 
     .qa-a {
       font-size: 13px;
       color: #555;
       line-height: 1.7;
       margin-top: 0.5rem;
+      display: none;
     }
+
+    .qa-item.open .qa-a { display: block; }
 
     /* ── WARNINGS / ASSUMPTIONS ── */
     .assumptions {
@@ -371,23 +395,24 @@
           </div>
         </div>
 
-        <div class="qa-section">
-          <div class="qa-item">
-            <div class="qa-q">How is Savvly able to provide more income later in life than traditional investing?</div>
-            <div class="qa-a">Savvly combines long-term investing with longevity pooling. While markets like the S&P 500 rely only on investment returns, Savvly also reallocates shared growth from the longevity pool to people who live longer. This additional source of value can result in significantly higher income later in life, without requiring individuals to plan alone for a very long lifespan.</div>
-          </div>
-          <div class="qa-item">
-            <div class="qa-q">What happens when I die?</div>
-            <div class="qa-a">Unlike traditional pensions, Savvly returns all or most of your original contributions to your family or estate. Use the age slider to see the value at each age, before your original contributions are returned.</div>
-          </div>
-          <div class="qa-item">
-            <div class="qa-q">What happens if I want to leave Savvly?</div>
-            <div class="qa-a">If you leave Savvly, all or most of your original contributions remain yours. You keep the value of what you put in, while any shared longevity growth stays in the pool. Use the age slider to see how much you would have at the point of leaving, before your original contributions are returned.</div>
-          </div>
-        </div>
-
       </div>
     </div>
+
+    <div class="qa-section">
+      <div class="qa-item open">
+        <div class="qa-q" onclick="this.parentElement.classList.toggle('open')">How is Savvly able to provide more income later in life than traditional investing? <span class="qa-icon">+</span></div>
+        <div class="qa-a">Savvly combines long-term investing with longevity pooling. While markets like the S&P 500 rely only on investment returns, Savvly also reallocates shared growth from the longevity pool to people who live longer. This additional source of value can result in significantly higher income later in life, without requiring individuals to plan alone for a very long lifespan.</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-q" onclick="this.parentElement.classList.toggle('open')">What happens when I die? <span class="qa-icon">+</span></div>
+        <div class="qa-a">Unlike traditional pensions, Savvly returns all or most of your original contributions to your family or estate. Use the age slider to see the value at each age, before your original contributions are returned.</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-q" onclick="this.parentElement.classList.toggle('open')">What happens if I want to leave Savvly? <span class="qa-icon">+</span></div>
+        <div class="qa-a">If you leave Savvly, all or most of your original contributions remain yours. You keep the value of what you put in, while any shared longevity growth stays in the pool. Use the age slider to see how much you would have at the point of leaving, before your original contributions are returned.</div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -428,8 +453,6 @@
     const baseMonthly = 800; // baseline employer contributions
     const annualContribK = (baseMonthly + personal) * 12 / 1000;
     const accumReturn = 0.07;
-    const sv = savvlyPayoutVals;
-    const savvlyPayouts = { 80: sv[0], 85: sv[1], 90: sv[2], 95: sv[3] };
 
     const allLabels = [];
     const mainCurve = [];
@@ -443,6 +466,13 @@
       peakK = Math.round(balK);
       balK = balK * (1 + accumReturn) + annualContribK;
     }
+
+    // Payouts scale with the projected balance at retirement relative to
+    // the baseline scenario (curAge 40, retAge 68, curSavings 135K, personal 0)
+    const basePeakK = basePeakBalance();
+    const scale = basePeakK > 0 ? peakK / basePeakK : 1;
+    const sv = savvlyPayoutVals.map(v => Math.round(v * scale));
+    const savvlyPayouts = { 80: sv[0], 85: sv[1], 90: sv[2], 95: sv[3] };
 
     // Depletion: retAge+1 → 100
     // ageVals[age] = balance BEFORE payout is added (bottom of spike)
@@ -483,30 +513,37 @@
     // Fill accumulation phase with nulls so it only draws from peak onward
     const noSavvlyData = new Array(allLabels.indexOf(String(retAge + 1))).fill(null).concat(noSavvlyCurve);
 
-    return { allLabels, mainCurve, payoutAges, payoutBottoms, payoutTops, noSavvlyData, noSavvlyRunsOutAge };
+    return { allLabels, mainCurve, payoutAges, payoutBottoms, payoutTops, noSavvlyData, noSavvlyRunsOutAge, scenarioVals: sv };
+  }
+
+  // Peak balance at retirement for the baseline scenario the payout
+  // constants (savvlyPayoutVals) were calibrated against.
+  function basePeakBalance() {
+    const baseCurAge = 40, baseRetAge = 68, baseCurSavings = 135000, baseAccumReturn = 0.07;
+    const baseAnnualContribK = 800 * 12 / 1000;
+    let balK = baseCurSavings / 1000;
+    let peakK = 0;
+    for (let age = baseCurAge; age <= baseRetAge; age++) {
+      peakK = Math.round(balK);
+      balK = balK * (1 + baseAccumReturn) + baseAnnualContribK;
+    }
+    return peakK;
   }
 
   function updateEstimator() {
-    const personal  = parseInt(document.getElementById('e-personal').value) || 0;
     const lifestyleVal = parseInt(document.getElementById('lifestyle-slider').value);
     const lifestyleAmt = Math.round(interpLifestyle(lifestyleAmounts, lifestyleVal) / 100) * 100;
 
     document.getElementById('lifestyle-value').textContent = '$' + lifestyleAmt.toLocaleString() + '/mo';
 
-    const basePayouts = savvlyPayoutVals;
-    const boost = personal > 0 ? Math.round((personal / 800) * 0.15 * (basePayouts[0] + basePayouts[1] + basePayouts[2] + basePayouts[3])) : 0;
-    const totalBase = basePayouts[0] + basePayouts[1] + basePayouts[2] + basePayouts[3];
-    const totalBoosted = totalBase + boost;
-    const p = basePayouts.map(v => v + Math.round(boost * v / totalBase));
+    // Always build data so the warning check runs even before the chart is drawn
+    const { allLabels, mainCurve, payoutAges, payoutBottoms, payoutTops, noSavvlyData, noSavvlyRunsOutAge, scenarioVals: p } = buildEstimatorData();
 
     document.getElementById('e-c80').textContent  = fmtK(p[0]);
     document.getElementById('e-c85').textContent  = fmtK(p[1]);
     document.getElementById('e-c90').textContent  = fmtK(p[2]);
     document.getElementById('e-c95').textContent  = fmtK(p[3]);
-    document.getElementById('e-ctotal').textContent = fmtK(totalBoosted);
-
-    // Always build data so the warning check runs even before the chart is drawn
-    const { allLabels, mainCurve, payoutAges, payoutBottoms, payoutTops, noSavvlyData, noSavvlyRunsOutAge } = buildEstimatorData();
+    document.getElementById('e-ctotal').textContent = fmtK(p[0] + p[1] + p[2] + p[3]);
 
     // Warning: check if balance dips near zero between payout ages
     const retAgeVal = parseInt(document.getElementById('e-retage').value) || 68;
@@ -531,7 +568,7 @@
       estimatorChart.config._payoutAges         = payoutAges;
       estimatorChart.config._payoutBottoms      = payoutBottoms;
       estimatorChart.config._payoutTops         = payoutTops;
-      estimatorChart.config._scenarioVals       = savvlyPayoutVals;
+      estimatorChart.config._scenarioVals       = p;
       estimatorChart.config._noSavvlyRunsOutAge = noSavvlyRunsOutAge;
       const dataMax = Math.max(...mainCurve.filter(v => v !== null), ...payoutTops);
       estimatorChart.options.scales.y.max = Math.ceil(dataMax * 1.15 / 100) * 100;
@@ -541,7 +578,7 @@
 
   function drawEstimatorChart() {
     if (estimatorChart) return;
-    const { allLabels, mainCurve, payoutAges, payoutBottoms, payoutTops, noSavvlyData, noSavvlyRunsOutAge } = buildEstimatorData();
+    const { allLabels, mainCurve, payoutAges, payoutBottoms, payoutTops, noSavvlyData, noSavvlyRunsOutAge, scenarioVals } = buildEstimatorData();
 
     const spikePlugin = {
       id: 'spikeLines',
@@ -585,7 +622,7 @@
       _payoutAges:         payoutAges,
       _payoutBottoms:      payoutBottoms,
       _payoutTops:         payoutTops,
-      _scenarioVals:       savvlyPayoutVals,
+      _scenarioVals:       scenarioVals,
       _noSavvlyRunsOutAge: noSavvlyRunsOutAge,
       plugins: [spikePlugin],
       data: {
@@ -653,7 +690,7 @@
     estimatorChart.config._payoutAges         = payoutAges;
     estimatorChart.config._payoutBottoms      = payoutBottoms;
     estimatorChart.config._payoutTops         = payoutTops;
-    estimatorChart.config._scenarioVals       = savvlyPayoutVals;
+    estimatorChart.config._scenarioVals       = scenarioVals;
     estimatorChart.config._noSavvlyRunsOutAge = noSavvlyRunsOutAge;
   }
 
