@@ -1904,23 +1904,24 @@ function closeCaseStudy(e) {
   if (location.hash === '#shed') history.pushState(null, '', ' ');
 }
 
-// Case study panels: expand to fill the screen once the user scrolls
+// Case study panels: the top gap and rounded corners ease away
+// continuously as the user scrolls, tied directly to scrollTop
+// instead of snapping at a threshold.
 (function() {
+  var GAP = 60;
   ['case-study-panel', 'savvly-panel', 'empower-panel', 'pathrise-panel'].forEach(function(id) {
     var panel = document.getElementById(id);
     if (!panel) return;
+    panel.style.top = GAP + 'px';
+    panel.style.bottom = '0';
+    panel.style.maxHeight = 'calc(100vh - ' + GAP + 'px)';
+    panel.style.transition = 'none';
     panel.addEventListener('scroll', function() {
-      if (panel.scrollTop > 0) {
-        panel.style.top = '0';
-        panel.style.bottom = '0';
-        panel.style.maxHeight = '100vh';
-        panel.style.borderRadius = '0';
-      } else {
-        panel.style.top = '';
-        panel.style.bottom = '0';
-        panel.style.maxHeight = '92vh';
-        panel.style.borderRadius = '12px 12px 0 0';
-      }
+      var t = Math.max(0, Math.min(1, panel.scrollTop / GAP));
+      var gap = GAP * (1 - t);
+      panel.style.top = gap + 'px';
+      panel.style.maxHeight = 'calc(100vh - ' + gap + 'px)';
+      panel.style.borderRadius = (12 * (1 - t)) + 'px ' + (12 * (1 - t)) + 'px 0 0';
     }, { passive: true });
   });
 })();
