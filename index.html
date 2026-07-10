@@ -1320,7 +1320,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
   <div class="freelance-grid">
 
-    <div class="freelance-item" onclick="toggleFreelance(this)">
+    <div class="freelance-item" id="flint" onclick="toggleFreelance(this)">
       <div class="fi-preview fi-preview--icon">
         <img src="portfolio_media/Flint/icon_transparent_padding.png" alt="Flint">
         <div class="fi-hover-label">
@@ -1354,7 +1354,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
       </div>
     </div>
 
-    <div class="freelance-item" onclick="toggleFreelance(this)">
+    <div class="freelance-item" id="aipeiron" onclick="toggleFreelance(this)">
       <div class="fi-preview fi-preview--icon">
         <img src="portfolio_media/Aipeiron/Aipeiron.png" alt="Aipeiron">
         <div class="fi-hover-label">
@@ -1378,7 +1378,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
       </div>
     </div>
 
-    <div class="freelance-item" onclick="toggleFreelance(this)">
+    <div class="freelance-item" id="mediboard" onclick="toggleFreelance(this)">
       <div class="fi-preview fi-preview--icon">
         <img src="portfolio_media/Mediboard/icon_nopad.png" alt="Mediboard">
         <div class="fi-hover-label">
@@ -1408,7 +1408,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
       </div>
     </div>
 
-    <div class="freelance-item" onclick="toggleFreelance(this)">
+    <div class="freelance-item" id="mirage" onclick="toggleFreelance(this)">
       <div class="fi-preview fi-preview--icon">
         <img src="portfolio_media/Mirage/mirageml_logo.png" alt="Mirage">
         <div class="fi-hover-label">
@@ -1432,7 +1432,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
       </div>
     </div>
 
-    <div class="freelance-item" onclick="toggleFreelance(this)">
+    <div class="freelance-item" id="knockknock" onclick="toggleFreelance(this)">
       <div class="fi-preview fi-preview--icon">
         <img src="portfolio_media/KnockKnock/app.png" alt="Knockknock">
         <div class="fi-hover-label">
@@ -1931,6 +1931,16 @@ function openFromHash(hash) {
   else if (hash === '#shed') openCaseStudy();
   else if (hash === '#empowerhealth') openEmpowerCaseStudy();
   else if (hash === '#pathrise') openPathriseCaseStudy();
+  else {
+    var freelanceIds = ['flint', 'aipeiron', 'mediboard', 'mirage', 'knockknock'];
+    if (freelanceIds.indexOf(hash.slice(1)) !== -1) {
+      var item = document.getElementById(hash.slice(1));
+      if (item) {
+        toggleFreelance(item);
+        item.scrollIntoView({ block: 'center' });
+      }
+    }
+  }
 }
 document.addEventListener('DOMContentLoaded', function() {
   if (location.hash) openFromHash(location.hash);
@@ -1984,6 +1994,9 @@ function toggleFreelance(item) {
       document.body.style.overflow = 'hidden';
     }
     item.classList.add('open');
+    if (item.id) history.pushState(null, '', '#' + item.id);
+  } else if (location.hash === '#' + item.id) {
+    history.pushState(null, '', ' ');
   }
 }
 
@@ -1995,6 +2008,9 @@ function closeFreelance(e, btn) {
   item.style.gridRow = '';
   if (window.innerWidth <= 600) {
     document.body.style.overflow = '';
+  }
+  if (item.id && location.hash === '#' + item.id) {
+    history.pushState(null, '', ' ');
   }
 }
 
