@@ -32,9 +32,9 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--sans);
-  background: var(--white);
-  color: var(--black);
-  font-size: 14px;
+  background: #0e0e0e;
+  color: #f0ede8;
+  font-size: 15.5px;
   line-height: 1.7;
   overflow-x: hidden;
   cursor: none;
@@ -59,8 +59,8 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   left: 0;
   width: 14px;
   height: 14px;
-  margin-left: -7px;
-  margin-top: -7px;
+  margin-left: -7.5px;
+  margin-top: -7.5px;
   border-radius: 50%;
   background: transparent;
   backdrop-filter: invert(1) grayscale(1);
@@ -104,17 +104,23 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 }
 
 #cover-spacer {
-  height: 100vh;
+  height: calc(100vh - 140px);
   position: relative;
   z-index: 1;
   pointer-events: none;
 }
 
 
-#projects-outer, #projects, #freelance, footer, section:not(#cover) {
+#freelance, footer, section:not(#cover) {
   position: relative;
   z-index: 1;
-  background: var(--white);
+  background: #0e0e0e;
+}
+
+#projects-outer, #projects {
+  position: relative;
+  z-index: 1;
+  background: transparent;
 }
 
 #cover .overlay {
@@ -129,63 +135,72 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   );
 }
 
-#cover .corner {
+#projects-outer .fade-to-black {
   position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: #0e0e0e;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#cover .masthead {
+  position: absolute;
+  z-index: 2;
+  left: 70.5px;
+  bottom: 66px;
+  max-width: 640px;
+  color: var(--white);
+}
+
+#cover .masthead h1 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(52px, 8vw, 104px);
+  line-height: 1.02;
+  margin: 0 0 14px;
+  letter-spacing: -0.01em;
+}
+
+#cover .masthead .masthead-role {
+  font-family: var(--serif);
+  font-size: 18.5px;
+  letter-spacing: normal;
+  line-height: 1.7;
+  opacity: 0.8;
+  margin: 0;
+}
+
+#cover .masthead-contact {
+  position: absolute;
+  z-index: 2;
+  top: 48.5px;
+  right: 70.5px;
   color: var(--white);
   font-family: var(--sans);
-  z-index: 2;
-}
-
-#cover .corner--tl {
-  top: 44px; left: 64px;
-  display: block;
-  font-size: 15px;
-  letter-spacing: 0.06em;
-  line-height: 2;
-  opacity: 0.8;
-  color: var(--white);
-}
-
-#cover .corner--tr {
-  top: 44px; right: 64px;
-  font-size: 15px;
+  font-size: 16.5px;
   letter-spacing: 0.08em;
   text-align: right;
   line-height: 2;
   opacity: 0.8;
 }
 
-#cover .corner--bl {
-  bottom: 48px; left: 64px;
-  font-size: 15px;
-  letter-spacing: 0.08em;
-  line-height: 2;
-  opacity: 0.7;
-}
-
-#cover .corner--br {
-  bottom: 48px; right: 64px;
-  font-size: 15px;
-  letter-spacing: 0.06em;
-  text-align: right;
-  line-height: 2;
-  opacity: 0.7;
-}
-
-#cover .corner a {
+#cover .masthead-contact a,
+#cover .masthead a {
   color: inherit;
   text-decoration: none;
   border-bottom: 1px solid rgba(255,255,255,0.35);
   padding-bottom: 1px;
   transition: border-color 0.2s;
 }
-#cover .corner a:hover { border-color: rgba(255,255,255,0.9); }
+#cover .masthead-contact a:hover,
+#cover .masthead a:hover { border-color: rgba(255,255,255,0.9); }
 
 #cover .scroll-cue {
   position: absolute;
-  bottom: 44px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 68.5px;
+  right: 70.5px;
   z-index: 2;
   color: var(--white);
   opacity: 0.75;
@@ -200,8 +215,8 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 }
 
 @keyframes scroll-cue-bounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(8px); }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
 }
 
 .narrow-only { display: none; }
@@ -211,22 +226,22 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 .section-divider {
   display: flex;
   align-items: center;
-  gap: 24px;
-  padding: 60px 80px 40px;
+  gap: 26.5px;
+  padding: 66px 88px 44px;
 }
 
 .section-divider .label {
-  font-size: 12px;
-  letter-spacing: 0.2em;
+  font-size: 15px;
+  letter-spacing: 0.17em;
   text-transform: uppercase;
-  color: var(--mid);
+  color: #888;
   white-space: nowrap;
 }
 
 .section-divider .line {
   flex: 1;
   height: 1px;
-  background: var(--border);
+  background: #2a2a2a;
 }
 
 /* ── SELECTED WORK: BENTO GRID ── */
@@ -234,11 +249,17 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 0.85fr 0.85fr 1.4fr;
-  gap: 14px;
+  gap: 15.5px;
   width: 100%;
-  aspect-ratio: 12/11;
-  padding: 0 80px 60px;
+  aspect-ratio: 12/11.5;
+  padding: 120px 88px;
   box-sizing: border-box;
+}
+
+.bento-item {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .bento-tile {
@@ -246,7 +267,10 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   display: block;
   overflow: hidden;
   cursor: none;
-  background: #ede9e3;
+  background: #1a1a1a;
+  border-radius: 12px;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .bento-tile video,
@@ -262,7 +286,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
 .bento-tile:hover video,
 .bento-tile:hover img.bento-cover {
-  transform: scale(1.03);
+  transform: scale(1.025);
 }
 
 .bento-tile--empower {
@@ -272,8 +296,6 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 .bento-tile--empower img.bento-cover {
   object-fit: contain;
   background: transparent;
-  padding: 16px;
-  box-sizing: border-box;
 }
 
 .bento-tile--empower .bento-cover--symptom {
@@ -287,56 +309,60 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   transform: scale(1.16);
 }
 
-.bento-tile .bento-label {
-  position: absolute;
-  left: 18px;
-  bottom: 18px;
-  z-index: 2;
-  color: var(--white);
-  background: var(--black);
-  padding: 14px 20px 16px;
-  max-width: calc(100% - 56px);
+.bento-item .bento-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: 11px;
+  padding-top: 13px;
 }
 
-.bento-tile .bento-label h2 {
+.bento-item .bento-label h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: 20px;
   line-height: 1.1;
-  margin: 0 0 4px;
+  color: #f0ede8;
 }
 
-.bento-tile .bento-label .bento-caption {
+.bento-item .bento-label .bento-caption {
   display: block;
   font-family: var(--serif);
   font-style: italic;
-  font-size: 12px;
-  opacity: 0.85;
+  font-size: 13px;
+  color: #888;
 }
 
-.bento-tile--shed { grid-column: 1 / 3; grid-row: 1 / 3; border: 4px solid #000; }
-.bento-tile--empower { grid-column: 3 / 4; grid-row: 1 / 3; border: 4px solid #000; }
-.bento-tile--pathrise { grid-column: 1 / 2; grid-row: 3 / 4; border: 4px solid #000; }
-.bento-tile--savvly { grid-column: 2 / 4; grid-row: 3 / 4; border: 4px solid #000; }
+.bento-item--shed { grid-column: 1 / 3; grid-row: 1 / 3; }
+.bento-item--empower { grid-column: 3 / 4; grid-row: 1 / 3; }
+.bento-item--pathrise { grid-column: 1 / 2; grid-row: 3 / 4; }
+.bento-item--savvly { grid-column: 2 / 4; grid-row: 3 / 4; }
 
 @media (max-width: 900px) {
   .bento-grid {
     grid-template-columns: 1fr;
     grid-template-rows: none;
     aspect-ratio: auto;
-    padding: 0 40px 60px;
+    padding: 120px 44px;
+    gap: 35px 15.5px;
   }
-  .bento-tile--shed { order: 1; }
-  .bento-tile--savvly { order: 2; }
-  .bento-tile--empower { order: 3; }
-  .bento-tile--pathrise { order: 4; }
+  .bento-item--shed { order: 1; }
+  .bento-item--savvly { order: 2; }
+  .bento-item--empower { order: 3; }
+  .bento-item--pathrise { order: 4; }
 
-  .bento-tile--shed,
-  .bento-tile--empower,
-  .bento-tile--pathrise,
-  .bento-tile--savvly {
+  .bento-item--shed,
+  .bento-item--empower,
+  .bento-item--pathrise,
+  .bento-item--savvly {
     grid-column: 1 / 2;
     grid-row: auto;
+  }
+
+  .bento-item--shed .bento-tile,
+  .bento-item--empower .bento-tile,
+  .bento-item--pathrise .bento-tile,
+  .bento-item--savvly .bento-tile {
     aspect-ratio: 4/3;
   }
 
@@ -354,7 +380,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
 /* ── FREELANCE ── */
 #freelance {
-  padding: 0 80px 100px;
+  padding: 0 88px 110px;
 }
 
 .freelance-grid {
@@ -368,7 +394,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   position: relative;
   cursor: none;
   overflow: hidden;
-  background: #ede9e3;
+  background: #222;
 }
 
 .freelance-item:not(.ph):not(.open) {
@@ -378,7 +404,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 /* Open: fills exactly its 2×2 grid area, content scrolls inside */
 .freelance-item.open {
   cursor: none;
-  background: var(--white);
+  background: #0e0e0e;
   overflow: hidden;
   height: 100%;
   min-height: 0;
@@ -388,7 +414,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 .freelance-item .fi-preview {
   position: relative;
   overflow: hidden;
-  background: #ede9e3;
+  background: #222;
   aspect-ratio: 4/3;
   display: flex;
   align-items: center;
@@ -404,21 +430,21 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 .freelance-item .fi-hover-label {
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  padding: 14px 18px;
+  padding: 15.5px 20px;
   background: linear-gradient(transparent, rgba(0,0,0,0.55));
   color: white;
   opacity: 0;
   transition: opacity 0.25s ease;
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: 9px;
   pointer-events: none;
 }
 .freelance-item:not(.open):hover .fi-hover-label { opacity: 1; }
-.fi-hover-label .fi-hl-name { font-family: var(--serif); font-size: 14px; }
-.fi-hover-label .fi-hl-type { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.7; }
+.fi-hover-label .fi-hl-name { font-family: var(--serif); font-size: 15.5px; }
+.fi-hover-label .fi-hl-type { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.7; }
 
-.fi-preview--icon { background: #f0ede8; padding: 24px; }
+.fi-preview--icon { background: #1e1e1e; padding: 26.5px; }
 .fi-preview--icon img { width: auto !important; height: auto !important; max-width: 60%; max-height: 60%; object-fit: contain; }
 
 /* Content panel — plain block flow, scrollable */
@@ -429,7 +455,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   max-height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 28px 30px 32px;
+  padding: 31px 33px 35px;
   box-sizing: border-box;
 }
 
@@ -438,34 +464,34 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   top: 0;
   float: right;
   background: none; border: none;
-  font-size: 14px; color: var(--mid);
+  font-size: 15.5px; color: var(--mid);
   cursor: none; padding: 0;
   line-height: 1;
   z-index: 1;
 }
-.fi-close:hover { color: var(--black); }
+.fi-close:hover { color: #f0ede8; }
 
 .fi-d-name {
   font-family: var(--serif);
-  font-size: clamp(18px, 1.6vw, 60px);
+  font-size: clamp(20px, 1.6vw, 66px);
   font-weight: 400;
-  color: var(--black);
+  color: #f0ede8;
   line-height: 1.1;
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 4.5px;
 }
 .fi-d-badge {
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--mid);
   display: block;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 .fi-d-img-row {
   display: flex;
-  gap: 4px;
-  margin-bottom: 20px;
+  gap: 4.5px;
+  margin-bottom: 22px;
   overflow: hidden;
 }
 .fi-d-img-row--tall img {
@@ -493,24 +519,24 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 }
 .fi-d-desc {
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: 16.5px;
   line-height: 1.8;
-  color: #222;
-  margin-bottom: 16px;
+  color: #ddd8d0;
+  margin-bottom: 17.5px;
 }
 .fi-d-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 4px;
+  gap: 6.5px;
+  margin-top: 4.5px;
 }
 .fi-d-tag {
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  border: 1px solid var(--border);
-  padding: 3px 10px;
-  color: var(--mid);
+  border: 1px solid #3a3a3a;
+  padding: 3.5px 11px;
+  color: #999;
 }
 
 
@@ -523,50 +549,50 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  border: 1px dashed var(--border);
-  background: #f7f5f2;
+  gap: 6.5px;
+  border: 1px dashed #3a3a3a;
+  background: #161616;
   aspect-ratio: 4/3;
 }
 
 .freelance-item.ph .ph-name {
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: 17.5px;
   color: #999;
 }
 .freelance-item.ph .ph-type {
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #ccc;
+  color: #555;
 }
 
 /* ── OTHER SECTION ── */
 #black {
-  padding: 0 0 100px;
+  padding: 0 0 110px;
 }
 
 /* Merch */
 .merch-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-  margin-bottom: 80px;
+  gap: 44px;
+  margin-bottom: 88px;
 }
 
 .merch-card .thumb {
   width: 100%;
   aspect-ratio: 1;
-  background: #ede9e3;
-  margin-bottom: 18px;
+  background: #1a1a1a;
+  margin-bottom: 20px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
   font-style: italic;
-  color: #bbb;
-  font-size: 15px;
+  color: #444;
+  font-size: 16.5px;
 }
 
 .merch-card .thumb img { width: 100%; height: 100%; object-fit: cover; }
@@ -585,32 +611,32 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
 .merch-card h4 {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: 18.5px;
   font-weight: 400;
-  margin-bottom: 5px;
+  margin-bottom: 5.5px;
 }
 
 .merch-card p {
-  font-size: 15px;
-  color: #666;
+  font-size: 16.5px;
+  color: #888;
   line-height: 1.6;
 }
 
 .merch-year {
   display: inline-block;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--mid);
-  margin-bottom: 4px;
+  margin-bottom: 4.5px;
 }
 
 /* Posters */
 .poster-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 3px;
-  margin-bottom: 80px;
+  gap: 3.5px;
+  margin-bottom: 88px;
 }
 
 .poster-cell {
@@ -631,25 +657,25 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 .poster-cell .poster-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.76);
+  background: rgba(0,0,0,0.25);
   opacity: 0;
   transition: opacity 0.3s ease;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 20px;
+  padding: 22px;
 }
 .poster-cell:hover .poster-overlay { opacity: 1; }
 .poster-overlay .poster-year {
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba(255,255,255,0.5);
-  margin-bottom: 4px;
+  margin-bottom: 4.5px;
 }
 .poster-overlay .poster-title { display: none; }
 .poster-overlay .poster-desc {
-  font-size: 12px;
+  font-size: 13px;
   color: rgba(255,255,255,0.6);
   line-height: 1.5;
 }
@@ -658,7 +684,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   height: 200px;
   overflow: hidden;
   position: relative;
-  margin-top: 6px;
+  margin-top: 6.5px;
 }
 .tweet-wrap iframe {
   transform: scale(0.45);
@@ -673,12 +699,12 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(0,0,0,0.92);
+  background: rgba(0,0,0,0.8);
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: none;
-  gap: 20px;
+  gap: 22px;
 }
 #lightbox.active { display: flex; }
 #lightbox img {
@@ -690,14 +716,14 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   text-align: center;
 }
 #lightbox-meta .lb-year {
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba(255,255,255,0.4);
-  margin-bottom: 4px;
+  margin-bottom: 4.5px;
 }
 #lightbox-meta .lb-desc {
-  font-size: 12px;
+  font-size: 13px;
   color: rgba(255,255,255,0.7);
   max-width: 480px;
   line-height: 1.6;
@@ -705,17 +731,17 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 .poster-cell .ph-text {
   font-family: var(--serif);
   font-style: italic;
-  color: #bbb;
-  font-size: 12px;
+  color: #444;
+  font-size: 13px;
 }
 
-/* ── DARK SECTION (Other) ── */
+/* ── DARK SECTION (Merch / Posters) ── */
 #black .section-divider .label { color: #888; }
 #black .section-divider .line { background: #2a2a2a; }
 #black .merch-card h4 { color: #f0ede8; }
 #black .merch-card p { color: #888; }
 #black .merch-card .thumb { background: #1a1a1a; color: #444; }
-#black .merch-year { color: #666; }
+#black .merch-year { color: var(--mid); }
 #black .poster-cell { background: #1a1a1a; }
 #black .poster-cell .ph-text { color: #444; }
 
@@ -724,16 +750,16 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   position: absolute;
   color: var(--white);
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: 16.5px;
   letter-spacing: 0.08em;
   line-height: 2;
   opacity: 0.8;
 }
 #cover-bottom .corner--bl {
-  bottom: 48px; left: 64px;
+  bottom: 53px; left: 70.5px;
 }
 #cover-bottom .corner--br {
-  bottom: 48px; right: 64px;
+  bottom: 53px; right: 70.5px;
   text-align: right;
 }
 #cover-bottom .corner a {
@@ -746,10 +772,10 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 #cover-bottom .corner a:hover { border-color: rgba(255,255,255,0.9); }
 #cover-bottom .credits {
   position: absolute;
-  bottom: 48px;
+  bottom: 53px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 15px;
+  font-size: 16.5px;
   letter-spacing: 0.06em;
   line-height: 2;
   color: var(--white);
@@ -769,11 +795,10 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
 
 #cover-bottom {
-  position: sticky;
-  bottom: 0;
+  position: relative;
   width: 100%;
   height: 100vh;
-  z-index: 0;
+  z-index: 1;
 }
 #cover-bottom .bg {
   position: absolute;
@@ -810,9 +835,10 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   width: 75vw;
   max-height: 92vh;
   background: var(--white);
+  color: var(--black);
   overflow-y: auto;
   cursor: none;
-  padding: 64px 56px 80px;
+  padding: 121px 121px 105.5px;
   border-radius: 12px 12px 0 0;
   transition: max-height 0.25s ease, border-radius 0.25s ease, top 0.25s ease, bottom 0.25s ease;
 }
@@ -820,39 +846,39 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
 #case-study-panel .cs-close, #empower-panel .cs-close, #savvly-panel .cs-close, #pathrise-panel .cs-close {
   position: absolute;
-  top: 60px; right: 28px;
+  top: 66px; right: 31px;
   background: none; border: none;
-  font-size: 18px; color: var(--mid);
-  cursor: none; padding: 4px 8px;
+  font-size: 20px; color: var(--mid);
+  cursor: none; padding: 4.5px 9px;
   line-height: 1;
 }
 #case-study-panel .cs-close:hover, #empower-panel .cs-close:hover, #savvly-panel .cs-close:hover, #pathrise-panel .cs-close:hover { color: var(--black); }
 
 #case-study-panel .cs-label, #empower-panel .cs-label, #savvly-panel .cs-label, #pathrise-panel .cs-label {
-  font-size: 12px;
+  font-size: 17px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--mid);
-  margin-bottom: 10px;
+  margin-bottom: 11px;
   display: block;
 }
 
 #case-study-panel h1, #empower-panel h1, #savvly-panel h1, #pathrise-panel h1 {
   font-family: var(--serif);
-  font-size: clamp(28px, 3vw, 60px);
+  font-size: clamp(31px, 3.3vw, 66px);
   font-weight: 400;
   line-height: 1.1;
-  margin-bottom: 32px;
+  margin-bottom: 35px;
   letter-spacing: -0.01em;
 }
 
 .cs-section-header {
-  font-size: 12px;
+  font-size: 17px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--mid);
-  margin-top: 40px;
-  margin-bottom: 14px;
+  margin-top: 44px;
+  margin-bottom: 15.5px;
   display: block;
 }
 
@@ -882,7 +908,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
 #savvly-panel .cs-figcaption {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: 13px;
   color: var(--mid);
   font-style: italic;
   margin-top: var(--cs-space-sm);
@@ -943,13 +969,13 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
 #savvly-panel .cs-embed-overlay span {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--black);
   background: var(--white);
   border: 1px solid var(--black);
-  padding: 12px 24px;
+  padding: 13px 26.5px;
   border-radius: 40px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.15);
 }
@@ -958,7 +984,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 #savvly-panel .cs-spot-cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 32px;
+  gap: 35px;
   width: 100%;
   margin: 0 0 var(--cs-space-md);
 }
@@ -967,7 +993,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 13px;
 }
 
 #savvly-panel .cs-spot-row p {
@@ -998,53 +1024,98 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
 #case-study-panel p, #empower-panel p, #savvly-panel p, #pathrise-panel p {
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: 17.5px;
   line-height: 1.85;
   color: #222;
-  margin-bottom: 16px;
+  margin-bottom: 17.5px;
 }
 
 #case-study-panel ul, #empower-panel ul, #savvly-panel ul, #pathrise-panel ul {
-  margin: 0 0 16px 0;
-  padding-left: 20px;
+  margin: 0 0 17.5px 0;
+  padding-left: 22px;
 }
 
 #case-study-panel ul li, #empower-panel ul li, #savvly-panel ul li, #pathrise-panel ul li {
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: 17.5px;
   line-height: 1.85;
   color: #222;
-  margin-bottom: 8px;
+  margin-bottom: 9px;
 }
 
 .cs-result-flow {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 16px;
+  gap: 9px;
+  margin-top: 17.5px;
 }
 .cs-flow-step {
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.06em;
   border: 1px solid var(--border);
-  padding: 5px 12px;
+  padding: 5.5px 13px;
   color: var(--black);
 }
 .cs-flow-arrow {
   color: var(--mid);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 /* ── CASE STUDY: EMPOWERHEALTH extras ── */
+.cs-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 22px;
+  margin-top: 22px;
+  margin-bottom: 35px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border);
+}
+.cs-meta-cols {
+  display: flex;
+  gap: 44px;
+  flex-wrap: wrap;
+}
+.cs-meta-col .cs-meta-label {
+  display: block;
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 6px;
+}
+.cs-meta-col .cs-meta-value {
+  font-size: 17px;
+  color: var(--black);
+}
+.cs-live-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--black);
+  color: var(--white);
+  font-size: 15.5px;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  padding: 13px 24px;
+  border-radius: 999px;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+.cs-live-link:hover { opacity: 0.82; }
+.cs-live-link svg { width: 16px; height: 16px; }
+
 .cs-collaborators {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 36px;
+  gap: 6.5px;
+  margin-bottom: 39.5px;
 }
 .cs-collaborators a {
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--mid);
@@ -1054,12 +1125,12 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   transition: color 0.2s, border-color 0.2s;
 }
 .cs-collaborators a:hover { color: var(--black); border-color: var(--black); }
-.cs-collaborators span { font-size: 12px; color: #999; }
+.cs-collaborators span { font-size: 13px; color: #999; }
 
 .cs-img-row {
   display: grid;
-  gap: 6px;
-  margin-bottom: 20px;
+  gap: 6.5px;
+  margin-bottom: 22px;
 }
 .cs-img-row.cols-2 { grid-template-columns: 1fr 1fr; }
 
@@ -1072,15 +1143,15 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 /* ── EMAIL TOAST ── */
 #email-toast {
   position: fixed;
-  bottom: 32px;
+  bottom: 35px;
   left: 50%;
   transform: translateX(-50%) translateY(8px);
   background: var(--black);
   color: var(--white);
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.08em;
-  padding: 9px 18px;
+  padding: 10px 20px;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease, transform 0.2s ease;
@@ -1096,8 +1167,6 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
 
 @media (max-width: 600px) {
-  #cover .corner--tr,
-  #cover .corner--br { display: none; }
   .wide-only { display: none; }
   .narrow-only { display: inline; }
 
@@ -1113,36 +1182,36 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
     grid-template-columns: 1fr !important;
   }
 
-  .section-divider { padding-left: 40px; padding-right: 40px; }
-  #freelance { padding-left: 40px; padding-right: 40px; }
-  #freelance-content { padding-left: 40px !important; padding-right: 40px !important; }
-  .merch-grid { padding-left: 40px !important; padding-right: 40px !important; grid-template-columns: 1fr; }
-  .poster-grid { padding-left: 40px !important; padding-right: 40px !important; grid-template-columns: repeat(2, 1fr) !important; }
+  .section-divider { padding-left: 44px; padding-right: 44px; }
+  #freelance { padding-left: 44px; padding-right: 44px; }
+  #freelance-content { padding-left: 44px!important; padding-right: 44px!important; }
+  .merch-grid { padding-left: 44px!important; padding-right: 44px!important; grid-template-columns: 1fr; }
+  .poster-grid { padding-left: 44px!important; padding-right: 44px!important; grid-template-columns: repeat(2, 1fr) !important; }
 
   .freelance-grid {
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: calc((100vw - 80px - 2px) / 2 * 3 / 4);
   }
 
-  #cover .corner--tl { left: 40px; }
-  #cover .corner--bl { left: 40px; }
-  #cover-bottom .corner--bl { left: 40px; }
-  #cover-bottom .corner--br { right: 40px; }
+  #cover .masthead { left: 44px; right: 44px; bottom: 88px; }
+  #cover .masthead-contact { display: none; }
+  #cover-bottom .corner--bl { left: 44px; }
+  #cover-bottom .corner--br { right: 44px; }
   #cover-bottom .credits { max-width: calc(100% - 80px); }
 
   #case-study-panel,
   #savvly-panel,
   #empower-panel,
   #pathrise-panel {
-    top: 0 !important;
-    bottom: auto !important;
-    left: 0 !important;
+    top: 0!important;
+    bottom: auto!important;
+    left: 0!important;
     transform: none !important;
     width: 100vw !important;
     max-height: none !important;
     height: 100vh !important;
     border-radius: 0 !important;
-    padding: 72px 32px 80px !important;
+    padding: 79px 35px 88px!important;
   }
 
   #case-study-panel .cs-close,
@@ -1150,8 +1219,8 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   #empower-panel .cs-close,
   #pathrise-panel .cs-close {
     position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
+    top: 22px!important;
+    right: 22px!important;
   }
 
   #savvly-panel .cs-spot-cols {
@@ -1166,12 +1235,12 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   /* EmpowerHealth: patient app stacked above provider dashboard */
   .empower-design-grid {
     grid-template-columns: 1fr !important;
-    gap: 24px !important;
+    gap: 26.5px!important;
   }
 
   /* Pathrise: taller video to show full height */
   .pathrise-video-wrap {
-    padding-bottom: 75% !important;
+    padding-bottom: 75%!important;
   }
 
   /* Freelance: stack image rows vertically */
@@ -1203,13 +1272,13 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   }
   .fi-close {
     position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
+    top: 22px!important;
+    right: 22px!important;
     float: none !important;
     z-index: 10000 !important;
-    background: var(--white) !important;
-    padding: 4px 8px !important;
-    font-size: 18px !important;
+    background: #0e0e0e !important;
+    padding: 4.5px 9px!important;
+    font-size: 20px !important;
   }
 }
 </style>
@@ -1225,24 +1294,18 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   </div>
   <div class="overlay"></div>
 
-  <div class="corner corner--tl">
-    Meghai Choudhury
-    <span class="narrow-only"><br><a href="#" onclick="copyEmail(event)">meghai@berkeley.edu</a><br><a href="https://www.linkedin.com/in/meghai-choudhury-b5538418b/" target="_blank">LinkedIn</a></span>
+  <div class="masthead">
+    <h1>Meghai<br>Choudhury</h1>
+    <p class="masthead-role">Product Design &middot; CS &amp; Design, UC Berkeley</p>
+    <p class="masthead-role narrow-only" style="margin-top:10px;">
+      <a href="#" onclick="copyEmail(event)">meghai@berkeley.edu</a> &middot;
+      <a href="https://www.linkedin.com/in/meghai-choudhury-b5538418b/" target="_blank">LinkedIn</a>
+    </p>
   </div>
 
-  <div class="corner corner--tr">
+  <div class="masthead-contact">
     <a href="#" onclick="copyEmail(event)">meghai@berkeley.edu</a><br>
     <a href="https://www.linkedin.com/in/meghai-choudhury-b5538418b/" target="_blank">LinkedIn</a>
-  </div>
-
-  <div class="corner corner--bl">
-    CS &amp; Design, UC Berkeley<br>
-    Jazz Violin &middot; Visual Arts
-    <span class="narrow-only"><br>UI/UX Design &middot; User Research</span>
-  </div>
-
-  <div class="corner corner--br">
-    UI/UX Design &middot; User Research
   </div>
 
   <div class="scroll-cue">
@@ -1255,50 +1318,53 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
 <!-- SELECTED WORK -->
 <div id="projects-outer">
+<div class="fade-to-black"></div>
 <div id="projects">
-
-  <div class="section-divider">
-    <span class="label">Selected Work</span>
-    <div class="line"></div>
-
-  </div>
 
   <div class="bento-grid">
 
     <!-- THE SHED -->
-    <div class="bento-tile bento-tile--shed" onclick="openCaseStudy()">
-      <video class="bento-cover" src="https://res.cloudinary.com/rsckwt4u/video/upload/q_auto/shed_overview.mp4" autoplay muted loop playsinline></video>
+    <div class="bento-item bento-item--shed">
+      <div class="bento-tile" onclick="openCaseStudy()">
+        <video class="bento-cover" src="https://res.cloudinary.com/rsckwt4u/video/upload/q_auto/shed_overview.mp4" autoplay muted loop playsinline></video>
+      </div>
       <div class="bento-label">
         <h2>The Shed</h2>
-        <span class="bento-caption">Loved by 200+ musicians</span>
+        <span class="bento-caption">Loved by 200+ musicians &middot; 2026</span>
       </div>
     </div>
 
     <!-- EMPOWERHEALTH -->
-    <div class="bento-tile bento-tile--empower" onclick="openEmpowerCaseStudy()">
-      <img class="bento-cover bento-cover--diary" src="portfolio_media/empowerhealth/diaryscreen.png" alt="EmpowerHealth diary screen">
-      <img class="bento-cover bento-cover--symptom" src="portfolio_media/empowerhealth/symptomscreen.png" alt="EmpowerHealth symptom screen">
+    <div class="bento-item bento-item--empower">
+      <div class="bento-tile bento-tile--empower" onclick="openEmpowerCaseStudy()">
+        <img class="bento-cover bento-cover--diary" src="portfolio_media/empowerhealth/diaryscreen.png" alt="EmpowerHealth diary screen">
+        <img class="bento-cover bento-cover--symptom" src="portfolio_media/empowerhealth/symptomscreen.png" alt="EmpowerHealth symptom screen">
+      </div>
       <div class="bento-label">
         <h2>EmpowerHealth</h2>
-        <span class="bento-caption">A patient portal for chronic illness</span>
+        <span class="bento-caption">A patient portal for chronic illness &middot; 2023</span>
       </div>
     </div>
 
     <!-- PATHRISE -->
-    <div class="bento-tile bento-tile--pathrise" onclick="openPathriseCaseStudy()">
-      <video class="bento-cover bento-cover--pathrise" src="https://res.cloudinary.com/rsckwt4u/video/upload/q_auto/pathrise_essay_brainstorming.mp4" autoplay muted loop playsinline onloadedmetadata="this.playbackRate=3"></video>
+    <div class="bento-item bento-item--pathrise">
+      <div class="bento-tile" onclick="openPathriseCaseStudy()">
+        <video class="bento-cover bento-cover--pathrise" src="https://res.cloudinary.com/rsckwt4u/video/upload/q_auto/pathrise_essay_brainstorming.mp4" autoplay muted loop playsinline onloadedmetadata="this.playbackRate=3"></video>
+      </div>
       <div class="bento-label">
         <h2>Pathrise</h2>
-        <span class="bento-caption">A college essay platform, built during my internship</span>
+        <span class="bento-caption">A college essay platform &middot; 2025</span>
       </div>
     </div>
 
     <!-- SAVVLY -->
-    <div class="bento-tile bento-tile--savvly" onclick="openSavvlyCaseStudy()">
-      <video class="bento-cover" src="https://res.cloudinary.com/rsckwt4u/video/upload/q_auto/savvly_estimator.mp4" autoplay muted loop playsinline></video>
+    <div class="bento-item bento-item--savvly">
+      <div class="bento-tile" onclick="openSavvlyCaseStudy()">
+        <video class="bento-cover" src="https://res.cloudinary.com/rsckwt4u/video/upload/q_auto/savvly_estimator.mp4" autoplay muted loop playsinline></video>
+      </div>
       <div class="bento-label">
         <h2>Savvly</h2>
-        <span class="bento-caption">Solo product designer</span>
+        <span class="bento-caption">Solo product designer &middot; 2026</span>
       </div>
     </div>
 
@@ -1307,15 +1373,10 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 </div><!-- /projects -->
 
 <!-- FREELANCE -->
-<div class="section-divider" id="freelance">
-  <span class="label">Freelance</span>
-  <div class="line"></div>
-</div>
-
-<section id="freelance-content" style="padding:0 80px 120px;background:var(--white);position:relative;z-index:1;">
-  <div style="max-width:460px;margin-bottom:52px;">
-    <h3 style="font-family:var(--serif);font-size:36px;font-weight:400;margin-bottom:10px;line-height:1.2;">Joined as the first designer.</h3>
-    <p style="font-size:14px;color:#555;line-height:1.7;">Joined seed-stage startups as first UI designer — logo, identity, marketing, and web from scratch. Several went on to YC or Sequoia-backed rounds.</p>
+<section id="freelance" style="padding-bottom:132px;background:#0e0e0e;color:#f0ede8;position:relative;z-index:1;">
+  <div style="max-width:460px;margin-bottom:57px;">
+    <h3 style="max-width:360px;font-family:var(--serif);font-size:39.5px;font-weight:400;margin-bottom:11px;line-height:1.2;">Joined as the first designer.</h3>
+    <p style="font-size:15.5px;color:#aaa;line-height:1.7;">Joined seed-stage startups as first UI designer — logo, identity, marketing, and web from scratch. Several went on to YC or Sequoia-backed rounds.</p>
   </div>
 
   <div class="freelance-grid">
@@ -1390,13 +1451,13 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
         <button class="fi-close" onclick="closeFreelance(event, this)">&#x2715;</button>
         <span class="fi-d-name">Mediboard</span>
         <span class="fi-d-badge">Logo &middot; Identity &middot; August 2022</span>
-        <div class="fi-d-img-row" style="gap:8px;">
+        <div class="fi-d-img-row" style="gap:9px;">
           <img src="portfolio_media/Mediboard/Pictorial_Mark.png" alt="Pictorial mark" onclick="openImgLightbox(this.src)" style="flex:1 1 0;min-width:0;width:100%;height:auto;">
           <img src="portfolio_media/Mediboard/combination.png" alt="Combination mark" onclick="openImgLightbox(this.src)" style="flex:1 1 0;min-width:0;width:100%;height:auto;">
           <img src="portfolio_media/Mediboard/both.png" alt="Both variants" onclick="openImgLightbox(this.src)" style="flex:1 1 0;min-width:0;width:100%;height:auto;">
         </div>
         <p class="fi-d-desc">The Medical Board makes clinical trial data readable for patients. I designed the logo to feel approachable for a general audience while staying credible in a clinical space. The plague doctor mascot was an unexpected choice that ended up becoming widely recognized among their users.</p>
-        <div class="fi-d-img-row" style="gap:8px;align-items:flex-start;">
+        <div class="fi-d-img-row" style="gap:9px;align-items:flex-start;">
           <img src="portfolio_media/Mediboard/sketch1.png" alt="Sketch 1" onclick="openImgLightbox(this.src)" style="flex:none;height:160px;width:auto;">
           <img src="portfolio_media/Mediboard/sketch2.png" alt="Sketch 2" onclick="openImgLightbox(this.src)" style="flex:none;height:160px;width:auto;">
           <img src="portfolio_media/Mediboard/icon_options.png" alt="Icon options" onclick="openImgLightbox(this.src)" style="flex:none;height:160px;width:auto;">
@@ -1463,18 +1524,21 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
     <div class="freelance-item ph">
       <div class="fi-preview">
         <span class="ph-name" style="text-align:center;">Want to work together?</span>
-        <a href="#" onclick="copyEmail(event)" class="ph-type" style="text-decoration:none;color:var(--mid);border-bottom:1px solid #ccc;padding-bottom:1px;">meghai@berkeley.edu</a>
+        <a href="#" onclick="copyEmail(event)" class="ph-type" style="text-decoration:none;color:#999;border-bottom:1px solid #555;padding-bottom:1px;">meghai@berkeley.edu</a>
       </div>
     </div>
 
   </div>
 </section>
 
-<section id="black" style="background:#0e0e0e;position:relative;z-index:1;padding-top:60px;">
+<section id="black" style="background:#0e0e0e;position:relative;z-index:1;">
 
   <!-- MERCH -->
-  <div class="section-divider" style="padding-top:0;"><span class="label">Merch Design</span><div class="line"></div></div>
-  <div class="merch-grid" style="padding:0 80px;">
+  <div id="merch" style="max-width:460px;margin-bottom:57px;padding:0 88px;box-sizing:content-box;">
+    <h3 style="max-width:360px;font-family:var(--serif);font-size:39.5px;font-weight:400;margin-bottom:11px;line-height:1.2;">Merch for the brands I've built.</h3>
+    <p style="font-size:15.5px;color:#aaa;line-height:1.7;">An extension of each brand identity into something people actually wear.</p>
+  </div>
+  <div class="merch-grid" style="padding:0 88px;">
     <div class="merch-card">
       <div class="thumb"><img src="portfolio_media/merch/laya.png" style="width:100%;height:100%;object-fit:cover;"></div>
       <h4>Laya</h4>
@@ -1496,8 +1560,11 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   </div>
 
   <!-- POSTERS -->
-  <div class="section-divider" id="posters"><span class="label">Poster Designs</span><div class="line"></div></div>
-  <div class="poster-grid" style="padding:0 80px;">
+  <div id="posters" style="max-width:460px;margin-bottom:57px;padding:0 88px;box-sizing:content-box;">
+    <h3 style="max-width:360px;font-family:var(--serif);font-size:39.5px;font-weight:400;margin-bottom:11px;line-height:1.2;">Posters for artists I love.</h3>
+    <p style="font-size:15.5px;color:#aaa;line-height:1.7;">Some are for shows I actually played, others I made just because I wanted my favorite artists on my wall.</p>
+  </div>
+  <div class="poster-grid" style="padding:0 88px;">
     <div class="poster-cell"><img src="portfolio_media/posters/raveena.png" alt="Raveena"><div class="poster-overlay"><div class="poster-year">2022</div><div class="poster-title">Raveena — Asha's Awakening</div><div class="poster-desc">Album poster design. Raveena retweeted this!<div class="tweet-wrap"><blockquote class="twitter-tweet" data-theme="dark"><p lang="qme" dir="ltr">😍😍😍</p>&mdash; Raveena (@raveena_aurora) <a href="https://x.com/raveena_aurora/status/1573880845047189504?ref_src=twsrc%5Etfw">September 25, 2022</a></blockquote><script async src="https://platform.x.com/widgets.js" charset="utf-8"></script></div></div></div></div>
     <div class="poster-cell"><img src="portfolio_media/posters/sailorrp.png" alt="Sailorr"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">Sailorr</div><div class="poster-desc">An album poster for Sailorr's From Florida's Finest.</div></div></div>
     <div class="poster-cell"><img src="portfolio_media/posters/laufeyp.png" alt="Laufey"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">Laufey</div><div class="poster-desc">A discography poster for Laufey.</div></div></div>
@@ -1521,7 +1588,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 <div id="cover-bottom">
   <div class="bg"><img src="https://res.cloudinary.com/rsckwt4u/image/upload/f_auto,q_auto/back.jpg" alt="Meghai Choudhury"></div>
   <div class="overlay"></div>
-  <div class="corner corner--tl narrow-only" style="top:48px;left:40px;">
+  <div class="corner corner--tl narrow-only" style="top:53px;left:44px;">
     Meghai Choudhury<br>
     <a href="#" onclick="copyEmail(event)">Email</a> &nbsp; <a href="https://www.linkedin.com/in/meghai-choudhury-b5538418b/" target="_blank">LinkedIn</a>
   </div>
@@ -1537,11 +1604,19 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
 <!-- CASE STUDY OVERLAY: SAVVLY -->
 <div id="savvly-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);cursor:none;" onclick="closeSavvlyCaseStudy(event)">
-  <div id="savvly-panel" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:75vw;max-height:92vh;background:var(--white);overflow-y:auto;cursor:none;padding:64px 56px 80px;border-radius:12px 12px 0 0;transition:max-height 0.25s ease, border-radius 0.25s ease, top 0.25s ease, bottom 0.25s ease;" onclick="event.stopPropagation()">
+  <div id="savvly-panel" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:75vw;max-height:92vh;background:var(--white);color:var(--black);overflow-y:auto;cursor:none;padding:121px 121px 105.5px;border-radius:12px 12px 0 0;transition:max-height 0.25s ease, border-radius 0.25s ease, top 0.25s ease, bottom 0.25s ease;" onclick="event.stopPropagation()">
     <button class="cs-close" onclick="closeSavvlyCaseStudy()">&#x2715;</button>
 
     <span class="cs-label">Case Study</span>
     <h1>Savvly</h1>
+
+    <div class="cs-meta-row">
+      <div class="cs-meta-cols">
+        <div class="cs-meta-col"><span class="cs-meta-label">Category</span><span class="cs-meta-value">Dashboard Redesign</span></div>
+        <div class="cs-meta-col"><span class="cs-meta-label">Role</span><span class="cs-meta-value">Product Design Intern</span></div>
+        <div class="cs-meta-col"><span class="cs-meta-label">Year</span><span class="cs-meta-value">2026</span></div>
+      </div>
+    </div>
 
     <span class="cs-section-header">My Role</span>
     <p>I was the sole designer at Savvly. This case study covers a project I led: redesigning the client dashboard.</p>
@@ -1562,11 +1637,11 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
     <div class="cs-spot-cols">
       <div class="cs-spot-row">
         <img class="cs-spot-illustration" src="portfolio_media/savvly/savvly_uncomfortable.png" alt="Figure anxiously thinking about an hourglass">
-        <p>User research confirmed it: retirement planning made people uncomfortable, and few had ever named "outliving your savings" as a specific risk. So the experience couldn't open with a calculator — calculators are for people who've already decided to engage.</p>
+        <p>User research confirmed it: retirement planning made people uncomfortable — few had named "outliving your savings" as a specific risk. So the experience couldn't open with a calculator; calculators are for people who've already decided to engage.</p>
       </div>
       <div class="cs-spot-row">
         <img class="cs-spot-illustration cs-spot-illustration--fire" src="portfolio_media/savvly/savvly_fire.png" alt="House on fire, illustrating the insurance analogy">
-        <p>The framing: nobody buys home insurance for the returns — they buy it because their house might burn down. The value is psychological before it's numerical. Savvly needed the same shift: from investment product to protection against a specific fear.</p>
+        <p>The framing: nobody buys home insurance for the returns — they buy it because their house might burn down. Savvly needed the same shift — from investment product to protection against a fear.</p>
       </div>
     </div>
 
@@ -1592,13 +1667,25 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
     <span class="cs-label">Case Study</span>
     <h1>The Shed</h1>
 
-    <video src="https://res.cloudinary.com/rsckwt4u/video/upload/q_auto/shed_overview.mp4" controls style="width:100%;border-radius:8px;display:block;margin-bottom:24px;"></video>
+    <div class="cs-meta-row">
+      <div class="cs-meta-cols">
+        <div class="cs-meta-col"><span class="cs-meta-label">Category</span><span class="cs-meta-value">Personal Project</span></div>
+        <div class="cs-meta-col"><span class="cs-meta-label">Role</span><span class="cs-meta-value">Designer &amp; Developer</span></div>
+        <div class="cs-meta-col"><span class="cs-meta-label">Year</span><span class="cs-meta-value">2026</span></div>
+      </div>
+      <a class="cs-live-link" href="https://meghai.com/jazz" target="_blank" rel="noopener">
+        View Project
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+      </a>
+    </div>
+
+    <video src="https://res.cloudinary.com/rsckwt4u/video/upload/q_auto/shed_overview.mp4" controls style="width:100%;border-radius:8px;display:block;margin-bottom:26.5px;"></video>
 
     <!-- FLAG: "The Problem" intro paragraph below now overlaps with what the overview video shows/explains — consider trimming to 1-2 sentences. -->
     <span class="cs-section-header">The Problem</span>
-    <p>A transcription is learning a recorded solo by ear, note by note. One of the foundational ways jazz musicians learn is by copying the way the greats played. The process requires slowing audio down, looping short phrases, and marking moments to return to.</p>
-    <div class="illus-row" style="display:flex;gap:24px;align-items:center;">
+    <div class="illus-row" style="display:flex;gap:26.5px;align-items:center;">
       <div style="flex:1;min-width:0;">
+        <p>A transcription is learning a recorded solo by ear, note by note. One of the foundational ways jazz musicians learn is by copying the way the greats played. The process requires slowing audio down, looping short phrases, and marking moments to return to.</p>
         <p>Most musicians have their own cobbled-together process: YouTube and a separate metronome, Chrome extensions, an MP3 download into whatever playback software they have. But across all methods, the workflow is fragmented and constantly pulls you out of the music.</p>
         <p>I built this because my own process was fragmented — and I realized that only part of my slowness was my ear. The rest was the clumsy process itself.</p>
       </div>
@@ -1607,16 +1694,16 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
     <span class="cs-section-header">Research</span>
     <p>I observed three jazz musicians transcribing in their natural workflow before designing anything.</p>
-    <ul class="illus-grid-3" style="list-style:none;padding-left:0;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
-      <li style="display:flex;flex-direction:column;align-items:center;text-align:center;"><div style="height:212px;display:flex;align-items:flex-end;margin-bottom:12px;"><img src="portfolio_media/shed/shed_research1.png" alt="Figure viewing a waveform" style="width:212px;"></div><span>One had opened a professional audio editing suite — not to edit anything, but purely to see the waveform so he could set loop points with precision. He was using a tool built for audio engineers just for that one visual.</span></li>
-      <li style="display:flex;flex-direction:column;align-items:center;text-align:center;"><div style="height:212px;display:flex;align-items:flex-end;margin-bottom:12px;"><img src="portfolio_media/shed/shed_research2.png" alt="Figure double-tapping on a phone" style="width:111px;"></div><span>Another was using his phone's YouTube app, double-tapping to skip forward and back. The 10-second jumps were too imprecise for phrase-level work, and he'd overshoot every time.</span></li>
-      <li style="display:flex;flex-direction:column;align-items:center;text-align:center;"><div style="height:212px;display:flex;align-items:flex-end;margin-bottom:12px;"><img src="portfolio_media/shed/shed_research3.png" alt="Figure switching between a video and a metronome" style="width:195px;"></div><span>A third kept switching apps mid-session to use a separate metronome.</span></li>
+    <ul class="illus-grid-3" style="list-style:none;padding-left:0;display:grid;grid-template-columns:repeat(3,1fr);gap:26.5px;">
+      <li style="display:flex;flex-direction:column;align-items:center;text-align:center;"><div style="height:212px;display:flex;align-items:flex-end;margin-bottom:13px;"><img src="portfolio_media/shed/shed_research1.png" alt="Figure viewing a waveform" style="width:212px;"></div><span>One had opened a professional audio editing suite — not to edit anything, but purely to see the waveform.</span></li>
+      <li style="display:flex;flex-direction:column;align-items:center;text-align:center;"><div style="height:212px;display:flex;align-items:flex-end;margin-bottom:13px;"><img src="portfolio_media/shed/shed_research2.png" alt="Figure double-tapping on a phone" style="width:111px;"></div><span>Another was using his phone's YouTube app, double-tapping to skip forward and back, but overshooting each time.</span></li>
+      <li style="display:flex;flex-direction:column;align-items:center;text-align:center;"><div style="height:212px;display:flex;align-items:flex-end;margin-bottom:13px;"><img src="portfolio_media/shed/shed_research3.png" alt="Figure switching between a video and a metronome" style="width:195px;"></div><span>A third kept switching apps mid-session to use a separate metronome.</span></li>
     </ul>
     <p>I then ran think-aloud sessions with five musicians on an early version of the tool, and sent them iterations as I built.</p>
 
     <span class="cs-section-header">Design Decisions</span>
-    <video src="https://res.cloudinary.com/rsckwt4u/video/upload/q_auto/shed_metronome.mp4" controls style="width:100%;border-radius:8px;display:block;margin-bottom:20px;"></video>
-    <div class="illus-row" style="display:flex;gap:24px;align-items:center;">
+    <video src="https://res.cloudinary.com/rsckwt4u/video/upload/q_auto/shed_metronome.mp4" controls style="width:100%;border-radius:8px;display:block;margin-bottom:22px;"></video>
+    <div class="illus-row" style="display:flex;gap:26.5px;align-items:center;">
       <p style="flex:1;min-width:0;"><strong>Waveform over video:</strong> Watching a musician pull up an audio engineer tool was the clearest signal — musicians need to see the audio, not the video. I added an MP3 upload tab with a full waveform view for precise loop-point setting. For YouTube uploads, I kept the large video player because musicians are so used to that interface that removing it would feel foreign.</p>
       <video src="https://res.cloudinary.com/rsckwt4u/video/upload/q_auto/shed_waveform.mp4" autoplay muted loop playsinline controls style="width:340px;flex-shrink:0;border-radius:6px;display:block;"></video>
     </div>
@@ -1638,31 +1725,39 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
       <span class="cs-flow-arrow">→</span>
       <span class="cs-flow-step">Practice with synced metronome</span>
     </div>
-    <p style="margin-top:20px;">All without ever leaving the browser.</p>
+    <p style="margin-top:22px;">All without ever leaving the browser.</p>
 
-    <div class="illus-row" style="display:flex;gap:24px;align-items:center;margin-top:20px;">
+    <div class="illus-row" style="display:flex;gap:26.5px;align-items:center;margin-top:22px;">
       <img src="portfolio_media/shed/shed_arranger.png" alt="Figure conducting with sheet music" style="width:229px;flex-shrink:0;">
       <p style="flex:1;min-width:0;margin:0;">An unexpected use case emerged after launch: composition arrangers using the tool, working through a recording phrase by phrase to transcribe a piece before arranging it for a new ensemble!</p>
     </div>
 
     <span class="cs-section-header">Impact</span>
     <p>200+ musicians have used The Shed so far. A few responses since launch:</p>
-    <p style="padding-left:16px;border-left:2px solid var(--border);font-style:italic;color:#555;">"The looping feature is probably the most visually interactive system I've dealt with. I finished my Sonny Stitt 16th note line really fast — I'll use this for every 16th note Bird line."</p>
-    <p style="padding-left:16px;border-left:2px solid var(--border);font-style:italic;color:#555;">"Much easier than what I used to do — download a YouTube video, open it in Audacity."</p>
-    <p style="padding-left:16px;border-left:2px solid var(--border);font-style:italic;color:#555;">"Just played around with it tonight and really dig it! Got some handy features I've been looking for."</p>
+    <p style="padding-left:17.5px;border-left:2px solid var(--border);font-style:italic;color:#555;">"The looping feature is probably the most visually interactive system I've dealt with. I finished my Sonny Stitt 16th note line really fast — I'll use this for every 16th note Bird line."</p>
+    <p style="padding-left:17.5px;border-left:2px solid var(--border);font-style:italic;color:#555;">"Much easier than what I used to do — download a YouTube video, open it in Audacity."</p>
+    <p style="padding-left:17.5px;border-left:2px solid var(--border);font-style:italic;color:#555;">"Just played around with it tonight and really dig it! Got some handy features I've been looking for."</p>
 
-    <a href="https://www.meghai.com/jazz" target="_blank" class="view-link" style="margin-top:32px;font-size:14px;">Try it out yourself</a>
+    <a href="https://www.meghai.com/jazz" target="_blank" class="view-link" style="margin-top:35px;font-size:15.5px;">Try it out yourself</a>
 
   </div>
 </div>
 
 <!-- CASE STUDY OVERLAY: EMPOWERHEALTH -->
 <div id="empower-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);cursor:none;" onclick="closeEmpowerCaseStudy(event)">
-  <div id="empower-panel" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:75vw;max-height:92vh;background:var(--white);overflow-y:auto;cursor:none;padding:64px 56px 80px;border-radius:12px 12px 0 0;transition:max-height 0.25s ease, border-radius 0.25s ease, top 0.25s ease, bottom 0.25s ease;" onclick="event.stopPropagation()">
+  <div id="empower-panel" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:75vw;max-height:92vh;background:var(--white);color:var(--black);overflow-y:auto;cursor:none;padding:121px 121px 105.5px;border-radius:12px 12px 0 0;transition:max-height 0.25s ease, border-radius 0.25s ease, top 0.25s ease, bottom 0.25s ease;" onclick="event.stopPropagation()">
     <button class="cs-close" onclick="closeEmpowerCaseStudy()">&#x2715;</button>
 
     <span class="cs-label">Case Study</span>
     <h1>EmpowerHealth</h1>
+
+    <div class="cs-meta-row">
+      <div class="cs-meta-cols">
+        <div class="cs-meta-col"><span class="cs-meta-label">Category</span><span class="cs-meta-value">Research Project</span></div>
+        <div class="cs-meta-col"><span class="cs-meta-label">Role</span><span class="cs-meta-value">Design Lead</span></div>
+        <div class="cs-meta-col"><span class="cs-meta-label">Year</span><span class="cs-meta-value">2023</span></div>
+      </div>
+    </div>
 
     <div class="cs-collaborators">
       <span>With</span>
@@ -1679,7 +1774,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
     <p>This project started within the <a href="https://funginstitute.berkeley.edu/fung-fellows/" target="_blank" style="color:var(--black);border-bottom:1px solid var(--border);text-decoration:none;">Fung Fellowship at UC Berkeley</a>, where I worked alongside Ishita Srivastava, Ashley Huerta, and Nessia Dambal. After the fellowship concluded, I continued developing the project as design lead with Ishita Srivastava and Jonanne Talebloo.</p>
 
     <span class="cs-section-header">The Problem</span>
-    <div class="illus-row" style="display:flex;gap:24px;align-items:center;">
+    <div class="illus-row" style="display:flex;gap:26.5px;align-items:center;">
       <div style="flex:1;min-width:0;">
         <p>Chronic illness is invisible, non-linear, and hard to explain in fifteen minutes, which is often all a patient gets. By the time someone with a chronic condition sits down with a doctor, they're carrying years of context: misdiagnoses, fluctuating symptoms, physical and mental pain that are deeply entangled. And yet almost none of it makes it into the room. Doctors don't have access to the history, don't have time to absorb it, or don't believe it.</p>
         <p>The result: patients feel unseen, and providers can't do better.</p>
@@ -1689,7 +1784,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
     <span class="cs-section-header">Research</span>
     <p>We interviewed users with chronic illness, and providers. Between them: years of misdiagnosis, $17,000 out of pocket, 50+ specialist appointments for one condition, a job lost mid-treatment.</p>
-    <div class="empower-interview-row" style="display:flex;gap:6px;align-items:flex-start;margin-bottom:32px;height:clamp(140px, 18vw, 220px);">
+    <div class="empower-interview-row" style="display:flex;gap:6.5px;align-items:flex-start;margin-bottom:35px;height:clamp(140px, 18vw, 220px);">
       <img src="portfolio_media/empowerhealth/interview.png" alt="Interview" onclick="openImgLightbox(this.src)" style="height:100%;width:auto;cursor:none;display:block;">
       <img src="portfolio_media/empowerhealth/interview2.png" alt="Interview 2" onclick="openImgLightbox(this.src)" style="height:100%;width:auto;cursor:none;display:block;">
       <img src="portfolio_media/empowerhealth/interview3.png" alt="Interview 3" onclick="openImgLightbox(this.src)" style="height:100%;width:auto;cursor:none;display:block;">
@@ -1697,16 +1792,16 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
     <div>
         <p style="margin-top:0;">
         <p><strong>Being dismissed or not believed:</strong> every patient named this. One had lived with chronic pain for years; doctors suspected fibromyalgia but refused to record it, fearing the label would make future providers dismiss any new symptom as "just your fibromyalgia." Without the diagnosis, he couldn't get treatment. With it, he'd lose credibility. The system was protecting itself at his expense.</p>
-        <div class="illus-row" style="display:flex;gap:16px;align-items:center;">
+        <div class="illus-row" style="display:flex;gap:17.5px;align-items:center;">
           <img src="portfolio_media/empowerhealth/empower_reexplain.png" alt="Figure repeating the same explanation in speech bubbles" style="width:151px;flex-shrink:0;">
           <div style="flex:1;min-width:0;">
-            <p style="margin:0 0 8px 0;"><strong>The proof burden.</strong> Invisible illness means constantly justifying pain — to doctors, employers, family, friends. One patient scratched their own arm mid-appointment just to be believed.</p>
+            <p style="margin:0 0 9px 0;"><strong>The proof burden.</strong> Invisible illness means constantly justifying pain — to doctors, employers, family, friends. One patient scratched their own arm mid-appointment just to be believed.</p>
             <p style="margin:0;"><strong>Exhaustion from re-explaining.</strong> Starting over at every new appointment, every new specialist, with no record of what came before. "I want a central place where everything is in one place for all doctors, irrespective of the hospital."</p>
           </div>
         </div>
-        <div class="illus-row" style="display:flex;gap:16px;align-items:center;">
+        <div class="illus-row" style="display:flex;gap:17.5px;align-items:center;">
           <div style="flex:1;min-width:0;">
-            <p style="margin:0 0 8px 0;"><strong>The mind-body connection, discovered alone.</strong> Nearly every patient had privately figured out that stress triggered flares, that emotional and physical pain were entangled. Almost none had a doctor name it. Dr. Bennett put it plainly: stress is a bodily stressor that literally fires pain receptors. The system wasn't tracking it.</p>
+            <p style="margin:0 0 9px 0;"><strong>The mind-body connection, discovered alone.</strong> Nearly every patient had privately figured out that stress triggered flares, that emotional and physical pain were entangled. Almost none had a doctor name it. Dr. Bennett put it plainly: stress is a bodily stressor that literally fires pain receptors. The system wasn't tracking it.</p>
             <p style="margin:0;"><strong>Isolation.</strong> One patient said they sometimes made up excuses rather than explain their illness. Another said "I never felt sick enough" — real symptoms, but excluded from the chronic illness community because their condition wasn't visibly debilitating enough.</p>
           </div>
           <img src="portfolio_media/empowerhealth/empower_mind-body.png" alt="Brain and heart joined, illustrating the mind-body connection" style="width:147px;flex-shrink:0;">
@@ -1720,23 +1815,23 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
     <span class="cs-section-header">The Design</span>
     <p>We designed two linked portals: a patient-facing mobile app and a provider dashboard.</p>
 
-    <div class="empower-design-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;margin-bottom:16px;">
+    <div class="empower-design-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start;margin-bottom:17.5px;">
       <div>
-        <div style="display:flex;gap:0;margin-bottom:8px;">
+        <div style="display:flex;gap:0;margin-bottom:9px;">
           <img src="portfolio_media/empowerhealth/symptomscreen.png" alt="Symptom screen" onclick="openImgLightbox(this.src)" style="width:50%;display:block;cursor:none;">
           <img src="portfolio_media/empowerhealth/diaryscreen.png" alt="Diary screen" onclick="openImgLightbox(this.src)" style="width:50%;display:block;cursor:none;">
         </div>
-        <div style="font-size:11px;color:var(--mid);letter-spacing:0.04em;">The patient app centered on a daily diary card — a design that holds space for whatever a user was carrying that day without making the process feel clinical or burdensome.</div>
+        <div style="font-size:12px;color:var(--mid);letter-spacing:0.04em;">The patient app centered on a daily diary card — a design that holds space for whatever a user was carrying that day without making the process feel clinical or burdensome.</div>
       </div>
       <div>
-        <img src="portfolio_media/empowerhealth/providerscreen.png" alt="Provider screen" onclick="openImgLightbox(this.src)" style="width:100%;display:block;cursor:none;margin-bottom:8px;">
-        <div style="font-size:11px;color:var(--mid);letter-spacing:0.04em;">The provider dashboard used AI-summarized data from patient diary cards before appointments, flagging new symptoms, mood trends, and key concerns the patient had noted, so the fifteen minutes could be spent on care rather than catch-up.</div>
+        <img src="portfolio_media/empowerhealth/providerscreen.png" alt="Provider screen" onclick="openImgLightbox(this.src)" style="width:100%;display:block;cursor:none;margin-bottom:9px;">
+        <div style="font-size:12px;color:var(--mid);letter-spacing:0.04em;">The provider dashboard used AI-summarized data from patient diary cards before appointments, flagging new symptoms, mood trends, and key concerns the patient had noted, so the fifteen minutes could be spent on care rather than catch-up.</div>
       </div>
     </div>
 
     <span class="cs-section-header">What We'd Do Differently</span>
     <p>The design was a first sketch, early-stage and untested with real patients or providers. Next steps would be usability testing, especially on the diary card interaction and how doctors want to scan summarized data under time pressure.</p>
-    <div class="illus-row" style="display:flex;gap:24px;align-items:center;">
+    <div class="illus-row" style="display:flex;gap:26.5px;align-items:center;">
       <p style="flex:1;min-width:0;margin:0;">The fibromyalgia catch-22 alone points to a harder question the design doesn't yet answer: how do you build trust into a system when the system itself has already broken it?</p>
       <img src="portfolio_media/empowerhealth/empower_catch22.png" alt="Scale balancing a medical record against medication" style="width:233px;flex-shrink:0;">
     </div>
@@ -1746,32 +1841,41 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
 <!-- CASE STUDY OVERLAY: PATHRISE -->
 <div id="pathrise-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);cursor:none;" onclick="closePathriseCaseStudy(event)">
-  <div id="pathrise-panel" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:75vw;max-height:92vh;background:var(--white);overflow-y:auto;cursor:none;padding:64px 56px 80px;border-radius:12px 12px 0 0;transition:max-height 0.25s ease, border-radius 0.25s ease, top 0.25s ease, bottom 0.25s ease;" onclick="event.stopPropagation()">
+  <div id="pathrise-panel" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:75vw;max-height:92vh;background:var(--white);color:var(--black);overflow-y:auto;cursor:none;padding:121px 121px 105.5px;border-radius:12px 12px 0 0;transition:max-height 0.25s ease, border-radius 0.25s ease, top 0.25s ease, bottom 0.25s ease;" onclick="event.stopPropagation()">
     <button class="cs-close" onclick="closePathriseCaseStudy()">&#x2715;</button>
 
     <span class="cs-label">Case Study</span>
     <h1>Pathrise Education</h1>
 
+    <div class="cs-meta-row">
+      <div class="cs-meta-cols">
+        <div class="cs-meta-col"><span class="cs-meta-label">Category</span><span class="cs-meta-value">Dashboard Design</span></div>
+        <div class="cs-meta-col"><span class="cs-meta-label">Role</span><span class="cs-meta-value">Product Design Intern</span></div>
+        <div class="cs-meta-col"><span class="cs-meta-label">Year</span><span class="cs-meta-value">2025</span></div>
+      </div>
+    </div>
+
     <span class="cs-section-header">Overview</span>
     <p>Pathrise is a platform for college consultants to manage and support their students through the admissions process. My team designed the consultant-facing dashboard, giving consultants a centralized view of each student's tasks, deadlines, and application progress across their full caseload.</p>
 
     <span class="cs-section-header">The Problem</span>
-    <div class="illus-row" style="display:flex;gap:24px;align-items:center;">
+    <div class="illus-row" style="display:flex;gap:26.5px;align-items:center;">
       <p style="flex:1;min-width:0;">After sitting in on consultant interviews, I noticed a recurring gap: students showed up to writing sessions with no organized material. They managed essays across notes, docs, and spreadsheets, reused content across schools with no system, and tracked deadlines separately from writing progress. Consultants ended up doing logistics instead of guidance.</p>
       <img src="portfolio_media/pathrise/pathrise_gap.png" alt="Figure surrounded by scattered notes, docs, and a calendar" style="width:293px;flex-shrink:0;">
     </div>
-    <p>To find the underlying structure, I mapped my own senior-year application materials — stories, brainstorming docs, spreadsheets — until a repeatable, phase-by-phase formula emerged. From that, I proposed and designed a student-facing brainstorm portal.</p>
 
-    <div class="cs-img-row cols-2" style="margin-bottom:8px;">
-      <img src="portfolio_media/pathrise/brainstorm.png" alt="Brainstorm" onclick="openImgLightbox(this.src)" style="cursor:none;width:100%;display:block;">
-      <img src="portfolio_media/pathrise/formula.png" alt="Formula" onclick="openImgLightbox(this.src)" style="cursor:none;width:100%;display:block;">
+    <div class="illus-row" style="display:flex;gap:26.5px;align-items:center;margin-top:26.5px;">
+      <p style="flex:1;min-width:0;">To find the underlying structure, I mapped my own senior-year application materials — stories, brainstorming docs, spreadsheets — until a repeatable, phase-by-phase formula emerged. From that, I proposed and designed a student-facing brainstorm portal.</p>
+      <img src="portfolio_media/pathrise/brainstorm.png" alt="Brainstorm" onclick="openImgLightbox(this.src)" style="cursor:none;width:293px;flex-shrink:0;display:block;">
     </div>
+
+    <img src="portfolio_media/pathrise/formula.png" alt="Formula" onclick="openImgLightbox(this.src)" style="cursor:none;width:100%;display:block;margin-bottom:9px;margin-top:26.5px;border-radius:8px;">
 
     <span class="cs-section-header">The Portal</span>
     <!-- FLAG: this paragraph now largely restates what the brainstorming video below demonstrates — consider trimming. -->
     <p>The portal walks students through five phases: building a story bank, grouping experiences into themes, matching themes to essay types, drafting outlines, and generating a college-specific timeline. Instead of managing ten separate essays for ten schools, students build one narrative system that maps across every application.</p>
 
-    <div class="pathrise-video-wrap" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin-bottom:20px;">
+    <div class="pathrise-video-wrap" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin-bottom:22px;">
       <video src="https://res.cloudinary.com/rsckwt4u/video/upload/q_auto/pathrise_essay_brainstorming.mp4" controls style="position:absolute;top:0;left:0;width:100%;height:100%;"></video>
     </div>
 
@@ -1784,6 +1888,21 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 <div id="email-toast">copied to clipboard</div>
 
 <script>
+// Selected Work section fades in from transparent (peeking over the cover) to solid dark
+(function() {
+  const fade = document.querySelector('#projects-outer .fade-to-black');
+  const spacer = document.getElementById('cover-spacer');
+  if (!fade || !spacer) return;
+  const FADE_DISTANCE = 160;
+  function update() {
+    const spacerBottom = spacer.getBoundingClientRect().bottom;
+    const t = 1 - Math.max(0, Math.min(1, spacerBottom / FADE_DISTANCE));
+    fade.style.opacity = t;
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+
 // Custom cursor dot, site-wide
 (function() {
   const dot = document.querySelector('.cursor-dot');
