@@ -257,20 +257,31 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 }
 
 .bento-item {
-  display: flex;
-  flex-direction: column;
+  position: relative;
   min-height: 0;
+  padding-bottom: 72px;
+  box-sizing: border-box;
 }
 
 .bento-tile {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 72px;
   display: block;
   overflow: hidden;
   cursor: none;
   background: #1a1a1a;
   border-radius: 12px;
-  flex: 1 1 auto;
-  min-height: 0;
+}
+
+.bento-item .bento-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% - 72px);
+  flex-wrap: wrap;
 }
 
 .bento-tile video,
@@ -327,8 +338,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
 .bento-item .bento-label .bento-caption {
   display: block;
-  font-family: var(--serif);
-  font-style: italic;
+  font-family: var(--sans);
   font-size: 13px;
   color: #888;
 }
@@ -359,11 +369,24 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
     grid-row: auto;
   }
 
+  .bento-item {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 0;
+  }
+
   .bento-item--shed .bento-tile,
   .bento-item--empower .bento-tile,
   .bento-item--pathrise .bento-tile,
   .bento-item--savvly .bento-tile {
+    position: relative;
+    inset: auto;
     aspect-ratio: 4/3;
+  }
+
+  .bento-item .bento-label {
+    position: relative;
+    top: auto;
   }
 
   .bento-tile--empower .bento-cover--diary,
@@ -401,13 +424,42 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   cursor: none;
 }
 
-/* Open: fills exactly its 2×2 grid area, content scrolls inside */
+/* Open: floats as a fixed, centered panel above the page, like the case studies */
 .freelance-item.open {
   cursor: none;
-  background: #0e0e0e;
+  background: var(--white);
+  color: var(--black);
   overflow: hidden;
-  height: 100%;
-  min-height: 0;
+}
+
+#freelance-overlay { display: none; }
+
+@media (min-width: 601px) {
+  .freelance-item.open {
+    position: fixed !important;
+    top: 60px;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 75vw;
+    height: auto;
+    max-height: none;
+    z-index: 9999;
+    border-radius: 12px;
+    grid-column: unset !important;
+    grid-row: unset !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  }
+
+  #freelance-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    background: rgba(0,0,0,0.75);
+    cursor: none;
+  }
+  #freelance-overlay.active { display: block; }
 }
 
 /* Closed: thumbnail fills the cell */
@@ -455,7 +507,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   max-height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 31px 33px 35px;
+  padding: 48px 33px 35px;
   box-sizing: border-box;
 }
 
@@ -469,13 +521,13 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   line-height: 1;
   z-index: 1;
 }
-.fi-close:hover { color: #f0ede8; }
+.fi-close:hover { color: var(--black); }
 
 .fi-d-name {
   font-family: var(--serif);
   font-size: clamp(20px, 1.6vw, 66px);
   font-weight: 400;
-  color: #f0ede8;
+  color: var(--black);
   line-height: 1.1;
   display: block;
   margin-bottom: 4.5px;
@@ -517,11 +569,74 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   object-position: left center;
   cursor: none;
 }
+
+/* Carousel: one large image at a time, with arrows + dots */
+.fi-carousel {
+  position: relative;
+  margin: 0 auto 22px;
+  background: #f3f1ec;
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 100%;
+  transition: width 0.35s ease;
+}
+.fi-carousel .fi-carousel-track {
+  display: flex;
+  transition: transform 0.35s ease;
+}
+.fi-carousel .fi-carousel-track img {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 320px;
+  object-fit: contain;
+  display: block;
+  cursor: none;
+}
+.fi-carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.85);
+  border: none;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  font-size: 16px;
+  color: var(--black);
+  cursor: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+.fi-carousel-arrow:hover { background: #fff; }
+.fi-carousel-arrow--prev { left: 11px; }
+.fi-carousel-arrow--next { right: 11px; }
+.fi-carousel-dots {
+  position: absolute;
+  bottom: 13px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6.5px;
+}
+.fi-carousel-dot {
+  width: 6.5px;
+  height: 6.5px;
+  border-radius: 50%;
+  background: rgba(14,14,14,0.25);
+  border: none;
+  cursor: none;
+  padding: 0;
+  transition: background 0.15s ease;
+}
+.fi-carousel-dot.active { background: rgba(14,14,14,0.75); }
+
 .fi-d-desc {
   font-family: var(--serif);
   font-size: 16.5px;
   line-height: 1.8;
-  color: #ddd8d0;
+  color: #333;
   margin-bottom: 17.5px;
 }
 .fi-d-tags {
@@ -534,9 +649,9 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   font-size: 12px;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  border: 1px solid #3a3a3a;
+  border: 1px solid #ddd;
   padding: 3.5px 11px;
-  color: #999;
+  color: #777;
 }
 
 
@@ -611,7 +726,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
 .merch-card h4 {
   font-family: var(--serif);
-  font-size: 18.5px;
+  font-size: 23px;
   font-weight: 400;
   margin-bottom: 5.5px;
 }
@@ -1276,7 +1391,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
     right: 22px!important;
     float: none !important;
     z-index: 10000 !important;
-    background: #0e0e0e !important;
+    background: var(--white) !important;
     padding: 4.5px 9px!important;
     font-size: 20px !important;
   }
@@ -1374,6 +1489,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
 <!-- FREELANCE -->
 <section id="freelance" style="padding-bottom:132px;background:#0e0e0e;color:#f0ede8;position:relative;z-index:1;">
+  <div id="freelance-overlay" onclick="closeFreelanceOverlay(event)"></div>
   <div style="max-width:460px;margin-bottom:57px;">
     <h3 style="max-width:360px;font-family:var(--serif);font-size:39.5px;font-weight:400;margin-bottom:11px;line-height:1.2;">Joined as the first designer.</h3>
     <p style="font-size:15.5px;color:#aaa;line-height:1.7;">Joined seed-stage startups as first UI designer — logo, identity, marketing, and web from scratch. Several went on to YC or Sequoia-backed rounds.</p>
@@ -1393,11 +1509,21 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
         <button class="fi-close" onclick="closeFreelance(event, this)">&#x2715;</button>
         <span class="fi-d-name">Flint</span>
         <span class="fi-d-badge">Logo &amp; Brand Identity &middot; YC S'23 &middot; May 2023</span>
-        <div class="fi-d-img-row">
-          <img src="portfolio_media/Flint/Pictoral_Mark.png" alt="Pictoral mark" onclick="openImgLightbox(this.src)">
-          <img src="portfolio_media/Flint/Combination_Mark.png" alt="Combination mark" onclick="openImgLightbox(this.src)">
-          <img src="portfolio_media/Flint/Color_Combos.png" alt="Color combos" onclick="openImgLightbox(this.src)">
-          <img src="portfolio_media/Flint/Both_Variants.png" alt="Both variants" onclick="openImgLightbox(this.src)">
+        <div class="fi-carousel">
+          <div class="fi-carousel-track">
+            <img src="portfolio_media/Flint/Pictoral_Mark.png" alt="Pictoral mark" onclick="openImgLightbox(this.src)">
+            <img src="portfolio_media/Flint/Combination_Mark.png" alt="Combination mark" onclick="openImgLightbox(this.src)">
+            <img src="portfolio_media/Flint/Color_Combos.png" alt="Color combos" onclick="openImgLightbox(this.src)">
+            <img src="portfolio_media/Flint/Both_Variants.png" alt="Both variants" onclick="openImgLightbox(this.src)">
+          </div>
+          <button class="fi-carousel-arrow fi-carousel-arrow--prev" onclick="carouselNav(this, -1)">&#8249;</button>
+          <button class="fi-carousel-arrow fi-carousel-arrow--next" onclick="carouselNav(this, 1)">&#8250;</button>
+          <div class="fi-carousel-dots">
+            <button class="fi-carousel-dot active" onclick="carouselGoTo(this, 0)"></button>
+            <button class="fi-carousel-dot" onclick="carouselGoTo(this, 1)"></button>
+            <button class="fi-carousel-dot" onclick="carouselGoTo(this, 2)"></button>
+            <button class="fi-carousel-dot" onclick="carouselGoTo(this, 3)"></button>
+          </div>
         </div>
         <p class="fi-d-desc">Flint is an AI tutoring platform for K–12 students. I joined as the first designer to build the brand from scratch. The logo needed to feel approachable for students and teachers and embody their mission to ignite progress in the education sector.</p>
         <div class="fi-d-img-row">
@@ -1434,7 +1560,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
         </div>
         <div class="fi-d-tags">
           <span class="fi-d-tag">Platform</span>
-          <span class="fi-d-tag">Data Viz</span>
+          <span class="fi-d-tag">Data Visualization</span>
         </div>
       </div>
     </div>
@@ -1451,10 +1577,19 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
         <button class="fi-close" onclick="closeFreelance(event, this)">&#x2715;</button>
         <span class="fi-d-name">Mediboard</span>
         <span class="fi-d-badge">Logo &middot; Identity &middot; August 2022</span>
-        <div class="fi-d-img-row" style="gap:9px;">
-          <img src="portfolio_media/Mediboard/Pictorial_Mark.png" alt="Pictorial mark" onclick="openImgLightbox(this.src)" style="flex:1 1 0;min-width:0;width:100%;height:auto;">
-          <img src="portfolio_media/Mediboard/combination.png" alt="Combination mark" onclick="openImgLightbox(this.src)" style="flex:1 1 0;min-width:0;width:100%;height:auto;">
-          <img src="portfolio_media/Mediboard/both.png" alt="Both variants" onclick="openImgLightbox(this.src)" style="flex:1 1 0;min-width:0;width:100%;height:auto;">
+        <div class="fi-carousel">
+          <div class="fi-carousel-track">
+            <img src="portfolio_media/Mediboard/Pictorial_Mark.png" alt="Pictorial mark" onclick="openImgLightbox(this.src)">
+            <img src="portfolio_media/Mediboard/combination.png" alt="Combination mark" onclick="openImgLightbox(this.src)">
+            <img src="portfolio_media/Mediboard/both.png" alt="Both variants" onclick="openImgLightbox(this.src)">
+          </div>
+          <button class="fi-carousel-arrow fi-carousel-arrow--prev" onclick="carouselNav(this, -1)">&#8249;</button>
+          <button class="fi-carousel-arrow fi-carousel-arrow--next" onclick="carouselNav(this, 1)">&#8250;</button>
+          <div class="fi-carousel-dots">
+            <button class="fi-carousel-dot active" onclick="carouselGoTo(this, 0)"></button>
+            <button class="fi-carousel-dot" onclick="carouselGoTo(this, 1)"></button>
+            <button class="fi-carousel-dot" onclick="carouselGoTo(this, 2)"></button>
+          </div>
         </div>
         <p class="fi-d-desc">The Medical Board makes clinical trial data readable for patients. I designed the logo to feel approachable for a general audience while staying credible in a clinical space. The plague doctor mascot was an unexpected choice that ended up becoming widely recognized among their users.</p>
         <div class="fi-d-img-row" style="gap:9px;align-items:flex-start;">
@@ -1506,7 +1641,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
         <span class="fi-d-name">Knockknock</span>
         <span class="fi-d-badge">Co-founder &amp; Lead Designer &middot; January 2023 – August 2023</span>
         <p class="fi-d-desc">A language-exchange app connecting people through shared culture and conversation goals.</p>
-        <p class="fi-d-desc">KnockKnock pairs users for language exchange based on shared interests, location, and learning goals. I came in after the team had done early user interviews and competitive research, and built the entire visual and interaction language from that foundation — including brand identity, home dashboard, matching flow, and profile screens.</p>
+        <p class="fi-d-desc">KnockKnock pairs users for language exchange based on shared interests, location, and learning goals. I came in after the team had done early user interviews and competitive research, and I built the entire visual and interaction language from that foundation — including brand identity, home dashboard, matching flow, and profile screens.</p>
         <div class="fi-d-img-row" style="gap:0;align-items:flex-start;">
           <img src="portfolio_media/KnockKnock/Untitled 1.png" alt="" onclick="openImgLightbox(this.src)" style="flex:none;width:20%;height:auto;">
           <img src="portfolio_media/KnockKnock/Untitled 2.png" alt="" onclick="openImgLightbox(this.src)" style="flex:none;width:20%;height:auto;">
@@ -1565,20 +1700,20 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
     <p style="font-size:15.5px;color:#aaa;line-height:1.7;">Some are for shows I actually played, others I made just because I wanted my favorite artists on my wall.</p>
   </div>
   <div class="poster-grid" style="padding:0 88px;">
-    <div class="poster-cell"><img src="portfolio_media/posters/raveena.png" alt="Raveena"><div class="poster-overlay"><div class="poster-year">2022</div><div class="poster-title">Raveena — Asha's Awakening</div><div class="poster-desc">Album poster design. Raveena retweeted this!<div class="tweet-wrap"><blockquote class="twitter-tweet" data-theme="dark"><p lang="qme" dir="ltr">😍😍😍</p>&mdash; Raveena (@raveena_aurora) <a href="https://x.com/raveena_aurora/status/1573880845047189504?ref_src=twsrc%5Etfw">September 25, 2022</a></blockquote><script async src="https://platform.x.com/widgets.js" charset="utf-8"></script></div></div></div></div>
-    <div class="poster-cell"><img src="portfolio_media/posters/sailorrp.png" alt="Sailorr"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">Sailorr</div><div class="poster-desc">An album poster for Sailorr's From Florida's Finest.</div></div></div>
-    <div class="poster-cell"><img src="portfolio_media/posters/laufeyp.png" alt="Laufey"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">Laufey</div><div class="poster-desc">A discography poster for Laufey.</div></div></div>
-    <div class="poster-cell"><img src="portfolio_media/posters/rihanna.png" alt="Rihanna"><div class="poster-overlay"><div class="poster-year">2024</div><div class="poster-title">Rihanna</div><div class="poster-desc">A reimagined concert poster for Rihanna.</div></div></div>
-    <div class="poster-cell"><img src="portfolio_media/posters/mitski.png" alt="Mitski"><div class="poster-overlay"><div class="poster-year">2022</div><div class="poster-title">Mitski</div><div class="poster-desc">A reimagined concert poster for Mitski's Be the Cowboy tour.</div></div></div>
-    <div class="poster-cell"><img src="portfolio_media/posters/omshanti.png" alt="Om Shanti Om"><div class="poster-overlay"><div class="poster-year">2022</div><div class="poster-title">Om Shanti Om</div><div class="poster-desc">A movie poster of the 2007 Farah Khan film Om Shanti Om.</div></div></div>
-    <div class="poster-cell"><img src="portfolio_media/posters/nujazz.png" alt="Nu Jazz"><div class="poster-overlay"><div class="poster-year">2026</div><div class="poster-title">Nu Jazz</div><div class="poster-desc">A concert poster for the joint concert between UC Jazz Orchestra and Berkeley Nu Jazz Collective.</div></div></div>
-    <div class="poster-cell"><img src="portfolio_media/posters/ucjowinter.png" alt="UCJo Winter"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">UC Jazz Winter</div><div class="poster-desc">A concert poster for UCJO's December 2025 concert, which featured a Charlie Brown tune.</div></div></div>
-    <div class="poster-cell"><img src="portfolio_media/posters/lala.jpg" alt="La La Land"><div class="poster-overlay"><div class="poster-year">2026</div><div class="poster-title">La La Land</div><div class="poster-desc">A concert poster for UCJO's May 2026 concert, which featured a La La Land tune.</div></div></div>
-    <div class="poster-cell"><img src="portfolio_media/posters/spellling.jpeg" alt="Spellling"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">Spellling</div><div class="poster-desc">A poster for a concert I went to by SPELLLING.</div></div></div>
-    <div class="poster-cell"><img src="portfolio_media/posters/beginningjazz.png" alt="Beginning Jazz"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">Beginning Jazz</div><div class="poster-desc">UC Jazz's Fall 2025 end of semester beginning combo concert poster.</div></div></div>
-    <div class="poster-cell letter"><img src="portfolio_media/posters/kendrick.png" alt="Kendrick"><div class="poster-overlay"><div class="poster-year">2023</div><div class="poster-title">Kendrick Lamar</div><div class="poster-desc">Album poster for To Pimp a Butterfly.</div></div></div>
-    <div class="poster-cell letter"><img src="portfolio_media/posters/fish.png" alt="Fish"><div class="poster-overlay"><div class="poster-year">2026</div><div class="poster-title">Fish</div><div class="poster-desc">UC Jazz's Spring 2026 beginning combo concert poster.</div></div></div>
-    <div class="poster-cell letter"><img src="portfolio_media/posters/116concert.png" alt="116 Concert"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">116 Concert</div><div class="poster-desc">Hand-illustrated concert poster for the end of semester concert for a free jazz improvisational class at UC Berkeley.</div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/raveena.png" alt="Raveena" loading="lazy" decoding="async"><div class="poster-overlay"><div class="poster-year">2022</div><div class="poster-title">Raveena — Asha's Awakening</div><div class="poster-desc">Album poster design. Raveena retweeted this!<div class="tweet-wrap"><blockquote class="twitter-tweet" data-theme="dark"><p lang="qme" dir="ltr">😍😍😍</p>&mdash; Raveena (@raveena_aurora) <a href="https://x.com/raveena_aurora/status/1573880845047189504?ref_src=twsrc%5Etfw">September 25, 2022</a></blockquote><script async src="https://platform.x.com/widgets.js" charset="utf-8"></script></div></div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/sailorrp.png" alt="Sailorr" loading="lazy" decoding="async"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">Sailorr</div><div class="poster-desc">An album poster for Sailorr's From Florida's Finest.</div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/laufeyp.png" alt="Laufey" loading="lazy" decoding="async"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">Laufey</div><div class="poster-desc">A discography poster for Laufey.</div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/rihanna.png" alt="Rihanna" loading="lazy" decoding="async"><div class="poster-overlay"><div class="poster-year">2024</div><div class="poster-title">Rihanna</div><div class="poster-desc">A reimagined concert poster for Rihanna.</div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/mitski.png" alt="Mitski" loading="lazy" decoding="async"><div class="poster-overlay"><div class="poster-year">2022</div><div class="poster-title">Mitski</div><div class="poster-desc">A reimagined concert poster for Mitski's Be the Cowboy tour.</div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/omshanti.png" alt="Om Shanti Om" loading="lazy" decoding="async"><div class="poster-overlay"><div class="poster-year">2022</div><div class="poster-title">Om Shanti Om</div><div class="poster-desc">A movie poster of the 2007 Farah Khan film Om Shanti Om.</div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/nujazz.png" alt="Nu Jazz" loading="lazy" decoding="async"><div class="poster-overlay"><div class="poster-year">2026</div><div class="poster-title">Nu Jazz</div><div class="poster-desc">A concert poster for the joint concert between UC Jazz Orchestra and Berkeley Nu Jazz Collective.</div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/ucjowinter.png" alt="UCJo Winter" loading="lazy" decoding="async"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">UC Jazz Winter</div><div class="poster-desc">A concert poster for UCJO's December 2025 concert, which featured a Charlie Brown tune.</div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/lala.jpg" alt="La La Land" loading="lazy" decoding="async"><div class="poster-overlay"><div class="poster-year">2026</div><div class="poster-title">La La Land</div><div class="poster-desc">A concert poster for UCJO's May 2026 concert, which featured a La La Land tune.</div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/spellling.jpeg" alt="Spellling" loading="lazy" decoding="async"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">Spellling</div><div class="poster-desc">A poster for a concert I went to by SPELLLING.</div></div></div>
+    <div class="poster-cell"><img src="portfolio_media/posters/beginningjazz.png" alt="Beginning Jazz" loading="lazy" decoding="async"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">Beginning Jazz</div><div class="poster-desc">UC Jazz's Fall 2025 end of semester beginning combo concert poster.</div></div></div>
+    <div class="poster-cell letter"><img src="portfolio_media/posters/kendrick.png" alt="Kendrick" loading="lazy" decoding="async"><div class="poster-overlay"><div class="poster-year">2023</div><div class="poster-title">Kendrick Lamar</div><div class="poster-desc">Album poster for To Pimp a Butterfly.</div></div></div>
+    <div class="poster-cell letter"><img src="portfolio_media/posters/fish.png" alt="Fish" loading="lazy" decoding="async"><div class="poster-overlay"><div class="poster-year">2026</div><div class="poster-title">Fish</div><div class="poster-desc">UC Jazz's Spring 2026 beginning combo concert poster.</div></div></div>
+    <div class="poster-cell letter"><img src="portfolio_media/posters/116concert.png" alt="116 Concert" loading="lazy" decoding="async"><div class="poster-overlay"><div class="poster-year">2025</div><div class="poster-title">116 Concert</div><div class="poster-desc">Hand-illustrated concert poster for the end of semester concert for a free jazz improvisational class at UC Berkeley.</div></div></div>
   </div>
 
 
@@ -1586,7 +1721,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
 <!-- BOTTOM COVER REVEAL -->
 <div id="cover-bottom">
-  <div class="bg"><img src="https://res.cloudinary.com/rsckwt4u/image/upload/f_auto,q_auto/back.jpg" alt="Meghai Choudhury"></div>
+  <div class="bg"><img src="https://res.cloudinary.com/rsckwt4u/image/upload/f_auto,q_auto/back.jpg" alt="Meghai Choudhury" decoding="async"></div>
   <div class="overlay"></div>
   <div class="corner corner--tl narrow-only" style="top:53px;left:44px;">
     Meghai Choudhury<br>
@@ -1900,6 +2035,8 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
     fade.style.opacity = t;
   }
   window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update, { passive: true });
+  window.addEventListener('load', update);
   update();
 })();
 
@@ -1908,7 +2045,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   const dot = document.querySelector('.cursor-dot');
   if (!dot) return;
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-  const hoverSelector = 'a, button, .bento-tile, .poster-cell, .freelance-item';
+  const hoverSelector = 'a, button, .bento-tile, .poster-cell, .freelance-item:not(.open)';
 
   let lastX = -9999, lastY = -9999;
 
@@ -1964,6 +2101,49 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
     lb.classList.remove('active');
   });
 })();
+
+/* ── Freelance carousel ── */
+function carouselFitWidth(carousel, img) {
+  var maxWidth = carousel.parentElement.clientWidth;
+  function apply() {
+    var h = 320;
+    var w = img.naturalWidth && img.naturalHeight ? (img.naturalWidth / img.naturalHeight) * h : maxWidth;
+    carousel.style.width = Math.min(w, maxWidth) + 'px';
+  }
+  if (img.complete && img.naturalWidth) apply();
+  else img.addEventListener('load', apply, { once: true });
+}
+function carouselSetIndex(carousel, index) {
+  var track = carousel.querySelector('.fi-carousel-track');
+  var slides = track.children;
+  var dots = carousel.querySelectorAll('.fi-carousel-dot');
+  var count = slides.length;
+  index = (index + count) % count;
+  track.style.transform = 'translateX(-' + (index * 100) + '%)';
+  dots.forEach(function(dot, i) { dot.classList.toggle('active', i === index); });
+  carousel.dataset.index = index;
+  carouselFitWidth(carousel, slides[index]);
+}
+function carouselNav(btn, dir) {
+  event.stopPropagation();
+  var carousel = btn.closest('.fi-carousel');
+  var current = parseInt(carousel.dataset.index || '0', 10);
+  carouselSetIndex(carousel, current + dir);
+}
+function carouselGoTo(btn, index) {
+  event.stopPropagation();
+  var carousel = btn.closest('.fi-carousel');
+  carouselSetIndex(carousel, index);
+}
+document.querySelectorAll('.fi-carousel').forEach(function(carousel) {
+  carouselSetIndex(carousel, 0);
+});
+window.addEventListener('resize', function() {
+  document.querySelectorAll('.fi-carousel').forEach(function(carousel) {
+    var current = parseInt(carousel.dataset.index || '0', 10);
+    carouselSetIndex(carousel, current);
+  });
+});
 
 /* ── Case study image zoom ── */
 function openImgLightbox(src) {
@@ -2102,18 +2282,15 @@ function toggleFreelance(item) {
   });
   if (!isOpen) {
     if (window.innerWidth > 600) {
-      var grid = item.closest('.freelance-grid');
-      var items = Array.from(grid.querySelectorAll('.freelance-item'));
-      var idx = items.indexOf(item);
-      var col = (idx % 3) + 1;
-      var row = Math.floor(idx / 3) + 1;
-      var colStart = col === 3 ? 2 : col;
-      item.style.gridColumn = colStart + ' / span 2';
-      item.style.gridRow = row + ' / span 2';
-    } else {
-      document.body.style.overflow = 'hidden';
+      var overlay = document.getElementById('freelance-overlay');
+      if (overlay) overlay.classList.add('active');
     }
+    document.body.style.overflow = 'hidden';
     item.classList.add('open');
+    item.querySelectorAll('.fi-carousel').forEach(function(carousel) {
+      var current = parseInt(carousel.dataset.index || '0', 10);
+      carouselSetIndex(carousel, current);
+    });
     if (item.id) history.pushState(null, '', '#' + item.id);
   } else if (location.hash === '#' + item.id) {
     history.pushState(null, '', ' ');
@@ -2126,12 +2303,27 @@ function closeFreelance(e, btn) {
   item.classList.remove('open');
   item.style.gridColumn = '';
   item.style.gridRow = '';
-  if (window.innerWidth <= 600) {
-    document.body.style.overflow = '';
-  }
+  var overlay = document.getElementById('freelance-overlay');
+  if (overlay) overlay.classList.remove('active');
+  document.body.style.overflow = '';
   if (item.id && location.hash === '#' + item.id) {
     history.pushState(null, '', ' ');
   }
+}
+
+function closeFreelanceOverlay(e) {
+  var openItem = document.querySelector('.freelance-item.open');
+  if (openItem) {
+    openItem.classList.remove('open');
+    openItem.style.gridColumn = '';
+    openItem.style.gridRow = '';
+    if (openItem.id && location.hash === '#' + openItem.id) {
+      history.pushState(null, '', ' ');
+    }
+  }
+  var overlay = document.getElementById('freelance-overlay');
+  if (overlay) overlay.classList.remove('active');
+  document.body.style.overflow = '';
 }
 
 function copyEmail(e) {
