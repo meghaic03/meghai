@@ -173,7 +173,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 }
 
 #cover .masthead-contact {
-  position: absolute;
+  position: fixed;
   z-index: 2;
   top: 48.5px;
   right: 70.5px;
@@ -1281,6 +1281,18 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 /* ── FOOTER ── */
 
 
+@media (max-width: 900px) {
+  #freelance { padding-left: 44px; padding-right: 44px; }
+  .merch-grid { padding-left: 44px!important; padding-right: 44px!important; }
+  .poster-grid { padding-left: 44px!important; padding-right: 44px!important; grid-template-columns: repeat(3, 1fr) !important; }
+  #merch, #posters { padding-left: 44px!important; padding-right: 44px!important; }
+
+  .freelance-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: calc((100vw - 80px - 2px) / 2 * 3 / 4);
+  }
+}
+
 @media (max-width: 600px) {
   .wide-only { display: none; }
   .narrow-only { display: inline; }
@@ -1307,19 +1319,30 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: calc((100vw - 80px - 2px) / 2 * 3 / 4);
   }
+
+  .freelance-item.ph .ph-name { font-size: 15px; padding: 0 8px; text-align: center; }
+  .freelance-item.ph .ph-type { font-size: 11px; letter-spacing: 0.04em; padding: 0 8px; text-align: center; word-break: break-all; }
+}
+
+@media (max-width: 715px) {
+  #cover-bottom .corner--bl {
+    left: 44px;
+    right: 44px;
+    bottom: 44px;
+  }
+  #cover-bottom .corner--br { display: none; }
+  #cover-bottom .credits { display: none; }
+  #cover-bottom .corner--bl .wide-only { display: none; }
+  #cover-bottom .corner--bl .mobile-contact {
+    display: flex !important;
+    flex-direction: column;
+    row-gap: 2px;
+  }
 }
 
 @media (max-width: 500px) {
-  .freelance-grid {
-    grid-template-columns: 1fr !important;
-    grid-auto-rows: calc((100vw - 88px) * 3 / 4) !important;
-  }
-
   #cover .masthead { left: 44px; right: 44px; bottom: 88px; }
   #cover .masthead-contact { display: none; }
-  #cover-bottom .corner--bl { left: 44px; }
-  #cover-bottom .corner--br { right: 44px; }
-  #cover-bottom .credits { max-width: calc(100% - 80px); }
 
   #case-study-panel,
   #savvly-panel,
@@ -1333,7 +1356,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
     max-height: none !important;
     height: 100vh !important;
     border-radius: 0 !important;
-    padding: 79px 35px 88px!important;
+    padding: 79px 44px 88px!important;
   }
 
   #case-study-panel .cs-close,
@@ -1419,15 +1442,10 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   <div class="masthead">
     <h1>Meghai<br>Choudhury</h1>
     <p class="masthead-role">Product Design &middot; CS &amp; Design, UC Berkeley</p>
-    <p class="masthead-role narrow-only" style="margin-top:10px;">
-      <a href="#" onclick="copyEmail(event)">meghai@berkeley.edu</a> &middot;
+    <div class="masthead-contact">
+      <a href="#" onclick="copyEmail(event)">meghai@berkeley.edu</a><br>
       <a href="https://www.linkedin.com/in/meghai-choudhury-b5538418b/" target="_blank">LinkedIn</a>
-    </p>
-  </div>
-
-  <div class="masthead-contact">
-    <a href="#" onclick="copyEmail(event)">meghai@berkeley.edu</a><br>
-    <a href="https://www.linkedin.com/in/meghai-choudhury-b5538418b/" target="_blank">LinkedIn</a>
+    </div>
   </div>
 
   <div class="scroll-cue">
@@ -1730,13 +1748,13 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 <div id="cover-bottom">
   <div class="bg"><img src="https://res.cloudinary.com/rsckwt4u/image/upload/f_auto,q_auto/back.jpg" alt="Meghai Choudhury" decoding="async"></div>
   <div class="overlay"></div>
-  <div class="corner corner--tl narrow-only" style="top:53px;left:44px;">
-    Meghai Choudhury<br>
-    <a href="#" onclick="copyEmail(event)">Email</a> &nbsp; <a href="https://www.linkedin.com/in/meghai-choudhury-b5538418b/" target="_blank">LinkedIn</a>
-  </div>
   <div class="corner corner--bl">
     <span class="wide-only">Meghai Choudhury</span>
-    <span class="narrow-only">Photography <a href="https://www.instagram.com/naliniphoto/" target="_blank">Nalini Kumar</a></span>
+    <span class="mobile-contact narrow-only">
+      <span>Meghai Choudhury</span>
+      <span><a href="#" onclick="copyEmail(event)">Email</a> &nbsp; <a href="https://www.linkedin.com/in/meghai-choudhury-b5538418b/" target="_blank">LinkedIn</a></span>
+      <span>Photography <a href="https://www.instagram.com/naliniphoto/" target="_blank">Nalini Kumar</a></span>
+    </span>
   </div>
   <div class="corner corner--br wide-only">
     <a href="#" onclick="copyEmail(event)">Email</a> &nbsp; <a href="https://www.linkedin.com/in/meghai-choudhury-b5538418b/" target="_blank">LinkedIn</a>
