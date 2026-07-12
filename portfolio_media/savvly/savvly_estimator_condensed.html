@@ -8,6 +8,11 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: #ffffff;
@@ -22,11 +27,13 @@
       margin: 0 auto;
       display: flex;
       justify-content: center;
+      min-width: 0;
     }
 
     #tab-estimator {
       width: 860px;
       max-width: 100%;
+      min-width: 0;
     }
 
     /* ── TWO-COLUMN LAYOUT ── */
@@ -35,6 +42,11 @@
       grid-template-columns: 340px 1fr;
       gap: 3rem;
       align-items: flex-start;
+      min-width: 0;
+    }
+
+    .input-col, .right-col {
+      min-width: 0;
     }
 
     /* ── LEFT: INPUTS ── */
@@ -311,7 +323,31 @@
     }
 
     @media (max-width: 800px) {
-      .main-layout { grid-template-columns: 1fr; }
+      .main-layout { grid-template-columns: 1fr; gap: 1.5rem; }
+      .right-col { max-width: 100%; margin-top: 0; }
+      .chart-wrapper { max-width: 100%; }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 1.25rem 0.75rem; }
+
+      .payout-cards-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .payout-card.total {
+        grid-column: 1 / -1;
+      }
+
+      .chart-wrapper { height: 260px; }
+
+      .legend {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .payout-card .amount { font-size: 13px; }
+      .payout-card .label { font-size: 9px; }
     }
   </style>
 </head>
@@ -593,6 +629,12 @@
 
 
         // Payout pill labels
+        const narrow = chart.width < 420;
+        const fontSize = narrow ? 9 : 11;
+        const padX = narrow ? 8 : 12;
+        const ph = narrow ? 16 : 20;
+        const stagger = narrow ? 16 : 0;
+
         ages.forEach((age, i) => {
           const idx = chart.data.labels.indexOf(String(age));
           if (idx === -1) return;
@@ -600,10 +642,11 @@
           const pyTop = y.getPixelForValue(tops[i]);
 
           const txt = '+' + fmtK(scenarioVals[i]);
-          ctx.font = '500 11px Arial';
+          ctx.font = '500 ' + fontSize + 'px Arial';
           const tw = ctx.measureText(txt).width;
-          const pw = tw + 12, ph = 20, pr = 4;
-          const lx = px - pw / 2, ly = pyTop - 8 - ph;
+          const pw = tw + padX, pr = 4;
+          const extraLift = (narrow && i % 2 === 1) ? stagger : 0;
+          const lx = px - pw / 2, ly = pyTop - 8 - ph - extraLift;
           ctx.fillStyle = '#1a6bc4';
           ctx.beginPath();
           ctx.roundRect(lx, ly, pw, ph, pr);

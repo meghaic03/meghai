@@ -1299,13 +1299,20 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 
   .section-divider { padding-left: 44px; padding-right: 44px; }
   #freelance { padding-left: 44px; padding-right: 44px; }
-  #freelance-content { padding-left: 44px!important; padding-right: 44px!important; }
   .merch-grid { padding-left: 44px!important; padding-right: 44px!important; grid-template-columns: 1fr; }
   .poster-grid { padding-left: 44px!important; padding-right: 44px!important; grid-template-columns: repeat(2, 1fr) !important; }
+  #merch, #posters { padding-left: 44px!important; padding-right: 44px!important; }
 
   .freelance-grid {
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: calc((100vw - 80px - 2px) / 2 * 3 / 4);
+  }
+}
+
+@media (max-width: 500px) {
+  .freelance-grid {
+    grid-template-columns: 1fr !important;
+    grid-auto-rows: calc((100vw - 88px) * 3 / 4) !important;
   }
 
   #cover .masthead { left: 44px; right: 44px; bottom: 88px; }
