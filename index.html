@@ -437,18 +437,19 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 @media (min-width: 601px) {
   .freelance-item.open {
     position: fixed !important;
-    top: 60px;
-    bottom: 60px;
+    bottom: 0;
+    top: auto;
     left: 50%;
     transform: translateX(-50%);
     width: 75vw;
     height: auto;
-    max-height: none;
+    max-height: 92vh;
     z-index: 9999;
-    border-radius: 12px;
+    border-radius: 12px 12px 0 0;
     grid-column: unset !important;
     grid-row: unset !important;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+    box-shadow: none;
+    overflow-y: auto;
   }
 
   #freelance-overlay {
@@ -503,43 +504,21 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 .freelance-item .fi-content { display: none; }
 .freelance-item.open .fi-content {
   display: block;
-  height: 100%;
-  max-height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 48px 33px 35px;
+  padding: 121px 121px 105.5px;
   box-sizing: border-box;
 }
 
 .fi-close {
-  position: sticky;
-  top: 0;
-  float: right;
+  position: absolute;
+  top: 66px; right: 31px;
   background: none; border: none;
-  font-size: 15.5px; color: var(--mid);
-  cursor: none; padding: 0;
+  font-size: 20px; color: var(--mid);
+  cursor: none; padding: 4.5px 9px;
   line-height: 1;
   z-index: 1;
 }
 .fi-close:hover { color: var(--black); }
 
-.fi-d-name {
-  font-family: var(--serif);
-  font-size: clamp(20px, 1.6vw, 66px);
-  font-weight: 400;
-  color: var(--black);
-  line-height: 1.1;
-  display: block;
-  margin-bottom: 4.5px;
-}
-.fi-d-badge {
-  font-size: 12px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--mid);
-  display: block;
-  margin-bottom: 22px;
-}
 .fi-d-img-row {
   display: flex;
   gap: 4.5px;
@@ -639,22 +618,6 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   color: #333;
   margin-bottom: 17.5px;
 }
-.fi-d-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6.5px;
-  margin-top: 4.5px;
-}
-.fi-d-tag {
-  font-size: 12px;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  border: 1px solid #ddd;
-  padding: 3.5px 11px;
-  color: #777;
-}
-
-
 .freelance-item.ph {
   cursor: default;
 }
@@ -969,7 +932,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
 }
 #case-study-panel .cs-close:hover, #empower-panel .cs-close:hover, #savvly-panel .cs-close:hover, #pathrise-panel .cs-close:hover { color: var(--black); }
 
-#case-study-panel .cs-label, #empower-panel .cs-label, #savvly-panel .cs-label, #pathrise-panel .cs-label {
+#case-study-panel .cs-label, #empower-panel .cs-label, #savvly-panel .cs-label, #pathrise-panel .cs-label, .fi-content .cs-label {
   font-size: 17px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -978,7 +941,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
   display: block;
 }
 
-#case-study-panel h1, #empower-panel h1, #savvly-panel h1, #pathrise-panel h1 {
+#case-study-panel h1, #empower-panel h1, #savvly-panel h1, #pathrise-panel h1, .fi-content h1 {
   font-family: var(--serif);
   font-size: clamp(31px, 3.3vw, 66px);
   font-weight: 400;
@@ -1414,6 +1377,7 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
     height: auto !important;
     max-height: none !important;
     overflow-y: visible !important;
+    padding: 79px 44px 88px !important;
   }
   .fi-close {
     position: fixed !important;
@@ -1532,8 +1496,15 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
       </div>
       <div class="fi-content">
         <button class="fi-close" onclick="closeFreelance(event, this)">&#x2715;</button>
-        <span class="fi-d-name">Flint</span>
-        <span class="fi-d-badge">Logo &amp; Brand Identity &middot; YC S'23 &middot; May 2023</span>
+        <span class="cs-label">Case Study</span>
+        <h1>Flint</h1>
+        <div class="cs-meta-row">
+          <div class="cs-meta-cols">
+            <div class="cs-meta-col"><span class="cs-meta-label">Category</span><span class="cs-meta-value">Logo &amp; Brand Identity</span></div>
+            <div class="cs-meta-col"><span class="cs-meta-label">Role</span><span class="cs-meta-value">Freelance Designer</span></div>
+            <div class="cs-meta-col"><span class="cs-meta-label">Year</span><span class="cs-meta-value">2023</span></div>
+          </div>
+        </div>
         <div class="fi-carousel">
           <div class="fi-carousel-track">
             <img src="portfolio_media/Flint/Pictoral_Mark.png" alt="Pictoral mark" onclick="openImgLightbox(this.src)">
@@ -1558,11 +1529,6 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
           <img src="portfolio_media/Flint/iteration3.png" alt="Iteration 3" onclick="openImgLightbox(this.src)">
         </div>
         <p class="fi-d-desc">I explored a wide range of directions before landing on the flint stone with radiating sparks, taking its name as inspiration.</p>
-        <div class="fi-d-tags">
-          <span class="fi-d-tag">Logo</span>
-          <span class="fi-d-tag">Identity</span>
-          <span class="fi-d-tag">Merch</span>
-        </div>
       </div>
     </div>
 
@@ -1576,16 +1542,19 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
       </div>
       <div class="fi-content">
         <button class="fi-close" onclick="closeFreelance(event, this)">&#x2715;</button>
-        <span class="fi-d-name">Aipeiron</span>
-        <span class="fi-d-badge">Dashboard &amp; Website &middot; February 2024</span>
+        <span class="cs-label">Case Study</span>
+        <h1>Aipeiron</h1>
+        <div class="cs-meta-row">
+          <div class="cs-meta-cols">
+            <div class="cs-meta-col"><span class="cs-meta-label">Category</span><span class="cs-meta-value">Dashboard &amp; Website</span></div>
+            <div class="cs-meta-col"><span class="cs-meta-label">Role</span><span class="cs-meta-value">Freelance Designer</span></div>
+            <div class="cs-meta-col"><span class="cs-meta-label">Year</span><span class="cs-meta-value">2024</span></div>
+          </div>
+        </div>
         <p class="fi-d-desc">Aipeiron is an AI accounting platform for small businesses. I designed the accounting dashboard, and created a mockup for the landing page, using prior user research to inform the data visualization and layout decisions in the dashboard.</p>
         <div class="fi-d-img-row fi-d-img-row--match">
           <img src="portfolio_media/Aipeiron/dashboard.png" alt="Accounting dashboard" onclick="openImgLightbox(this.src)">
           <img src="portfolio_media/Aipeiron/landingpage.png" alt="Landing page" onclick="openImgLightbox(this.src)">
-        </div>
-        <div class="fi-d-tags">
-          <span class="fi-d-tag">Platform</span>
-          <span class="fi-d-tag">Data Visualization</span>
         </div>
       </div>
     </div>
@@ -1600,8 +1569,15 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
       </div>
       <div class="fi-content">
         <button class="fi-close" onclick="closeFreelance(event, this)">&#x2715;</button>
-        <span class="fi-d-name">Mediboard</span>
-        <span class="fi-d-badge">Logo &middot; Identity &middot; August 2022</span>
+        <span class="cs-label">Case Study</span>
+        <h1>Mediboard</h1>
+        <div class="cs-meta-row">
+          <div class="cs-meta-cols">
+            <div class="cs-meta-col"><span class="cs-meta-label">Category</span><span class="cs-meta-value">Logo &amp; Identity</span></div>
+            <div class="cs-meta-col"><span class="cs-meta-label">Role</span><span class="cs-meta-value">Freelance Designer</span></div>
+            <div class="cs-meta-col"><span class="cs-meta-label">Year</span><span class="cs-meta-value">2022</span></div>
+          </div>
+        </div>
         <div class="fi-carousel">
           <div class="fi-carousel-track">
             <img src="portfolio_media/Mediboard/Pictorial_Mark.png" alt="Pictorial mark" onclick="openImgLightbox(this.src)">
@@ -1622,10 +1598,6 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
           <img src="portfolio_media/Mediboard/sketch2.png" alt="Sketch 2" onclick="openImgLightbox(this.src)" style="flex:none;height:160px;width:auto;">
           <img src="portfolio_media/Mediboard/icon_options.png" alt="Icon options" onclick="openImgLightbox(this.src)" style="flex:none;height:160px;width:auto;">
         </div>
-        <div class="fi-d-tags">
-          <span class="fi-d-tag">Logo</span>
-          <span class="fi-d-tag">Identity</span>
-        </div>
       </div>
     </div>
 
@@ -1639,16 +1611,19 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
       </div>
       <div class="fi-content">
         <button class="fi-close" onclick="closeFreelance(event, this)">&#x2715;</button>
-        <span class="fi-d-name">Mirage</span>
-        <span class="fi-d-badge">Website &amp; Branding &middot; Sequoia '23 &middot; May 2022</span>
+        <span class="cs-label">Case Study</span>
+        <h1>Mirage</h1>
+        <div class="cs-meta-row">
+          <div class="cs-meta-cols">
+            <div class="cs-meta-col"><span class="cs-meta-label">Category</span><span class="cs-meta-value">Website &amp; Branding</span></div>
+            <div class="cs-meta-col"><span class="cs-meta-label">Role</span><span class="cs-meta-value">Freelance Designer</span></div>
+            <div class="cs-meta-col"><span class="cs-meta-label">Year</span><span class="cs-meta-value">2022</span></div>
+          </div>
+        </div>
         <p class="fi-d-desc">Mirage is an ML platform for generating photorealistic synthetic data. I designed and built the initial website on Figma and Webflow for their Sequoia fundraise.</p>
         <div class="fi-d-img-row fi-d-img-row--tall">
           <img src="portfolio_media/Mirage/landingpage.png" alt="Landing page" onclick="openImgLightbox(this.src)">
           <img src="portfolio_media/Mirage/early_access_page.png" alt="Early access page" onclick="openImgLightbox(this.src)">
-        </div>
-        <div class="fi-d-tags">
-          <span class="fi-d-tag">Website</span>
-          <span class="fi-d-tag">Brand</span>
         </div>
       </div>
     </div>
@@ -1663,8 +1638,15 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
       </div>
       <div class="fi-content">
         <button class="fi-close" onclick="closeFreelance(event, this)">&#x2715;</button>
-        <span class="fi-d-name">Knockknock</span>
-        <span class="fi-d-badge">Co-founder &amp; Lead Designer &middot; January 2023 – August 2023</span>
+        <span class="cs-label">Case Study</span>
+        <h1>Knockknock</h1>
+        <div class="cs-meta-row">
+          <div class="cs-meta-cols">
+            <div class="cs-meta-col"><span class="cs-meta-label">Category</span><span class="cs-meta-value">Product Design</span></div>
+            <div class="cs-meta-col"><span class="cs-meta-label">Role</span><span class="cs-meta-value">Co-founder &amp; Lead Designer</span></div>
+            <div class="cs-meta-col"><span class="cs-meta-label">Year</span><span class="cs-meta-value">2023</span></div>
+          </div>
+        </div>
         <p class="fi-d-desc">A language-exchange app connecting people through shared culture and conversation goals.</p>
         <p class="fi-d-desc">KnockKnock pairs users for language exchange based on shared interests, location, and learning goals. I came in after the team had done early user interviews and competitive research, and I built the entire visual and interaction language from that foundation — including brand identity, home dashboard, matching flow, and profile screens.</p>
         <div class="fi-d-img-row" style="gap:0;align-items:flex-start;">
@@ -1673,10 +1655,6 @@ a, button, [onclick], .bento-tile, .poster-cell, .freelance-item {
           <img src="portfolio_media/KnockKnock/Untitled 3.png" alt="" onclick="openImgLightbox(this.src)" style="flex:none;width:20%;height:auto;">
           <img src="portfolio_media/KnockKnock/Untitled 4.png" alt="" onclick="openImgLightbox(this.src)" style="flex:none;width:20%;height:auto;">
           <img src="portfolio_media/KnockKnock/Untitled 5.png" alt="" onclick="openImgLightbox(this.src)" style="flex:none;width:20%;height:auto;">
-        </div>
-        <div class="fi-d-tags">
-          <span class="fi-d-tag">Product Design</span>
-          <span class="fi-d-tag">Brand</span>
         </div>
       </div>
     </div>
